@@ -1,0 +1,32 @@
+{
+  "name": "@soundxyz/docs",
+  "private": true,
+  "scripts": {
+    "format": "prettier . --write",
+    "postinstall": "husky install",
+    "pretty-quick": "pretty-quick --staged",
+    "release": "pnpm -r --access=public publish --no-git-checks",
+    "changeset": "changeset"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soundxyz/docs"
+  },
+  "bugs": {
+    "url": "https://github.com/soundxyz/docs/issues"
+  },
+  "homepage": "https://github.com/soundxyz/docs#readme",
+  "engines": {
+    "pnpm": ">=7.9.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "pnpm@7.0.0",
+  "devDependencies": {
+    "husky": "^7.0.4",
+    "prettier": "^2.7.1",
+    "pretty-quick": "^3.1.3"
+  }
+}
