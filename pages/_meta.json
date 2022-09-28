@@ -5,5 +5,14 @@
   },
   "sdk": {
     "title": "Sound SDK"
+  },
+  "listener-api": {
+    "title": "Listener API"
+  },
+  "api-explorer": {
+    "title": "API Explorer",
+    "theme": {
+      "layout": "raw"
+    }
   }
 }

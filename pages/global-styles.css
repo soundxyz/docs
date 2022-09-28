@@ -1,0 +1,9 @@
+.graphiql-container * {
+  box-sizing: border-box;
+
+  --sidebar-width: 60px;
+}
+
+.graphiql-container .graphiql-sidebar button {
+  width: 44px !important;
+}
