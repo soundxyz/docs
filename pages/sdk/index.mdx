@@ -73,14 +73,64 @@ To get an `API Key` contact us on our discord server [`discord.gg/soundxyz`](htt
 
 ```ts
 import { SoundClient } from '@soundxyz/sdk'
+import { SoundAPI } from '@soundxyz/sdk/api'
+
+// ...
+
+const soundAPI = SoundAPI({
+  apiKey: process.env.SOUNDXYZ_API_KEY,
+})
+
+const client = SoundClient({
+  // ...
+
+  soundAPI,
+})
+```
+
+#### Merkle Providers
+
+When interacting with `Merkle Drops` it's required to specify `merkleProvider` while creating the `SoundClient` instance.
+
+Currently the SDK provides integrations with [**Lanyard**](https://lanyard.org) and _Sound.xyz API_.
+
+- Lanyard
+
+```ts
+import { SoundClient } from '@soundxyz/sdk'
+import { LanyardMerkleProofProvider } from '@soundxyz/sdk/merkle/lanyard'
 
 // ...
 
 const client = SoundClient({
-  // At least one has to be specified
-  signer,
-  provider,
+  // ...
 
+  merkleProvider: LanyardMerkleProofProvider,
+})
+```
+
+- Sound.xyz API
+
+```ts
+import { SoundClient } from '@soundxyz/sdk'
+import { SoundAPI } from '@soundxyz/sdk/api'
+
+// ...
+
+const soundAPI = SoundAPI({
   apiKey: process.env.SOUNDXYZ_API_KEY,
+})
+
+// ...
+
+const client = SoundClient({
+  // ...
+
+  // It can be the same instance used for the API integration
+  soundAPI,
+
+  // ...
+
+  merkleProvider: soundAPI,
 })
 ```
