@@ -132,3 +132,95 @@ You will receive the following response:
   }
 }
 ```
+
+### Pagination
+
+Our API uses the [Relay specification](https://relay.dev/graphql/connections.htm) for pagination.
+
+Let's get the last 10 minted releases.
+
+```graphql
+query ApiExplorer {
+  pastMintedReleases(pagination: { first: 10, sort: DESC }) {
+    edges {
+      cursor
+      node {
+        title
+        artist {
+          name
+        }
+        numSold
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+```
+
+This gives us a response like this:
+
+```json
+{
+  "data": {
+    "pastMintedReleases": {
+      "edges": [
+        {
+          "cursor": "MTY2NDQ4NzE0NnxjNTNiYzljZi1iOWEwLTQwNDQtOGIyYi1lMTQ2OWRkMTliMzI=",
+          "node": {
+            "title": "Telephone",
+            "artist": {
+              "name": "TAROT"
+            },
+            "numSold": 16
+          }
+        },
+        ...
+        {
+          "cursor": "MTY2Mzg4NDE4M3w4MWFiZDU0ZC0zZjlmLTRiNWUtYWFjNC05NmVkYThmNjBmNzY=",
+          "node": {
+            "title": "VINEGAR HILL",
+            "artist": {
+              "name": "BRUX"
+            },
+            "numSold": 10
+          }
+        }
+      ],
+      "pageInfo": {
+        "hasNextPage": true,
+        "endCursor": "MTY2Mzg4NDE4M3w4MWFiZDU0ZC0zZjlmLTRiNWUtYWFjNC05NmVkYThmNjBmNzY="
+      }
+    }
+  }
+}
+```
+
+Since `hasNextPage` is `TRUE`, we know additional data is available.
+
+To get the next 10 items, we specify `after` and set the starting point to the `endCursor` from the previous response.
+
+```graphql
+query ApiExplorer {
+  pastMintedReleases(
+    pagination: { first: 10, sort: DESC, after: "MTY2Mzg4NDE4M3w4MWFiZDU0ZC0zZjlmLTRiNWUtYWFjNC05NmVkYThmNjBmNzY=" }
+  ) {
+    edges {
+      cursor
+      node {
+        title
+        artist {
+          name
+        }
+        numSold
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+```
