@@ -33,4 +33,7 @@ export default {
     link: 'https://discord.gg/soundxyz',
   },
   unstable_faviconGlyph: '✦',
+  sidebar: {
+    defaultMenuCollapsed: true,
+  },
 }
