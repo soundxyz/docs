@@ -6,8 +6,8 @@
   "sdk": {
     "title": "Sound SDK"
   },
-  "listener-api": {
-    "title": "Listener API"
+  "sound-api": {
+    "title": "Sound API"
   },
   "api-explorer": {
     "title": "API Explorer",
