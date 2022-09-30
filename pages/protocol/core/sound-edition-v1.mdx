@@ -1,0 +1,815 @@
+# SoundEditionV1
+
+[`contracts/core/SoundEditionV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1.sol)
+
+The NFT contract, an implementation of [ERC721A](https://github.com/chiru-labs/ERC721A) deployed via the [ERC-1167 minimal proxy clone](https://eips.ethereum.org/EIPS/eip-1167) pattern.
+
+It has a [`mint`](sound-edition-v1#mint) function which allows authorized minter contracts or administrators to batch mint NFTs (authorization is granted via the [`MINTER_ROLE`](sound-edition-v1#minter_role) or [`ADMIN_ROLE`](sound-edition-v1#admin_role) respectively).
+
+These roles can be granted/revoked by the owner, or during setup by the SoundCreator.
+
+Token IDs are minted sequentially (e.g. 1, 2, 3...) starting from 1.
+
+Inherits:
+
+- [ERC721AUpgradeable](/protocol/libraries/erc721a-upgradeable)
+- [ERC721ABurnableUpgradeable](/protocol/libraries/erc721a-burnable-upgradeable)
+- [ERC721AQueryableUpgradeable](/protocol/libraries/erc721a-queryable-upgradeable)
+- [OwnableRoles](/protocol/libraries/ownable-roles)
+
+## Structs
+
+### EditionInfo
+
+```solidity
+struct EditionInfo {
+    // Base URI for the tokenId.
+    string baseURI;
+    // Contract URI for OpenSea storefront.
+    string contractURI;
+    // Name of the collection.
+    string name;
+    // Symbol of the collection.
+    string symbol;
+    // Address that receives primary and secondary royalties.
+    address fundingRecipient;
+    // The current max mintable amount;
+    uint32 editionMaxMintable;
+    // The lower limit of the maximum number of tokens that can be minted.
+    uint32 editionMaxMintableUpper;
+    // The upper limit of the maximum number of tokens that can be minted.
+    uint32 editionMaxMintableLower;
+    // The timestamp (in seconds since unix epoch) after which the
+    // max amount of tokens mintable will drop from
+    // `maxMintableUpper` to `maxMintableLower`.
+    uint32 editionCutoffTime;
+    // Address of metadata module, address(0x00) if not used.
+    address metadataModule;
+    // The current mint randomness value.
+    uint256 mintRandomness;
+    // The royalty BPS (basis points).
+    uint16 royaltyBPS;
+    // Whether the mint randomness is enabled.
+    bool mintRandomnessEnabled;
+    // Whether the mint has concluded.
+    bool mintConcluded;
+    // Whether the metadata has been frozen.
+    bool isMetadataFrozen;
+    // Next token ID to be minted.
+    uint256 nextTokenId;
+    // Total number of tokens burned.
+    uint256 totalBurned;
+    // Total number of tokens minted.
+    uint256 totalMinted;
+    // Total number of tokens currently in existence.
+    uint256 totalSupply;
+}
+```
+
+Holds information pertaining to the SoundEdition.
+
+This struct is intended for off-chain queries, and can be retrieved via the `editionInfo` function.
+
+## Write Functions
+
+### initialize
+
+```solidity
+function initialize(
+    string memory name_,
+    string memory symbol_,
+    address metadataModule_,
+    string memory baseURI_,
+    string memory contractURI_,
+    address fundingRecipient_,
+    uint16 royaltyBPS_,
+    uint32 editionMaxMintableLower_,
+    uint32 editionMaxMintableUpper_,
+    uint32 editionCutoffTime_,
+    uint8 flags_
+) external
+```
+
+Initializes the contract.
+
+This function is called in the [`createSoundAndMints`](sound-creator-v1#createsoundandmints) function of SoundCreatorV1, right after the creation of the SoundEdtion, within the same transaction.
+
+| Params:                    |                                                                                                                                                                                          |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name_`                    | Name of the collection.                                                                                                                                                                  |
+| `symbol_`                  | Symbol of the collection.                                                                                                                                                                |
+| `metadataModule_`          | Address of metadata module, address(0x00) if not used.                                                                                                                                   |
+| `baseURI_`                 | Base URI.                                                                                                                                                                                |
+| `contractURI_`             | Contract URI for OpenSea storefront.                                                                                                                                                     |
+| `fundingRecipient_`        | Address that receives primary and secondary royalties.                                                                                                                                   |
+| `royaltyBPS_`              | Royalty amount in bps (basis points).                                                                                                                                                    |
+| `editionMaxMintableLower_` | The lower bound of the max mintable quantity for the edition.                                                                                                                            |
+| `editionMaxMintableUpper_` | The upper bound of the max mintable quantity for the edition.                                                                                                                            |
+| `editionCutoffTime_`       | The timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `max(_totalMinted(), editionMaxMintableLower)`.                                                   |
+| `flags_`                   | The bitwise OR result of the initialization flags. <br/>See: [METADATA_IS_FROZEN_FLAG](#metadata_is_frozen_flag) <br/>See: [MINT_RANDOMNESS_ENABLED_FLAG](#mint_randomness_enabled_flag) |
+
+### mint
+
+```solidity
+function mint(address to, uint256 quantity) external payable returns (uint256)
+```
+
+Mints `quantity` tokens to addrress `to`
+
+Each token will be assigned a token ID that is consecutively increasing.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have either the
+  [`ADMIN_ROLE`](sound-edition-v1#admin_role), [`MINTER_ROLE`](sound-edition-v1#minter_role), which can be granted via `grantRoles`.
+  Multiple minters, such as different minter contracts,
+  can be authorized simultaneously.
+
+| Params:    |                           |
+| ---------- | ------------------------- |
+| `to`       | Address to mint to.       |
+| `quantity` | Number of tokens to mint. |
+
+Returns the first token ID minted.
+
+### airdrop
+
+```solidity
+function airdrop(address[] calldata to, uint256 quantity) external returns (uint256)
+```
+
+Mints `quantity` tokens to each of the addresses in `to`.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the
+  [`ADMIN_ROLE`](sound-edition-v1#admin_role), which can be granted via `grantRoles`.
+
+| Params:    |                           |
+| ---------- | ------------------------- |
+| `to`       | Address to mint to.       |
+| `quantity` | Number of tokens to mint. |
+
+Returns the first token ID minted.
+
+### withdrawETH
+
+```solidity
+function withdrawETH() external
+```
+
+Withdraws collected ETH royalties to the fundingRecipient.
+
+### withdrawERC20
+
+```solidity
+function withdrawERC20(address[] calldata tokens) external
+```
+
+Withdraws collected ERC20 royalties to the fundingRecipient.
+
+| Params:  |                                   |
+| -------- | --------------------------------- |
+| `tokens` | array of ERC20 tokens to withdraw |
+
+### setMetadataModule
+
+```solidity
+function setMetadataModule(address metadataModule) external
+```
+
+Sets metadata module.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:          |                             |
+| ---------------- | --------------------------- |
+| `metadataModule` | Address of metadata module. |
+
+### setBaseURI
+
+```solidity
+function setBaseURI(string memory baseURI) external
+```
+
+Sets global base URI.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:   |                         |
+| --------- | ----------------------- |
+| `baseURI` | The base URI to be set. |
+
+### setContractURI
+
+```solidity
+function setContractURI(string memory contractURI) external
+```
+
+Sets contract URI.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:       |                             |
+| ------------- | --------------------------- |
+| `contractURI` | The contract URI to be set. |
+
+### freezeMetadata
+
+```solidity
+function freezeMetadata() external
+```
+
+Freezes metadata by preventing any more changes to base URI.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+### setFundingRecipient
+
+```solidity
+function setFundingRecipient(address fundingRecipient) external
+```
+
+Sets funding recipient address.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:            |                                                 |
+| ------------------ | ----------------------------------------------- |
+| `fundingRecipient` | Address to be set as the new funding recipient. |
+
+### setRoyalty
+
+```solidity
+function setRoyalty(uint16 bps) external
+```
+
+Sets royalty amount in bps (basis points).
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params: |                                         |
+| ------- | --------------------------------------- |
+| `bps`   | The new royalty basis points to be set. |
+
+### setEditionMaxMintableRange
+
+```solidity
+function setEditionMaxMintableRange(
+    uint32 editionMaxMintableLower_,
+    uint32 editionMaxMintableUpper_
+) external
+```
+
+Sets the edition max mintable range.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:                    |                                                                     |
+| -------------------------- | ------------------------------------------------------------------- |
+| `editionMaxMintableLower_` | The lower limit of the maximum number of tokens that can be minted. |
+| `editionMaxMintableUpper_` | The upper limit of the maximum number of tokens that can be minted. |
+
+### setEditionCutoffTime
+
+```solidity
+function setEditionCutoffTime(uint32 editionCutoffTime_) external
+```
+
+Sets the timestamp after which, the `editionMaxMintable` drops from `editionMaxMintableUpper` to `editionMaxMintableLower`.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:              |                |
+| -------------------- | -------------- |
+| `editionCutoffTime_` | The timestamp. |
+
+### setMintRandomnessEnabled
+
+```solidity
+function setMintRandomnessEnabled(bool mintRandomnessEnabled_) external
+```
+
+Sets whether the `mintRandomness` is enabled.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+
+| Params:                  |                    |
+| ------------------------ | ------------------ |
+| `mintRandomnessEnabled_` | The boolean value. |
+
+## Read-only Functions
+
+### editionInfo
+
+```solidity
+function editionInfo() external view returns (EditionInfo memory)
+```
+
+Returns the edition info.
+
+### supportsInterface
+
+`IERC165-supportsInterface`
+
+```solidity
+function supportsInterface(bytes4 interfaceId) public view virtual returns (bool)
+```
+
+Returns `true` if this contract implements the interface defined by `interfaceId`.
+
+See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified) to learn more about how these ids are created.
+
+| Params:       |                          |
+| ------------- | ------------------------ |
+| `interfaceId` | The 4 byte interface ID. |
+
+| Supported Interface IDs: |              |
+| ------------------------ | ------------ |
+| `IERC165`                | `0x01ffc9a7` |
+| `ERC721`                 | `0x80ac58cd` |
+| `ERC721Metadata`         | `0x5b5e139f` |
+| `ISoundEditionV1`        | `0x50899e54` |
+
+### MINTER_ROLE
+
+```solidity
+function MINTER_ROLE() external view returns (uint256)
+```
+
+Returns the minter role flag.
+
+### ADMIN_ROLE
+
+```solidity
+function ADMIN_ROLE() external view returns (uint256)
+```
+
+Returns the admin role flag.
+
+### ADDRESS_BATCH_MINT_LIMIT
+
+```solidity
+function ADDRESS_BATCH_MINT_LIMIT() external pure returns (uint256)
+```
+
+Returns the maximum limit for the mint or airdrop `quantity`.
+
+Prevents the first-time transfer costs for tokens near the end of large mint batches via ERC721A from becoming too expensive due to the need to scan many storage slots.
+
+See: https://chiru-labs.github.io/ERC721A/#/tips?id=batch-size
+
+### METADATA_IS_FROZEN_FLAG
+
+```solidity
+function METADATA_IS_FROZEN_FLAG() external pure returns (uint8)
+```
+
+Returns the bit flag to freeze the metadata on initialization.
+
+### MINT_RANDOMNESS_ENABLED_FLAG
+
+```solidity
+function MINT_RANDOMNESS_ENABLED_FLAG() external pure returns (uint8)
+```
+
+Returns the bit flag to enable the mint randomness feature on initialization.
+
+### baseURI
+
+```solidity
+function baseURI() external view returns (string memory)
+```
+
+Returns the base token URI for the collection.
+
+### contractURI
+
+```solidity
+function contractURI() external view returns (string memory)
+```
+
+Returns the contract URI to be used by Opensea.
+
+See: https://docs.opensea.io/docs/contract-level-metadata
+
+### fundingRecipient
+
+```solidity
+function fundingRecipient() external view returns (address)
+```
+
+Returns the address of the funding recipient.
+
+### editionMaxMintable
+
+```solidity
+function editionMaxMintable() external view returns (uint32)
+```
+
+Returns the maximum amount of tokens mintable for this edition.
+
+### editionMaxMintableUpper
+
+```solidity
+function editionMaxMintableUpper() external view returns (uint32)
+```
+
+Returns the upper bound for the maximum tokens that can be minted for this edition.
+
+### editionMaxMintableLower
+
+```solidity
+function editionMaxMintableLower() external view returns (uint32)
+```
+
+Returns the lower bound for the maximum tokens that can be minted for this edition.
+
+### editionCutoffTime
+
+```solidity
+function editionCutoffTime() external view returns (uint32)
+```
+
+Returns the timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `editionMaxMintableLower`.
+
+### metadataModule
+
+```solidity
+function metadataModule() external view returns (address)
+```
+
+Returns the address of the metadata module.
+
+### mintRandomness
+
+```solidity
+function mintRandomness() external view returns (uint256)
+```
+
+Returns the randomness based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true.
+
+Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
+
+> :warning:
+> This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain psuedorandom mechanism.
+
+### mintRandomnessEnabled
+
+```solidity
+function mintRandomnessEnabled() external view returns (bool)
+```
+
+Returns whether the `mintRandomness` has been enabled.
+
+### mintConcluded
+
+```solidity
+function mintConcluded() external view returns (bool)
+```
+
+Returns whether the mint has been concluded.
+
+### royaltyBPS
+
+```solidity
+function royaltyBPS() external view returns (uint16)
+```
+
+Returns the royalty basis points.
+
+### isMetadataFrozen
+
+```solidity
+function isMetadataFrozen() external view returns (bool)
+```
+
+Returns whether the metadata module is frozen.
+
+### nextTokenId
+
+```solidity
+function nextTokenId() external view returns (uint256)
+```
+
+Returns the next token ID to be minted.
+
+### numberMinted
+
+```solidity
+function numberMinted(address owner) external view returns (uint256)
+```
+
+Returns the number of tokens minted by `owner`.
+
+| Params: |                                     |
+| ------- | ----------------------------------- |
+| `owner` | Address to query for number minted. |
+
+### numberBurned
+
+```solidity
+function numberBurned(address owner) external view returns (uint256)
+```
+
+Returns the number of tokens burned by `owner`.
+
+| Params: |                                     |
+| ------- | ----------------------------------- |
+| `owner` | Address to query for number burned. |
+
+### totalMinted
+
+```solidity
+function totalMinted() external view returns (uint256)
+```
+
+Returns the total amount of tokens minted.
+
+### totalBurned
+
+```solidity
+function totalBurned() external view returns (uint256);
+```
+
+Returns the total amount of tokens burned.
+
+## Events
+
+### MetadataModuleSet
+
+```solidity
+event MetadataModuleSet(address metadataModule);
+```
+
+Emitted when the metadata module is set.
+
+| Params:          |                                     |
+| ---------------- | ----------------------------------- |
+| `metadataModule` | the address of the metadata module. |
+
+### BaseURISet
+
+```solidity
+event BaseURISet(string baseURI);
+```
+
+Emitted when the `baseURI` is set.
+
+| Params:   |                              |
+| --------- | ---------------------------- |
+| `baseURI` | The base URI of the edition. |
+
+### ContractURISet
+
+```solidity
+event ContractURISet(string contractURI);
+```
+
+Emitted when the `contractURI` is set.
+
+| Params:       |                                  |
+| ------------- | -------------------------------- |
+| `contractURI` | The contract URI of the edition. |
+
+### MetadataFrozen
+
+```solidity
+event MetadataFrozen(address metadataModule, string baseURI, string contractURI)
+```
+
+Emitted when the metadata is frozen (e.g.: `baseURI` can no longer be changed).
+
+| Params:          |                                     |
+| ---------------- | ----------------------------------- |
+| `metadataModule` | The address of the metadata module. |
+| `baseURI`        | The base URI of the edition.        |
+| `contractURI`    | The contract URI of the edition.    |
+
+### FundingRecipientSet
+
+```solidity
+event FundingRecipientSet(address fundingRecipient)
+```
+
+Emitted when the `fundingRecipient` is set.
+
+| Params:            |                                       |
+| ------------------ | ------------------------------------- |
+| `fundingRecipient` | The address of the funding recipient. |
+
+### RoyaltySet
+
+```solidity
+event RoyaltySet(uint16 bps)
+```
+
+Emitted when the `royaltyBPS` is set.
+
+| Params: |                                            |
+| ------- | ------------------------------------------ |
+| `bps`   | The new royalty, measured in basis points. |
+
+### EditionMaxMintableRangeSet
+
+```solidity
+event EditionMaxMintableRangeSet(
+    uint32 editionMaxMintableLower_,
+    uint32 editionMaxMintableUpper_
+)
+```
+
+Emitted when the edition's maximum mintable token quantity range is set.
+
+| Params:                    |                                                                     |
+| -------------------------- | ------------------------------------------------------------------- |
+| `editionMaxMintableLower_` | The lower limit of the maximum number of tokens that can be minted. |
+| `editionMaxMintableUpper_` | The upper limit of the maximum number of tokens that can be minted. |
+
+### EditionCutoffTimeSet
+
+```solidity
+event EditionCutoffTimeSet(uint32 editionCutoffTime_)
+```
+
+Emitted when the edition's cutoff time set.
+
+| Params:              |                |
+| -------------------- | -------------- |
+| `editionCutoffTime_` | The timestamp. |
+
+### MintRandomnessEnabledSet
+
+```solidity
+event MintRandomnessEnabledSet(bool mintRandomnessEnabled_)
+```
+
+Emitted when the `mintRandomnessEnabled` is set.
+
+| Params:                  |                    |
+| ------------------------ | ------------------ |
+| `mintRandomnessEnabled_` | The boolean value. |
+
+### SoundEditionInitialized
+
+```solidity
+event SoundEditionInitialized(
+    address indexed edition_,
+    string name_,
+    string symbol_,
+    address metadataModule_,
+    string baseURI_,
+    string contractURI_,
+    address fundingRecipient_,
+    uint16 royaltyBPS_,
+    uint32 editionMaxMintableLower_,
+    uint32 editionMaxMintableUpper_,
+    uint32 editionCutoffTime_,
+    uint8 flags_
+    )
+```
+
+Emitted upon initialization.
+
+| Params:                    |                                                                                                                                                                                          |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `edition_`                 | The address of the edition.                                                                                                                                                              |
+| `name_`                    | Name of the collection.                                                                                                                                                                  |
+| `symbol_`                  | Symbol of the collection.                                                                                                                                                                |
+| `metadataModule_`          | Address of metadata module, `address(0)` if not used.                                                                                                                                    |
+| `baseURI_`                 | Base URI.                                                                                                                                                                                |
+| `contractURI_`             | Contract URI for OpenSea storefront.                                                                                                                                                     |
+| `fundingRecipient_`        | Address that receives primary and secondary royalties.                                                                                                                                   |
+| `royaltyBPS_`              | Royalty amount in bps (basis points).                                                                                                                                                    |
+| `editionMaxMintableLower_` | The lower bound of the max mintable quantity for the edition.                                                                                                                            |
+| `editionMaxMintableUpper_` | The upper bound of the max mintable quantity for the edition.                                                                                                                            |
+| `editionCutoffTime_`       | The timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `max(_totalMinted(), editionMaxMintableLower)`.                                                   |
+| `flags_`                   | The bitwise OR result of the initialization flags. <br/>See: [METADATA_IS_FROZEN_FLAG](#metadata_is_frozen_flag) <br/>See: [MINT_RANDOMNESS_ENABLED_FLAG](#mint_randomness_enabled_flag) |
+
+## Errors
+
+### MetadataIsFrozen
+
+```solidity
+error MetadataIsFrozen()
+```
+
+The edition's metadata is frozen.
+
+### InvalidRoyaltyBPS
+
+```solidity
+error InvalidRoyaltyBPS()
+```
+
+The given `royaltyBPS` is invalid.
+
+### InvalidRandomnessLock
+
+```solidity
+error InvalidRandomnessLock()
+```
+
+The given `randomnessLockedAfterMinted` value is invalid.
+
+### ExceedsEditionAvailableSupply
+
+```solidity
+error ExceedsEditionAvailableSupply(uint32 available)
+```
+
+The requested quantity exceeds the edition's remaining mintable token quantity.
+
+| Params:     |                                                    |
+| ----------- | -------------------------------------------------- |
+| `available` | The number of tokens remaining available for mint. |
+
+### InvalidAmount
+
+```solidity
+error InvalidAmount()
+```
+
+The given amount is invalid.
+
+### InvalidFundingRecipient
+
+```solidity
+error InvalidFundingRecipient()
+```
+
+The given `fundingRecipient` address is invalid.
+
+### InvalidEditionMaxMintableRange
+
+```solidity
+error InvalidEditionMaxMintableRange()
+```
+
+The `editionMaxMintableLower` must not be greater than `editionMaxMintableUpper`.
+
+### MaximumHasAlreadyBeenReached
+
+```solidity
+error MaximumHasAlreadyBeenReached()
+```
+
+The `editionMaxMintable` has already been reached.
+
+### ExceedsAddressBatchMintLimit
+
+```solidity
+error ExceedsAddressBatchMintLimit()
+```
+
+The mint `quantity` cannot exceed `ADDRESS_BATCH_MINT_LIMIT` tokens.
+
+### MintRandomnessAlreadyRevealed
+
+```solidity
+error MintRandomnessAlreadyRevealed()
+```
+
+The mint randomness has already been revealed.
+
+### NoAddressesToAirdrop
+
+```solidity
+error NoAddressesToAirdrop()
+```
+
+No addresses to airdrop.
+
+### MintHasConcluded
+
+```solidity
+error MintHasConcluded()
+```
+
+The mint has already concluded.
+
+### MintsAlreadyExist
+
+```solidity
+error MintsAlreadyExist()
+```
+
+Cannot perform the operation after a token has been minted.

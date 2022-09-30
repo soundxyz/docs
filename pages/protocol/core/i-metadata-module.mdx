@@ -1,0 +1,21 @@
+# IMetadataModule
+
+[`contracts/core/interfaces/IMetadataModule.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/interfaces/IMetadataModule.sol)
+
+Interface for the metadata module.
+
+## Read-only Functions
+
+### tokenURI
+
+```solidity
+function tokenURI(uint256 tokenId) external view returns (string memory)
+```
+
+When implemented, the SoundEdition's `tokenURI` redirects execution to this `tokenURI`.
+
+| Params:   |                                             |
+| --------- | ------------------------------------------- |
+| `tokenId` | The token ID to retrieve the token URI for. |
+
+Returns the token URI string.

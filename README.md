@@ -1,4 +1,4 @@
-# Sound.xyz Docs
+# Sound Docs
 
 This repo is a [Next.js](https://nextjs.org/) site built using [Nextra](https://nextra.vercel.app/) and hosts our official developer docs site.
 
