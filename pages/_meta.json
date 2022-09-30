@@ -1,0 +1,18 @@
+{
+  "index": "Introduction",
+  "sdk": {
+    "title": "Sound SDK",
+    "type": "page"
+  },
+  "listener-api": {
+    "title": "Listener API",
+    "type": "page"
+  },
+  "api-explorer": {
+    "title": "API Explorer",
+    "type": "page",
+    "theme": {
+      "layout": "raw"
+    }
+  }
+}
