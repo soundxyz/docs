@@ -1,4 +1,7 @@
 {
   "index": "Introduction",
-  "sdk": "SDK"
+  "sdk": {
+    "title": "Sound SDK",
+    "type": "page"
+  }
 }
