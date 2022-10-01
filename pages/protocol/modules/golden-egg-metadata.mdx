@@ -1,0 +1,21 @@
+# GoldenEggMetadata
+
+[`contracts/modules/GoldenEggMetadata.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/GoldenEggMetadata.sol)
+
+A metadata modules that implements an on-chain golden egg.
+
+Inherits:
+
+- [IMetadataModule](i-metadata-module)
+
+### getGoldenEggTokenId
+
+```solidity
+function getGoldenEggTokenId(ISoundEditionV1 edition) external view returns (uint256)
+```
+
+Returns token ID for the golden egg after the `mintRandomness` is locked, else returns 0.
+
+| Params:   |                                                          |
+| --------- | -------------------------------------------------------- |
+| `edition` | Address of the song edition contract we are minting for. |

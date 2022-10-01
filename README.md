@@ -1,6 +1,6 @@
-# Sound.xyz Docs
+# Sound Docs
 
-This repo is a [Next.js](https://nextjs.org/) site built using [Nextra](https://nextra.vercel.app/) and hosts our official developer docs site.
+This repo hosts all documentation for Sound Protocol and related tools like our SDK & API. It's a [Next.js](https://nextjs.org/) site built using [Nextra](https://nextra.vercel.app/) and hosted by [Vercel](https://vercel.com/).
 
 ## Getting Started
 

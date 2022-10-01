@@ -1,7 +1,9 @@
 {
   "index": "Introduction",
+  "protocol": {
+    "title": "Sound Protocol"
+  },
   "sdk": {
-    "title": "Sound SDK",
-    "type": "page"
+    "title": "Sound SDK"
   }
 }

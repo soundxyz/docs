@@ -1,0 +1,18 @@
+# ERC721ABurnableUpgradeable
+
+[`erc721a-upgradeable/contracts/extensions/ERC721ABurnableUpgradeable.sol`](https://github.com/chiru-labs/ERC721A-Upgradeable/blob/main/contracts/extensions/ERC721ABurnableUpgradeable.sol)
+
+ERC721A Token that can be irreversibly burned (destroyed).
+
+## Write Functions
+
+### burn
+
+```solidity
+function burn(uint256 tokenId) public virtual
+```
+
+Burns `tokenId`. 
+
+**Calling conditions:**
+- The caller must own `tokenId` or be an approved operator.

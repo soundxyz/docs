@@ -1,0 +1,286 @@
+# OwnableRoles
+
+[`solady/src/auth/OwnableRoles.sol`](https://github.com/vectorized/solady/blob/main/src/auth/OwnableRoles.sol)
+
+Contract ownership and access roles management class.
+
+Multiple roles are granted, revoked, accessed via 256-bit bitmaps (binary-OR result) of their flags.
+
+## Write Functions
+
+### transferOwnership 
+
+```solidity
+function transferOwnership(address newOwner) public virtual
+```
+
+Transfers contract ownership to `newOwner`.
+
+**Calling conditions:**
+- The caller must be the owner of the contract.
+
+|Params:||
+|---|---|
+| `newOwner` | The new owner of the contract.
+
+
+### renounceOwnership
+
+```solidity
+function renounceOwnership() public virtual
+```
+
+Renounces contract ownership.
+
+**Calling conditions:**
+- The caller must be the owner of the contract.
+
+
+### requestOwnershipHandover
+
+```solidity
+function requestOwnershipHandover() public virtual
+```
+
+Request a two-step ownership handover to the caller.   
+The request will be automatically expire in 48 hours.
+
+
+### cancelOwnershipHandover
+
+```solidity
+function cancelOwnershipHandover() public virtual
+```
+
+Cancels the two-step ownership handover to the caller, if any.
+
+
+### completeOwnershipHandover
+
+```solidity
+function completeOwnershipHandover(address pendingOwner) public virtual
+```
+
+Allows the owner to complete the two-step ownership handover to `pendingOwner`.   
+Reverts if there is no existing ownership handover requested by `pendingOwner`.
+
+|Params:||
+|---|---|
+| `pendingOwner` | The address which requested the two-step ownership handover.
+
+
+### grantRoles
+
+```solidity
+function grantRoles(address user, uint256 roles) public virtual
+```
+
+Allows the owner to grant `user` `roles`.   
+If the `user` already has a role, then it will be an no-op for the role.
+
+**Calling conditions:**
+- The caller must be the owner of the contract.
+
+|Params:||
+|---|---|
+| `user` | The address to grant the roles to.
+| `roles` | The bitmap of the role flags to grant.
+
+
+### revokeRoles
+
+```solidity
+function revokeRoles(address user, uint256 roles) public virtual 
+```
+
+Allows the owner to remove `user` `roles`.   
+If the `user` does not have a role, then it will be an no-op for the role.
+
+**Calling conditions:**
+- The caller must be the owner of the contract.
+
+|Params:||
+|---|---|
+| `user` | The address to grant the roles to.
+| `roles` | The bitmap of the role flags to revoke.
+
+
+### renounceRoles
+
+```solidity
+function renounceRoles(uint256 roles) public virtual
+```
+
+Allow the caller to remove their own roles.   
+If the caller does not have a role, then it will be an no-op for the role.
+
+|Params:||
+|---|---|
+| `roles` | The bitmap of the role flags to renounce.
+
+
+
+
+## Read-only Functions
+
+### owner
+
+```solidity
+function owner() public view virtual returns (address)
+```
+
+Returns the owner of the contract.
+
+
+### ownershipHandoverExpiresAt
+
+```solidity
+function ownershipHandoverExpiresAt(
+    address pendingOwner
+) public view virtual returns (uint256)
+```
+
+Returns the expiry timestamp for the two-step ownership handover to `pendingOwner`. 
+
+
+### ownershipHandoverValidFor
+
+```solidity
+function ownershipHandoverValidFor() public view returns (uint256);
+```
+
+Returns how long a two-step ownership handover is valid for in seconds.
+
+
+### hasAllRoles
+
+```solidity
+function hasAllRoles(
+    address user, 
+    uint256 roles
+) public view virtual returns (bool)
+```
+
+Returns whether `user` has all of `roles`.
+
+
+### rolesOf
+
+```solidity
+function rolesOf(address user) public view virtual returns (uint256)
+```
+
+Returns the roles of `user`.
+
+
+### rolesFromOrdinals
+
+```solidity
+function rolesFromOrdinals(
+    uint8[] memory ordinals
+) public pure returns (uint256)
+```
+
+Convenience function to return a `roles` bitmap from the `ordinals`.  
+This is meant for frontends like Etherscan, and is therefore not fully optimized.  
+Not recommended to be called on-chain.  
+
+
+### ordinalsFromRoles
+
+```solidity
+function ordinalsFromRoles(
+    uint256 roles
+) public pure returns (uint8[] memory)
+```
+
+Convenience function to return an array of `ordinals` from the `roles` bitmap.   
+This is meant for frontends like Etherscan, and is therefore not fully optimized.   
+Not recommended to be called on-chain.
+
+
+
+## Events
+
+### OwnershipTransferred
+
+```solidity
+event OwnershipTransferred(address indexed oldOwner, address indexed newOwner)
+```
+
+The contract ownership is transferred from `oldOwner` to `newOwner`.
+
+|Params:||
+|---|---|
+| `oldOwner` | The old owner of the contract.
+| `newOwner` | The new owner of the contract.
+
+
+### OwnershipHandoverRequested
+
+```solidity
+event OwnershipHandoverRequested(address indexed pendingOwner)
+```
+
+An ownership handover to `pendingOwner` has been requested.
+
+|Params:||
+|---|---|
+| `pendingOwner` | The pending owner of the contract.
+
+
+### OwnershipHandoverCanceled
+
+```solidity
+event OwnershipHandoverCanceled(address indexed pendingOwner)
+```
+
+An ownership handover to `pendingOwner` has been canceled.
+
+|Params:||
+|---|---|
+| `pendingOwner` | The pending owner of the contract.
+
+
+### RolesUpdated
+
+```solidity
+event RolesUpdated(address indexed user, uint256 indexed roles)
+```
+
+The `user`'s roles is updated to `roles`.
+
+|Params:||
+|---|---|
+| `user` | The address of the user.
+| `roles` | The bitmap of the latest roles of the `user`.
+
+
+
+## Errors
+
+### Unauthorized
+
+```solidity
+error Unauthorized()
+```
+
+The caller is not authorized to call the function.
+
+
+### NewOwnerIsZeroAddress
+
+```solidity
+error NewOwnerIsZeroAddress()
+```
+
+The `newOwner` cannot be the zero address.
+
+
+### NoHandoverRequest
+
+```solidity
+error NoHandoverRequest()
+```
+
+The `pendingOwner` does not have a valid handover request.
