@@ -1,0 +1,226 @@
+# Making Requests
+
+All GraphQL requests go to a single endpoint. You MUST use the `POST` method for all requests.
+
+```
+https://api.sound.xyz/graphql
+```
+
+## Requirements
+
+### Client API Key
+
+An API key looks something like `f3740c4a-c8b1-31c1-ca14-5a3cc121537c`. These do not grant any special privileges associated
+with your public address but do allow access to our API.
+
+Every request MUST include the key with the `X-Sound-Client-Key` header.
+
+```
+X-Sound-Client-Key: f3740c4a-c8b1-31c1-ca14-5a3cc121537c
+```
+
+### Content Type
+
+The content type of the request MUST be `application/json`.
+
+```
+Content-Type: application/json
+```
+
+## An example request
+
+### Get a list of genres
+
+We're going to use the following `Query`:
+
+```graphql
+query getReleaseGenres {
+  releaseGenres {
+    name
+  }
+}
+```
+
+We need to encode that request as a JSON object with a single `query` key.
+
+```json
+{ "query": "query getReleaseGenres { releaseGenres { name }" }
+```
+
+Making that request using `curl`:
+
+```sh
+curl 'https://api.sound.xyz/graphql' -H 'Content-Type: application/json' -H 'X-Sound-Client-Key: f3740c4a-c8b1-31c1-ca14-5a3cc121537c' --data-binary '{"query":"query getReleaseGenres { releaseGenres { name }"}'
+```
+
+You will receive the following response:
+
+```json
+{
+  "data": {
+    "releaseGenres": [
+      {
+        "name": "Rock"
+      },
+      {
+        "name": "Drum & Bass"
+      },
+      {
+        "name": "Techno"
+      },
+      {
+        "name": "Dubstep"
+      },
+      {
+        "name": "Trap"
+      },
+      {
+        "name": "Metal"
+      },
+      {
+        "name": "R&B & Soul"
+      },
+      {
+        "name": "Hip-hop & Rap"
+      },
+      {
+        "name": "Disco"
+      },
+      {
+        "name": "Latin"
+      },
+      {
+        "name": "Dance & EDM"
+      },
+      {
+        "name": "Folk & Singer-Songwriter"
+      },
+      {
+        "name": "Deep House"
+      },
+      {
+        "name": "Indie"
+      },
+      {
+        "name": "Dancehall"
+      },
+      {
+        "name": "Ambient"
+      },
+      {
+        "name": "Pop"
+      },
+      {
+        "name": "World"
+      },
+      {
+        "name": "Soundtrack"
+      },
+      {
+        "name": "House"
+      },
+      {
+        "name": "Reggaeton"
+      },
+      {
+        "name": "Alternative Rock"
+      },
+      {
+        "name": "Electronic"
+      }
+    ]
+  }
+}
+```
+
+### Pagination
+
+Our API uses the [Relay specification](https://relay.dev/graphql/connections.htm) for pagination.
+
+Let's get the last 10 minted releases.
+
+```graphql
+query ApiExplorer {
+  pastMintedReleases(pagination: { first: 10, sort: DESC }) {
+    edges {
+      cursor
+      node {
+        title
+        artist {
+          name
+        }
+        numSold
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+```
+
+This gives us a response like this:
+
+```json
+{
+  "data": {
+    "pastMintedReleases": {
+      "edges": [
+        {
+          "cursor": "MTY2NDQ4NzE0NnxjNTNiYzljZi1iOWEwLTQwNDQtOGIyYi1lMTQ2OWRkMTliMzI=",
+          "node": {
+            "title": "Telephone",
+            "artist": {
+              "name": "TAROT"
+            },
+            "numSold": 16
+          }
+        },
+        ...
+        {
+          "cursor": "MTY2Mzg4NDE4M3w4MWFiZDU0ZC0zZjlmLTRiNWUtYWFjNC05NmVkYThmNjBmNzY=",
+          "node": {
+            "title": "VINEGAR HILL",
+            "artist": {
+              "name": "BRUX"
+            },
+            "numSold": 10
+          }
+        }
+      ],
+      "pageInfo": {
+        "hasNextPage": true,
+        "endCursor": "MTY2Mzg4NDE4M3w4MWFiZDU0ZC0zZjlmLTRiNWUtYWFjNC05NmVkYThmNjBmNzY="
+      }
+    }
+  }
+}
+```
+
+Since `hasNextPage` is `TRUE`, we know additional data is available.
+
+To get the next 10 items, we specify `after` and set the starting point to the `endCursor` from the previous response.
+
+```graphql
+query ApiExplorer {
+  pastMintedReleases(
+    pagination: { first: 10, sort: DESC, after: "MTY2Mzg4NDE4M3w4MWFiZDU0ZC0zZjlmLTRiNWUtYWFjNC05NmVkYThmNjBmNzY=" }
+  ) {
+    edges {
+      cursor
+      node {
+        title
+        artist {
+          name
+        }
+        numSold
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+```
