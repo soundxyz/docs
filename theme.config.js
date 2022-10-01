@@ -2,8 +2,12 @@
 /**
  * @type {import('nextra-theme-docs').DocsThemeConfig}
  */
+
+import GitHub from '@geist-ui/react-icons/github'
+import { SoundLogo } from './components/SoundLogo'
+
 export default {
-  logo: 'Sound Docs',
+  logo: <SoundLogo />,
   titleSuffix: ' \u2013 Sound',
   docsRepositoryBase: 'https://github.com/soundxyz/sdk/blob/main/docs',
   editLink: {
@@ -29,8 +33,9 @@ export default {
       <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
     </>
   ),
-  chat: {
-    link: 'https://discord.gg/soundxyz',
+  project: {
+    link: 'https://github.com/soundxyz/',
+    icon: <GitHub />,
   },
   unstable_faviconGlyph: '✦',
   sidebar: {
