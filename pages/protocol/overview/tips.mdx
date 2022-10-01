@@ -1,4 +1,21 @@
-# Tips
+# ERC721a Info
+
+The following is some info and recommendations to help developers get the most from the ERC721a standard that SoundEditionV1 implements.
+
+## ERC721A vs ERC1155
+
+|                  | ERC721A        | ERC1155                |
+| ---------------- | -------------- | ---------------------- |
+| O(1) ownerOf     | Yes            | No ownerOf             |
+| O(1) balanceOf   | For all tokens | Within fungible tokens |
+| O(1)\* bulk mint | For all tokens | Within fungible tokens |
+| # mint `SSTORE`s | 3              | 1 <sup>&#8224;</sup>   |
+
+\* Approximately O(1) for ERC721A. See [Design](design).
+
+<sup>&#8224;</sup> For unique collections, ERC1155 needs a counter which needs 1 more `SSTORE`.
+
+ERC1155 requires centralized indexing services to emulate ERC721-like functionality off-chain.
 
 ## Transfers
 
@@ -52,21 +69,6 @@ The `ERC721a.startTimestamp`, is available via the
 You can get it from the
 `ERC721a._ownershipOf` function or the non-reverting
 `ERC721a.ERC721AQueryable.explicitOwnershipOf` function.
-
-## ERC721A vs ERC1155
-
-|                  | ERC721A        | ERC1155                |
-| ---------------- | -------------- | ---------------------- |
-| O(1) ownerOf     | Yes            | No ownerOf             |
-| O(1) balanceOf   | For all tokens | Within fungible tokens |
-| O(1)\* bulk mint | For all tokens | Within fungible tokens |
-| # mint `SSTORE`s | 3              | 1 <sup>&#8224;</sup>   |
-
-\* Approximately O(1) for ERC721A. See [Design](design).
-
-<sup>&#8224;</sup> For unique collections, ERC1155 needs a counter which needs 1 more `SSTORE`.
-
-ERC1155 requires centralized indexing services to emulate ERC721-like functionality off-chain.
 
 ## Other Implementations
 
