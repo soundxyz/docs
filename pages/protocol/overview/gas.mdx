@@ -1,0 +1,36 @@
+import Image from 'next/image'
+import { IndentedParagraph } from '../../../components/IndentedParagraph'
+import { IndentedDiv } from '../../../components/IndentedDiv'
+
+## Gas benchmarks
+
+The following are some scenarios that can be used to estimate the gas cost of setting up your edition. Each of the listed transactions can be made separately, but it is more convenient to use [`SoundCreatorV1.createSoundAndMints`](/protocol/core/sound-creator-v1#createsoundandmints), which can execute any arbitrary list of contract calls.
+
+### Public fixed-price edition
+
+Total: **328,264 gas**
+
+- 229,073 gas to deploy & initialize [SoundEditionV1](/protocol/core/sound-edition-v1).
+- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
+- 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint).
+
+### Public sale + 1 presale
+
+Total: **451,043 gas**
+
+- 229,073 gas to deploy & initialize [SoundEditionV1](/protocol/core/sound-edition-v1).
+- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
+- 24,264 gas to register `MINTER_ROLE` for [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) (`SoundEditionV1.grantRoles`).
+- 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint) public sale config.
+- 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) presale config.
+
+### Public sale + 1 free mint + 1 presale
+
+Total: **549,558 gas**
+
+- 229,073 gas to deploy & initialize [SoundEditionV1](/protocol/core/sound-edition-v1).
+- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
+- 24,264 gas to register `MINTER_ROLE` for [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) (`SoundEditionV1.grantRoles`).
+- 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint) public sale config.
+- 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) free mint config.
+- 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) presale config.

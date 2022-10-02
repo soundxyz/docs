@@ -1,0 +1,6 @@
+{
+  "edition-max-minter": "EditionMaxMinter",
+  "range-edition-minter": "RangeEditionMinter",
+  "fixed-price-signature-minter": "FixedPriceSignature Minter",
+  "merkle-drop-minter": "MerkleDropMinter"
+}

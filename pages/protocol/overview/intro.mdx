@@ -1,38 +1,39 @@
 import Image from 'next/image'
+import { IndentedParagraph } from '../../../components/IndentedParagraph'
+import { IndentedDiv } from '../../../components/IndentedDiv'
 
 # Sound Protocol
 
-Sound Protocol is a generalized platform for flexible and efficient creation of NFT drops. It consists of a factory, `SoundCreatorV1`, which deploys minimal proxies of a 721a NFT contract, `SoundEditionV1`, which can optionally implement a set of module contracts responsible for functionality like minting and NFT metadata.
+The Sound Protocol is a permissionless, open-source, modular smart contract framework for efficient creation of digital collectibles by musicians, artists, and creators.
 
-<br />
-<Image
-  src="/images/sound-protocol-diagram.png"
-  alt="Sound Protocol diagram"
-  width="700"
-  height="700"
-  className="p-10"
-/>
+## Features
 
-## Core contracts
+### Permissionless
 
-These contracts form the core of the system.
+<IndentedParagraph>Anyone can freely deploy Sound contracts.</IndentedParagraph>
 
-- [SoundCreatorV1](/protocol/core/sound-creator-v1) - A factory that deploys Sound editions.
-- [SoundEditionV1](/protocol/core/sound-edition-v1) - The 721a NFT contract.
-- [IMinterModule](/protocol/core/i-minter-module) - The interface for minter module contracts.
-- [IMetadataModule](/protocol/core/i-metadata-module) - The interface for metadata module contracts.
+### Non-upgradeable contracts
 
-## Module contracts
+<IndentedParagraph>
+  All contracts are non-upgradeable, which gives artists and collectors greater confidence in the security and
+  sovereignty of the communities they can build on Sound.
+</IndentedParagraph>
 
-These are the current set of modules that can be optionally implemented by Sound Editions.
+### Custom metadata
 
-### Metadata modules
+<IndentedParagraph>
+  Artists and developers are free to implement custom metadata modules to suit their needs.
+</IndentedParagraph>
 
-- [GoldenEggMetadata](/protocol/modules/golden-egg-metadata) - Implements the Golden Egg used by sound.xyz.
+### Custom mint formats
 
-### Minter modules
+<IndentedParagraph>
+  Mint formats can be customized on a per-song basis by utilizing minter module contracts.
+</IndentedParagraph>
 
-- [EditionMaxMinter](/protocol/modules/edition-max-minter) - A minimalist fixed-price public minting module. Can implement single-schedule range mints.
-- [RangeEditionMinter](/protocol/modules/range-edition-minter) - Implements any number of fixed-price range mint schedules for an edition.
-- [FixedPriceSignatureMinter](/protocol/modules/fixed-price-signature-minter) - Implements fixed-price signature-based minting.
-- [MerkleDropMinter](/protocol/modules/merkle-drop-minter) - Implements fixed-price Merkle proof minting (allow lists).
+### Payments & royalties
+
+<IndentedParagraph>
+  With each song as its own contract, Sound Protocol supports end-to-end royalties across primary and secondary sales.
+  Any address can be set to receive the edition’s revenue, be it the artist’s wallet or a payment splitter contract.
+</IndentedParagraph>
