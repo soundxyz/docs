@@ -4,7 +4,9 @@ import { IndentedDiv } from '../../../components/IndentedDiv'
 
 ## Gas benchmarks
 
-The following are some scenarios that can be used to estimate the gas cost of setting up your edition. Each of the listed transactions can be made separately, but it is more convenient to use [`SoundCreatorV1.createSoundAndMints`](/protocol/core/sound-creator-v1#createsoundandmints), which can execute any arbitrary list of contract calls.
+## Edition & mint config creation
+
+The following are some scenarios that can be used to estimate the gas cost of deploying & initializing your edition, as well as initializing the configuration(s) for a sale. Each of the listed transactions can be made separately, but it is more convenient to use [`SoundCreatorV1.createSoundAndMints`](/protocol/core/sound-creator-v1#createsoundandmints), which can execute any arbitrary list of contract calls.
 
 ### Public fixed-price edition
 
@@ -34,3 +36,12 @@ Total: **549,558 gas**
 - 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint) public sale config.
 - 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) free mint config.
 - 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) presale config.
+
+## Minting
+
+The gas cost of minting is highly dependent on the number of tokens being minted. The following are median figures based on fuzz tests with random inputs.
+
+- [`EditionMaxMinter.mint`](/protocol/modules/minters/edition-max-minter#mint): 43,512 gas
+- [`RangeEditionMinter.mint`](/protocol/modules/minters/range-edition-minter#mint): 45,337 gas
+- [`FixedPriceSignatureMinter.mint`](/protocol/modules/minters/fixed-price-signature-minter#mint): 69,725 gas
+- [`MerkleDropMinter.mint`](/protocol/modules/minters/merkle-drop-minter#mint): 49,983 gas
