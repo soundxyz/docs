@@ -465,7 +465,7 @@ Returns the address of the metadata module.
 function mintRandomness() external view returns (uint256)
 ```
 
-Returns a pseudorandom value based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
+Returns a pseudorandom number based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
 
 > :warning:
 > This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain pseudorandom mechanism.
