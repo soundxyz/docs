@@ -1,6 +1,11 @@
 @tailwind components;
 @tailwind utilities;
 
+p::selection {
+  background: theme('colors.brand500');
+  color: #ffffff;
+}
+
 a,
 a.text-primary-500 {
   color: theme('colors.brand500');
