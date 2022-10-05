@@ -40,7 +40,7 @@ importers:
       isomorphic-fetch: 3.0.0
       react-is: 18.2.0
     devDependencies:
-      '@geist-ui/react-icons': 1.0.1_react@17.0.2
+      '@geist-ui/react-icons': 1.0.1_5agevngnv4hiwzezwngxr7rjnq
       '@types/node': 18.7.18
       autoprefixer: 10.4.12_postcss@8.4.17
       husky: 7.0.4
@@ -106,13 +106,25 @@ packages:
       w3c-keyname: 2.2.6
     dev: false
 
-  /@geist-ui/react-icons/1.0.1_react@17.0.2:
+  /@geist-ui/react-icons/1.0.1_5agevngnv4hiwzezwngxr7rjnq:
     resolution: {integrity: sha512-/phre1NwXT0Mrxcq3yb+KksJ16/ykptgxI7+jh5pmDZfxnIMPlBWFBGDK0yw96oi752Wuo24X6+tkWjVe/g5Bg==}
     peerDependencies:
       '@geist-ui/react': '>=1.0.0'
       react: '>=16.13.0'
     dependencies:
+      '@geist-ui/react': 2.2.5_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
+    dev: true
+
+  /@geist-ui/react/2.2.5_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-yPBAweYVh5HXXJ6W5ont/z6UObbfsjesg0/KTfcJzc64/zjGgp+wv2zLIdReGOTAj2R4XWoNSirNGGbQnwFe6w==}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.19.0
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: true
 
   /@graphiql/plugin-explorer/0.1.5_oatonzjj6lkj2otrn643a4n5xu:
