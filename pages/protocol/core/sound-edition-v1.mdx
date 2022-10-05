@@ -2,13 +2,17 @@
 
 **[`contracts/core/SoundEditionV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1.sol)**
 
-The NFT contract, an implementation of [ERC721A](https://github.com/chiru-labs/ERC721A) deployed via the [ERC-1167 minimal proxy clone](https://eips.ethereum.org/EIPS/eip-1167) pattern.
+The Sound Protocol NFT contract.
 
-It has a [`mint`](sound-edition-v1#mint) function which allows authorized minter contracts or administrators to batch mint NFTs (authorization is granted via the [`MINTER_ROLE`](sound-edition-v1#minter_role) or [`ADMIN_ROLE`](sound-edition-v1#admin_role) respectively).
+Overview:
 
-These roles can be granted/revoked by the owner, or during setup by the SoundCreator.
-
-Token IDs are minted sequentially (e.g. 1, 2, 3...) starting from 1.
+- An implementation of [ERC721A](https://github.com/chiru-labs/ERC721A).
+- Enables the owner, authorized minter contracts or administrators to batch mint NFTs. Authorization is granted by the owner via the [`grantRoles`](#grantRoles) function inherited from [`OwnableRoles`](/protocol/libraries/ownable-roles).
+- Token IDs are minted sequentially (e.g. 1, 2, 3...) starting from 1.
+- Can optionally implement a `metadataModule` that effectively overrides the default `tokenURI` function.
+- Can natively support [range editions](https://sound.mirror.xyz/hmz2pueqBV37MD-mULjvch0vQoc-VKJdsfqXf8jTB30) via a dynamic maximum mintable supply (based on a `editionCutoffTime`),
+- Has a pseudorandom `mintRandomness` number optionally set on each [`mint`](#mint) call, which can be used for game mechanics.
+- Implements [EIP-2981 Royalty Standard](https://eips.ethereum.org/EIPS/eip-2981).
 
 Inherits:
 
