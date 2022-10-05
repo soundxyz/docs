@@ -1,0 +1,48 @@
+import Image from 'next/image'
+import { IndentedDiv } from '../../../components/IndentedDiv'
+
+## Design
+
+<br />
+<Image
+  src="/images/sound-protocol-diagram.png"
+  alt="Sound Protocol diagram"
+  width="700"
+  height="700"
+  className="p-10"
+/>
+
+### Core contracts
+
+These contracts form the core of the system.
+
+<IndentedDiv>
+
+- [SoundCreatorV1](/protocol/core/sound-creator-v1) - A factory that deploys minimal proxies of [SoundEditionV1](/protocol/core/sound-edition-v1).
+- [SoundEditionV1](/protocol/core/sound-edition-v1) - The NFT implementation contract, based on the [721a standard](https://github.com/chiru-labs/ERC721A).
+- [IMinterModule](/protocol/core/i-minter-module) - The interface for minter module contracts.
+- [IMetadataModule](/protocol/core/i-metadata-module) - The interface for metadata module contracts.
+
+</IndentedDiv>
+
+### Module contracts
+
+These are the current set of modules that can be optionally implemented by Sound Editions.
+
+<IndentedDiv>
+
+#### Metadata modules
+
+- [GoldenEggMetadata](/protocol/modules/golden-egg-metadata) - Implements the Golden Egg used by sound.xyz.
+
+#### Minter modules
+
+The Sound protocol team built this initial set of minters, but any conceivable type of auction or distribution
+can be built into custom minters: open editions, bonding-curves, dutch auctions, and more.
+
+- [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) - A minimalist fixed-price public minting module. Can implement single-schedule range mints.
+- [RangeEditionMinter](/protocol/modules/minters/range-edition-minter) - Implements any number of fixed-price range mint schedules for an edition.
+- [FixedPriceSignatureMinter](/protocol/modules/minters/fixed-price-signature-minter) - Implements fixed-price signature-based minting.
+- [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) - Implements fixed-price Merkle proof minting (allow lists).
+
+</IndentedDiv>

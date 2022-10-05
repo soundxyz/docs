@@ -1,8 +1,8 @@
-# FixedPriceSignatureMinter
+# RangeEditionMinter
 
-[`contracts/modules/FixedPriceSignatureMinter.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/FixedPriceSignatureMinter.sol)
+**[`contracts/modules/RangeEditionMinter.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/RangeEditionMinter.sol)**
 
-A minter that enables permissioned mints via ECDSA signatures.
+A minter that enables multiple schedules of fixed-price mints with a maximum mintable supply that drops from a upper bound to a lower bound after a defined cutoff time.
 
 Inherits:
 
@@ -24,14 +24,15 @@ struct MintInfo {
     bool mintPaused;
     // Sale price in ETH for minting a single token.
     uint96 price;
-    // The maximum number of tokens that can be minted.
-    uint32 maxMintable;
     // The maximum number of tokens that can be minted by an account.
     uint32 maxMintablePerAccount;
-    // The total number of tokens minted.
-    uint32 totalMinted;
-    // The address of the signer.
-    address signer;
+    // The lower limit of the maximum number of tokens that can be minted.
+    uint32 maxMintableLower;
+    // The upper limit of the maximum number of tokens that can be minted.
+    uint32 maxMintableUpper;
+    // The cutoff timestamp when the maximum number of tokens that can
+    // be minted drops from `maxMintableUpper` to `maxMintableLower`.
+    uint32 cutoffTime;
 }
 ```
 
@@ -54,10 +55,10 @@ function createEditionMint(
     uint32 maxMintableLower,
     uint32 maxMintableUpper,
     uint32 maxMintablePerAccount_
-    ) external returns (uint128 mintId)
+) external returns (uint128 mintId)
 ```
 
-Initializes a range edition mint instance.
+Initializes a range mint instance
 
 **Calling conditions:**
 
@@ -108,7 +109,7 @@ function setMaxMintableRange(
     uint128 mintId,
     uint32 maxMintableLower,
     uint32 maxMintableUpper
-) external
+    ) external
 ```
 
 Sets the max mintable range.
@@ -219,11 +220,11 @@ See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-i
 | ------------- | ------------------------ |
 | `interfaceId` | The 4 byte interface ID. |
 
-| Supported Interface IDs:     |              |
-| ---------------------------- | ------------ |
-| `IERC165`                    | `0x01ffc9a7` |
-| `IMinterModule`              | `0x37c74bd8` |
-| `IFixedPriceSignatureMinter` | `0xa61bd96f` |
+| Supported Interface IDs: |              |
+| ------------------------ | ------------ |
+| `IERC165`                | `0x01ffc9a7` |
+| `IMinterModule`          | `0x37c74bd8` |
+| `IRangeEditionMinter`    | `0x4d4a2e35` |
 
 ## Events
 

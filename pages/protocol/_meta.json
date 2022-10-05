@@ -1,6 +1,6 @@
 {
   "overview": "Overview",
-  "core": "Core",
-  "modules": "Modules",
+  "core": "Core Contracts",
+  "modules": "Module Contracts",
   "libraries": "Libraries"
 }

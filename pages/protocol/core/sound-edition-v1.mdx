@@ -1,6 +1,6 @@
 # SoundEditionV1
 
-[`contracts/core/SoundEditionV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1.sol)
+**[`contracts/core/SoundEditionV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1.sol)**
 
 The NFT contract, an implementation of [ERC721A](https://github.com/chiru-labs/ERC721A) deployed via the [ERC-1167 minimal proxy clone](https://eips.ethereum.org/EIPS/eip-1167) pattern.
 
@@ -465,12 +465,10 @@ Returns the address of the metadata module.
 function mintRandomness() external view returns (uint256)
 ```
 
-Returns the randomness based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true.
-
-Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
+Returns a pseudorandom number based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
 
 > :warning:
-> This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain psuedorandom mechanism.
+> This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain pseudorandom mechanism.
 
 ### mintRandomnessEnabled
 
