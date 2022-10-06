@@ -75,31 +75,6 @@ Initializes a range edition mint instance.
 | `maxMintableUpper`       | The upper limit of the maximum number of tokens that can be minted.                                                                                |
 | `maxMintablePerAccount_` | The maximum number of tokens that can be minted by an account.                                                                                     |
 
-### setTimeRange
-
-```solidity
-function setTimeRange(
-    address edition,
-    uint128 mintId,
-    uint32 startTime,
-    uint32 cutoffTime,
-    uint32 endTime
-) external
-```
-
-Sets the time range.
-
-**Calling conditions:**
-
-- The caller must be the owner or an adminstrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition-v1#admin_role)) of the `edition` contract.
-
-| Params:      |                                                                                                                                                    |
-| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `edition`    | Address of the song edition contract we are minting for.                                                                                           |
-| `startTime`  | Start timestamp of sale (in seconds since unix epoch).                                                                                             |
-| `cutoffTime` | The timestamp (in seconds since unix epoch) after which the max amount of tokens mintable will drop from `maxMintableUpper` to `maxMintableLower`. |
-| `endTime`    | End timestamp of sale (in seconds since unix epoch).                                                                                               |
-
 ### setMaxMintableRange
 
 ```solidity
