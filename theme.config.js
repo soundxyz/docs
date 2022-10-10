@@ -9,7 +9,7 @@ import { SoundLogo } from './components/SoundLogo'
 export default {
   logo: <SoundLogo />,
   titleSuffix: ' \u2013 Sound',
-  docsRepositoryBase: 'https://github.com/soundxyz/sdk/blob/main/docs',
+  docsRepositoryBase: 'https://github.com/soundxyz/docs/blob/main',
   editLink: {
     text: 'Edit this page on GitHub',
   },
@@ -20,10 +20,10 @@ export default {
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Language" content="en" />
       <meta name="description" content="Sound Docs" />
-      <meta name="og:description" content="Sound SDK" />
+      <meta name="og:description" content="Sound Docs" />
       <meta name="twitter:site:domain" content="www.sound.xyz" />
       <meta name="twitter:url" content="https://www.sound.xyz" />
-      <meta name="og:title" content="Sound SDK" />
+      <meta name="og:title" content="Sound Docs" />
       <meta name="apple-mobile-web-app-title" content="Sound Docs" />
 
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
