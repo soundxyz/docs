@@ -61,6 +61,8 @@ module.exports = {
       gray300: '#E7E7E7',
       green100: '#34D399',
       green200: '#A7F3D0',
+      green300: '#6EE7B7',
+      green400: '#10B981',
     },
     extend: {},
   },

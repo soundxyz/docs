@@ -1,0 +1,40 @@
+import { ChangelogItems, SchemaChangelogItemsSchema } from '../../components/ChangelogItem'
+import { useSSG } from 'nextra/ssg'
+
+export const getStaticProps = ({ params }) => {
+  const SCHEMA_CHANGELOG_ENDPONT = 'https://schema-changelog-service-worker.soundxyz.workers.dev/changelog/list'
+  return fetch(SCHEMA_CHANGELOG_ENDPONT)
+    .then((res) => res.json())
+    .then((json) => ({
+      props: {
+        ssg: {
+          rawChangelogItems: json,
+        },
+      },
+      // The page will be considered as stale and regenerated every 60 seconds.
+      revalidate: 60,
+    }))
+}
+
+export const Page = () => {
+  const { rawChangelogItems } = useSSG()
+  const parsed = SchemaChangelogItemsSchema.safeParse(rawChangelogItems)
+  if (parsed.success) {
+    const seen = new Set()
+    const changelogItems = parsed.data.filter((item) => {
+      const key = JSON.stringify(item.payload.changes)
+      const duplicate = seen.has(key)
+      seen.add(key)
+      return !duplicate
+    })
+    return <ChangelogItems items={changelogItems} />
+  } else {
+    // TODO: handle error
+    // TODO: add empty state
+    return <ChangelogItems items={[]} />
+  }
+}
+
+# Changelog
+
+<Page />
