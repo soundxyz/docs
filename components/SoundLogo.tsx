@@ -3,10 +3,13 @@ import { theme } from '../stitches.config'
 import { useRouter } from 'next/router'
 
 export const SoundLogo = () => {
-  const htmlElement = document?.querySelector('html')
-
   const [fill, setFill] = React.useState('white')
   const router = useRouter()
+  let htmlElement: HTMLHtmlElement | null = null
+
+  if (typeof window !== 'undefined') {
+    htmlElement = window.document?.querySelector('html')
+  }
 
   const updateFill = () => {
     if (!htmlElement) return
