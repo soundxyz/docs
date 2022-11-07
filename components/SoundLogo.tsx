@@ -2,9 +2,9 @@ import React from 'react'
 import { theme } from '../stitches.config'
 import { useRouter } from 'next/router'
 
-const htmlElement = document.querySelector('html')
-
 export const SoundLogo = () => {
+  const htmlElement = document?.querySelector('html')
+
   const [fill, setFill] = React.useState('white')
   const router = useRouter()
 
