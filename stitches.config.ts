@@ -1,7 +1,6 @@
-/** @type {import('tailwindcss').Config} */
+import { createStitches } from '@stitches/react'
 
-module.exports = {
-  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme, config } = createStitches({
   theme: {
     colors: {
       neutral50: '#FAFAFA',
@@ -41,6 +40,7 @@ module.exports = {
       education50: '#ECECFF',
       education100: '#8280FF',
       education200: '#605DEC',
+
       white: '#fff',
       black: '#0E1213',
       blue400: '#4299E1',
@@ -61,9 +61,6 @@ module.exports = {
       gray300: '#E7E7E7',
       green100: '#34D399',
       green200: '#A7F3D0',
-      green300: '#6EE7B7',
-      green400: '#10B981',
     },
-    extend: {},
   },
-}
+})

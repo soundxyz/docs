@@ -2,22 +2,40 @@ import clsx from 'clsx'
 import React from 'react'
 import reactStringReplace from 'react-string-replace'
 import * as z from 'zod'
+import { H2, H3 } from '../components/typography'
+import { Divider } from '../components/Divider'
+import { styled, theme } from '../stitches.config'
 
-const Label = ({ children }: { children: React.ReactNode }) => (
-  <span
-    className="
-      inline-block py-1 px-2 mx-1 rounded bg-grey700
-      text-white
-      text-xs font-medium tracking-widest"
-  >
+const Dot = styled('span', {
+  height: 5,
+  width: 5,
+  borderRadius: '100%',
+  display: 'block',
+  position: 'absolute',
+  top: 12,
+  left: -16,
+})
+
+const Block = styled('div', {
+  marginBottom: 16,
+})
+
+const List = styled('ul', {
+  lineHeight: 1.8,
+  listStyleType: 'disc',
+  paddingLeft: 16,
+})
+
+const CodeInline = ({ children }: { children: React.ReactNode }) => (
+  <code className="text-white border-black/5 bg-black/5 break-words rounded-md border py-0.2 px-[.25em] text-[.9em] dark:border-white/10 dark:bg-white/10">
     {children}
-  </span>
+  </code>
 )
 
 function labelize(message: string) {
   const findSingleQuotes = /'([^']+)'/gim
 
-  return reactStringReplace(message, findSingleQuotes, (match, i) => <Label key={i}>{match}</Label>)
+  return reactStringReplace(message, findSingleQuotes, (match, i) => <CodeInline key={i}>{match}</CodeInline>)
 }
 
 const Criticality = z.enum(['Breaking', 'Dangerous', 'Safe'])
@@ -41,9 +59,9 @@ const titleMap: Record<CriticalityLevel, string> = {
 }
 
 const criticalityLevelMapping = {
-  Safe: 'text-green400',
-  Dangerous: 'text-warning500',
-  Breaking: 'text-destructive500',
+  Safe: theme.colors.success500.value,
+  Dangerous: theme.colors.warning500.value,
+  Breaking: theme.colors.destructive500.value,
 } as Record<CriticalityLevel, string>
 
 const ChangesBlock = ({
@@ -60,18 +78,17 @@ const ChangesBlock = ({
   }
 
   return (
-    <div>
-      <h2 className="mb-2 text-lg font-medium">{titleMap[criticality]}</h2>
-      <ul className="list-inside list-disc pl-3 text-base leading-relaxed">
+    <Block>
+      <H3>{titleMap[criticality]}</H3>
+      <List>
         {filteredChanges.map((change, key) => (
-          <li key={key} className={clsx(criticalityLevelMapping[criticality])}>
-            <span className="text-gray-500 dark:text-neutral-500 contrast-more:text-gray-900 contrast-more:dark:text-gray-50 contrast-more:border-transparent">
-              {labelize(change.message)}
-            </span>
-          </li>
+          <p style={{ position: 'relative' }} key={key}>
+            <Dot style={{ backgroundColor: criticalityLevelMapping[criticality] }} />
+            {labelize(change.message)}
+          </p>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Block>
   )
 }
 
@@ -96,9 +113,9 @@ export const SchemaChangelogItemsSchema = z.array(SchemaChangelogItemSchema)
 const ChangelogItem = (props: { item: z.infer<typeof SchemaChangelogItemSchema> }) => {
   return (
     <div>
-      <h2 className="text-xl py-2 my-2">{props.item.createdAt.toDateString()}</h2>
+      <H2>{props.item.createdAt.toDateString()}</H2>
       <DiffView changes={props.item.payload.changes} />
-      <hr />
+      <Divider />
     </div>
   )
 }
