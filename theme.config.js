@@ -41,4 +41,6 @@ export default {
   sidebar: {
     defaultMenuCollapsed: true,
   },
+  font: false,
+  footer: false,
 }

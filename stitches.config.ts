@@ -1,5 +1,18 @@
 import { createStitches } from '@stitches/react'
 
+export const mediaQueries = {
+  mobile: '(min-width: 340px)',
+  tablet: '(min-width: 768px)',
+  tabletLandscape: '(min-width: 1024px)',
+  laptop: '(min-width: 1160px)',
+  desktop: '(min-width: 1440px)',
+  desktopLg: '(min-width: 1920px)',
+  touch: '(pointer: coarse)',
+  darkMode: '(prefers-color-scheme: dark)',
+  prefersReducedMotion: '(prefers-reduced-motion: reduce)',
+  uploadFlow: '(min-width: 900px)',
+}
+
 export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme, config } = createStitches({
   theme: {
     colors: {
@@ -63,6 +76,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       green200: '#A7F3D0',
     },
   },
+  media: mediaQueries,
 })
 
 export const globalStyles = globalCss({

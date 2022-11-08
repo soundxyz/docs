@@ -1,3 +1,8 @@
+@font-face {
+  font-family: DrukWideMedium;
+  src: url(./fonts/DrukWideMedium.otf);
+}
+
 .graphiql-container * {
   box-sizing: border-box;
 
