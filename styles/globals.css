@@ -7,3 +7,16 @@
 .graphiql-container .graphiql-sidebar button {
   width: 44px !important;
 }
+
+/*******************
+    LANDING PAGE
+*******************/
+.hero-container-inner {
+  display: grid;
+  grid-template-rows: 1fr 250px 2.5fr;
+  position: relative;
+}
+
+.hero-text {
+  font-feature-settings: 'ss03' on;
+}
