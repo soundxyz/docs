@@ -2,6 +2,15 @@ import Image from 'next/image'
 import { IndentedParagraph } from '../../../components/IndentedParagraph'
 import { IndentedDiv } from '../../../components/IndentedDiv'
 import { ETH_PRICE, GAS_PRICE_IN_GWEI, gasFigures, getDollarEstimate } from '../../../lib/gas'
+import { styled } from '../../../stitches.config'
+
+export const Div1 = styled('div', {
+  marginTop: 16,
+})
+
+export const Div2 = styled('div', {
+  marginTop: 8,
+})
 
 # Gas benchmarks
 
@@ -9,16 +18,16 @@ import { ETH_PRICE, GAS_PRICE_IN_GWEI, gasFigures, getDollarEstimate } from '../
 
 The following are some scenarios that can be used to estimate the gas cost of deploying & initializing your edition, as well as initializing the configuration(s) for a sale. Each of the listed transactions can be made separately, but it is more convenient to use [`SoundCreatorV1.createSoundAndMints`](/protocol/core/sound-creator-v1#createsoundandmints), which can execute any arbitrary list of contract calls.
 
-<p className="mt-4">
+<Div1>
   Dollar figures below assume a gas price of {GAS_PRICE_IN_GWEI} gwei and ETH price of ${ETH_PRICE.toLocaleString()}. To
   check calculations with different figures, use a [gas
   calculator](https://legacy.ethgasstation.info/calculatorTxV.php).
-</p>
+</Div1>
 
 ### Public fixed-price edition
 
-<div className="mt-4">Gas total: **{gasFigures.CREATE_EDITION_1.toLocaleString()}**</div>
-<div className="mt-2">Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_1)}**</div>
+<Div1>Gas total: **{gasFigures.CREATE_EDITION_1.toLocaleString()}**</Div1>
+<Div2>Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_1)}**</Div2>
 
 - 229,073 gas to deploy & initialize the minimal proxy of [SoundEditionV1](/protocol/core/sound-edition-v1).
 - 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
@@ -26,8 +35,8 @@ The following are some scenarios that can be used to estimate the gas cost of de
 
 ### Public sale + 1 presale
 
-<div className="mt-4">Gas total: **{gasFigures.CREATE_EDITION_2.toLocaleString()}**</div>
-<div className="mt-2">Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_2)}**</div>
+<Div1>Gas total: **{gasFigures.CREATE_EDITION_2.toLocaleString()}**</Div1>
+<Div2>Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_2)}**</Div2>
 
 - 229,073 gas to deploy & initialize the minimal proxy of [SoundEditionV1](/protocol/core/sound-edition-v1).
 - 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
@@ -37,8 +46,8 @@ The following are some scenarios that can be used to estimate the gas cost of de
 
 ### Public sale + 1 free mint + 1 presale
 
-<div className="mt-4">Gas total: **{gasFigures.CREATE_EDITION_3.toLocaleString()}**</div>
-<div className="mt-2">Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_3)}**</div>
+<Div1>Gas total: **{gasFigures.CREATE_EDITION_3.toLocaleString()}**</Div1>
+<Div2>Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_3)}**</Div2>
 
 - 229,073 gas to deploy & initialize the minimal proxy of [SoundEditionV1](/protocol/core/sound-edition-v1).
 - 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
