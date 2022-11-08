@@ -64,3 +64,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
     },
   },
 })
+
+export const globalStyles = globalCss({
+  'a.text-primary-500': { color: theme.colors.brand500.value },
+})
