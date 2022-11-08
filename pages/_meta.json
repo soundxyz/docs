@@ -1,5 +1,10 @@
 {
-  "index": "Introduction",
+  "index": {
+    "theme": {
+      "sidebar": false,
+      "layout": "raw"
+    }
+  },
   "protocol": {
     "title": "Sound Protocol"
   },
