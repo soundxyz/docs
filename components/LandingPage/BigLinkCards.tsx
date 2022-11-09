@@ -1,5 +1,5 @@
 import React from 'react'
-import { styled } from '../stitches.config'
+import { styled } from '../../stitches.config'
 import Link from 'next/link'
 
 const content = {
@@ -25,7 +25,7 @@ const content = {
   },
 }
 
-export const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
+const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
   const currentContent = content[type]
 
   const ButtonLink = ({ children }: { children: React.ReactChild }) => {
@@ -72,6 +72,24 @@ export const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
     </OuterContainer>
   )
 }
+
+export const BigLinkCards = () => {
+  return (
+    <BigLinksFlexContainer>
+      <BigLinkCard type="blogPost" />
+      <BigLinkCard type="apiExplorer" />
+    </BigLinksFlexContainer>
+  )
+}
+
+const BigLinksFlexContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+
+  '@tabletLandscape': {
+    flexDirection: 'row',
+  },
+})
 
 const OuterContainer = styled('div', {
   backgroundColor: '$black',
