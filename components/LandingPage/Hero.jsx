@@ -1,50 +1,53 @@
 import React from 'react'
 import { WrappedImage } from '../WrappedImage'
 import { styled } from '../../stitches.config'
+import { SectionContainer } from '../Containers'
 
 export const Hero = () => {
   return (
-    <HeroContainer>
-      <HeroFlexContainer>
+    <SectionContainer css={{ backgroundColor: 'black' }}>
+      <HeroContainer>
+        <HeroFlexContainer>
+          <WrappedImage
+            css={{
+              left: '10%',
+              top: 20,
+              position: 'relative',
+              width: 84,
+              height: 'auto',
+              '@tablet': { top: 0, width: 140 },
+            }}
+            src="/images/hero-small-grid.png"
+            width={84}
+            height={63}
+            layout="responsive"
+          />
+          <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
+            Tools for empowering artists & collectors
+          </BigH1>
+        </HeroFlexContainer>
         <WrappedImage
-          css={{
-            left: '10%',
-            top: 20,
-            position: 'relative',
-            width: 84,
-            height: 'auto',
-            '@tablet': { top: 0, width: 140 },
-          }}
-          src="/images/hero-small-grid.png"
-          width={84}
-          height={63}
+          src="/images/hero-mobile-bottom-grid.png"
+          width={359}
+          height={331}
           layout="responsive"
+          css={{ width: '90%', maxWidth: 500, '@tablet': { display: 'none' } }}
         />
-        <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
-          Tools for empowering artists & collectors
-        </BigH1>
-      </HeroFlexContainer>
-      <WrappedImage
-        src="/images/hero-mobile-bottom-grid.png"
-        width={359}
-        height={331}
-        layout="responsive"
-        css={{ width: '90%', maxWidth: 500, '@tablet': { display: 'none' } }}
-      />
-      <WrappedImage
-        src="/images/hero-desktop-right-grid.png"
-        width={804}
-        height={483}
-        layout="responsive"
-        css={{
-          alignSelf: 'end',
-          marginLeft: 'auto',
-          width: '100%',
-          display: 'none',
-          '@tablet': { display: 'block' },
-        }}
-      />
-    </HeroContainer>
+        <WrappedImage
+          src="/images/hero-desktop-right-grid.png"
+          width={804}
+          height={483}
+          layout="responsive"
+          css={{
+            alignSelf: 'end',
+            marginLeft: 'auto',
+            width: '100%',
+            display: 'none',
+            '@tablet': { display: 'block' },
+          }}
+        />
+      </HeroContainer>
+    </SectionContainer>
   )
 }
 
@@ -56,6 +59,7 @@ const BigH1 = styled('h1', {
   fontWeight: 500,
   margin: '60px auto',
   lineHeight: '110%',
+  color: 'white',
 
   '@tablet': {
     margin: '100px auto',
