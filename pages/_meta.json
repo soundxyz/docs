@@ -1,5 +1,6 @@
 {
   "index": {
+    "hidden": true,
     "theme": {
       "sidebar": false,
       "layout": "raw"
