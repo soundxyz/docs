@@ -2,6 +2,7 @@ import React from 'react'
 import { styled } from '../../stitches.config'
 import { SoundProtocolIcon, SoundSDKIcon, SoundAPIIcon } from '../icons'
 import Link from 'next/link'
+import { SectionContainer } from '../Containers'
 
 const content = {
   protocol: {
@@ -41,6 +42,7 @@ export const LinkCard = ({ type }: { type: 'protocol' | 'sdk' | 'api' }) => {
                 borderColor: currentContent.color,
               },
             }}
+            className="inner"
           >
             <IconContainer>{currentContent.icon()}</IconContainer>
             <Heading>{currentContent.heading}</Heading>
@@ -54,11 +56,13 @@ export const LinkCard = ({ type }: { type: 'protocol' | 'sdk' | 'api' }) => {
 
 export const LinkCards = () => {
   return (
-    <MiddleLinks>
-      <LinkCard type="protocol" />
-      <LinkCard type="sdk" />
-      <LinkCard type="api" />
-    </MiddleLinks>
+    <SectionContainer css={{ backgroundColor: '$neutral100' }}>
+      <MiddleLinks>
+        <LinkCard type="protocol" />
+        <LinkCard type="sdk" />
+        <LinkCard type="api" />
+      </MiddleLinks>
+    </SectionContainer>
   )
 }
 
@@ -72,23 +76,16 @@ const MiddleLinks = styled('div', {
 })
 
 const OuterContainer = styled('div', {
-  backgroundColor: '$white',
-  color: '$black',
+  color: '$darkBg',
   width: '100%',
-  height: 295,
   display: 'flex',
   justifyContent: 'center',
   borderRadius: 0,
-
-  '@tabletLandscape': {
-    width: '33.333%',
-    height: 410,
-  },
 })
 
 const InnerContainer = styled('div', {
-  paddingTop: 50,
-  maxWidth: 330,
+  padding: '50px 0',
+  maxWidth: 290,
   margin: '0 auto',
 
   svg: {
@@ -119,8 +116,8 @@ const IconContainer = styled('div', {
   width: 100,
   height: 100,
   display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
+  justifyContent: 'center',
   borderRadius: 8,
   borderWidth: 2,
   borderColor: '$black',
