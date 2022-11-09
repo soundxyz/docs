@@ -1,5 +1,4 @@
 import React from 'react'
-import { theme } from '../stitches.config'
 import { useRouter } from 'next/router'
 
 export const SoundLogo = () => {
