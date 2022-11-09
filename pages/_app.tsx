@@ -11,20 +11,31 @@ globalStyles()
 
 export default function Nextra({ Component, pageProps }) {
   const router = useRouter()
-  let header: HTMLDivElement | null = null
+  let htmlElement: HTMLHtmlElement | null = null
 
-  if (typeof window !== 'undefined') {
-    header = window?.document?.querySelector('.nextra-nav-container > .nextra-nav-container-blur')
+  const setLightOrDarkMode = (mode: 'light' | 'dark') => {
+    if (!htmlElement) return
+
+    htmlElement.setAttribute('style', `color-scheme: ${mode}`)
+    htmlElement.classList.remove(mode === 'dark' ? 'light' : 'dark')
+    htmlElement.classList.add(mode)
   }
 
+  if (typeof window !== 'undefined') {
+    htmlElement = window?.document?.querySelector('html')
+  }
+
+  // Force into dark mode when on landing page
   React.useEffect(() => {
-    if (!header) return
-    // CSS overrides for landing page
+    if (!htmlElement) return
     if (router.pathname === '/') {
-      header.setAttribute('style', 'background-color: black !important')
+      setLightOrDarkMode('dark')
     } else {
-      if (header) {
-        header.style.backgroundColor = ''
+      const currentTheme = localStorage.getItem('theme')
+      if (currentTheme === 'light') {
+        setLightOrDarkMode('light')
+      } else {
+        setLightOrDarkMode('dark')
       }
     }
   }, [router.pathname])
