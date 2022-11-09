@@ -1,6 +1,6 @@
 import React from 'react'
-import { styled } from '../stitches.config'
-import { SoundProtocolIcon, SoundSDKIcon, SoundAPIIcon } from './icons'
+import { styled } from '../../stitches.config'
+import { SoundProtocolIcon, SoundSDKIcon, SoundAPIIcon } from '../icons'
 import Link from 'next/link'
 
 const content = {
@@ -51,6 +51,25 @@ export const LinkCard = ({ type }: { type: 'protocol' | 'sdk' | 'api' }) => {
     </OuterContainer>
   )
 }
+
+export const LinkCards = () => {
+  return (
+    <MiddleLinks>
+      <LinkCard type="protocol" />
+      <LinkCard type="sdk" />
+      <LinkCard type="api" />
+    </MiddleLinks>
+  )
+}
+
+const MiddleLinks = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+
+  '@tabletLandscape': {
+    flexDirection: 'row',
+  },
+})
 
 const OuterContainer = styled('div', {
   backgroundColor: '$white',

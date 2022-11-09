@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRouter } from 'next/router'
+import { theme } from '../stitches.config'
 
 export const SoundLogo = () => {
   const [fill, setFill] = React.useState('white')
