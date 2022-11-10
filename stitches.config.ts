@@ -55,6 +55,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       education200: '#605DEC',
 
       white: '#fff',
+      darkBg: '##111111',
       black: '#0E1213',
       blue400: '#4299E1',
       grey100: '#F3F4F6',

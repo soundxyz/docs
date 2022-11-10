@@ -5,7 +5,7 @@ import { SectionContainer } from '../Containers'
 
 export const Hero = () => {
   return (
-    <SectionContainer css={{ backgroundColor: 'black' }}>
+    <SectionContainer css={{ backgroundColor: '$darkBg' }}>
       <HeroContainer>
         <HeroFlexContainer>
           <WrappedImage
