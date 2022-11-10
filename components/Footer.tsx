@@ -4,93 +4,115 @@ import { useRouter } from 'next/router'
 import { SectionContainer } from '../components/Containers'
 import { SoundLogo } from '../components/SoundLogo'
 import Link from 'next/link'
+import { ExternalLink } from '../components/ExternalLink'
+
+const LINKS = {
+  feed: 'https://sound.xyz/',
+  market: 'https://market.sound.xyz/',
+  trending: 'https://sound.xyz/trending',
+  protocol: '/protocol',
+  sdk: '/sdk',
+  api: '/sound-api',
+  about: 'https://sound.xyz/about',
+  careers: 'https://jobs.ashbyhq.com/sound.xyz',
+  faqs: 'https://help.sound.xyz',
+  twitter: 'https://twitter.com/soundxyz_',
+  instagram: 'https://www.instagram.com/soundxyz',
+  opensea: 'https://opensea.io/category/soundxyz',
+  discord: 'https://discord.gg/soundxyz',
+  mirror: 'https://sound.mirror.xyz',
+  termsOfService: 'https://soundxyz.notion.site/Terms-of-Service-782b54520f0047aca0afb81552e3b7fb',
+  privacyPolicy: 'https://soundxyz.notion.site/Privacy-Policy-dfa7fc4039444f0a86c4049450872a65',
+}
 
 export const Footer = () => {
   const router = useRouter()
 
   return (
-    <SectionContainer css={{ backgroundColor: '$neutral100' }}>
-      <InnerContainer>
-        <Section>
-          <SoundLogo fillColor={theme.colors.darkBg.value} />
-          <LogoSubText>Empowering artists & collectors</LogoSubText>
-        </Section>
-        <Section>
-          <NavContainer>
+    <>
+      <SectionContainer css={{ backgroundColor: '$neutral100' }}>
+        <InnerContainer>
+          <Section>
+            <SoundLogo />
+            <LogoSubText>Empowering artists & collectors</LogoSubText>
+          </Section>
+          <Section>
+            <NavContainer>
+              <Column>
+                <ColumnHeader>Sound.xyz</ColumnHeader>
+                <li>
+                  <ExternalLink href={LINKS.feed}>Feed</ExternalLink>
+                </li>
+                <li>
+                  <ExternalLink href={LINKS.market}>Market</ExternalLink>
+                </li>
+                <li>
+                  <ExternalLink href={LINKS.trending}>Trending</ExternalLink>
+                </li>
+              </Column>
+              <Column>
+                <ColumnHeader>Docs</ColumnHeader>
+                <li>
+                  <Link href={LINKS.protocol}>Sound Protocol</Link>
+                </li>
+                <li>
+                  <Link href={LINKS.sdk}>Sound SDK</Link>
+                </li>
+                <li>
+                  <Link href={LINKS.api}>Sound API</Link>
+                </li>
+              </Column>
+              <Column>
+                <ColumnHeader>Resources</ColumnHeader>
+                <li>
+                  <ExternalLink href={LINKS.about}>About</ExternalLink>
+                </li>
+                <li>
+                  <ExternalLink href={LINKS.careers}>Careers</ExternalLink>
+                </li>
+                <li>
+                  <ExternalLink href={LINKS.faqs}>FAQs</ExternalLink>
+                </li>
+              </Column>
+            </NavContainer>
+          </Section>
+          <Section>
             <Column>
-              <ColumnHeader>Sound.xyz</ColumnHeader>
-              <li>
-                <a href="https://sound.xyz/" target="_blank">
-                  Feed
-                </a>
-              </li>
-              <li>
-                <a href="https://market.sound.xyz/" target="_blank">
-                  Market
-                </a>
-              </li>
-              <li>
-                <a href="https://sound.xyz/trending" target="_blank">
-                  Trending
-                </a>
-              </li>
+              <ColumnHeader>Stay Connected</ColumnHeader>
+              <SocialLinks>
+                <ExternalLink href={LINKS.twitter}>
+                  <TwitterIcon />
+                </ExternalLink>
+                <ExternalLink href={LINKS.instagram}>
+                  <InstagramIcon />
+                </ExternalLink>
+                <ExternalLink href={LINKS.opensea}>
+                  <OpenSeaIcon />
+                </ExternalLink>
+                <ExternalLink href={LINKS.discord}>
+                  <DiscordIcon />
+                </ExternalLink>
+                <ExternalLink href={LINKS.mirror}>
+                  <MirrorIcon />
+                </ExternalLink>
+              </SocialLinks>
             </Column>
-            <Column>
-              <ColumnHeader>Docs</ColumnHeader>
-              <li>
-                <Link href="/protocol">Sound Protocol</Link>
-              </li>
-              <li>
-                <Link href="/sdk">Sound SDK</Link>
-              </li>
-              <li>
-                <Link href="/sound-api">Sound API</Link>
-              </li>
-            </Column>
-            <Column>
-              <ColumnHeader>Resources</ColumnHeader>
-              <li>
-                <a href="https://sound.xyz/about" target="_blank">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="https://jobs.ashbyhq.com/sound.xyz" target="_blank">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="https://help.sound.xyz" target="_blank">
-                  FAQs
-                </a>
-              </li>
-            </Column>
-          </NavContainer>
-        </Section>
-        <Section>
-          <Column>
-            <ColumnHeader>Stay Connected</ColumnHeader>
-            <SocialLinks>
-              <a href="https://twitter.com/soundxyz_" target="_blank">
-                <TwitterIcon />
-              </a>
-              <a href="https://www.instagram.com/soundxyz" target="_blank">
-                <InstagramIcon />
-              </a>
-              <a href="https://opensea.io/category/soundxyz" target="_blank">
-                <OpenSeaIcon />
-              </a>
-              <a href="https://discord.gg/soundxyz" target="_blank">
-                <DiscordIcon />
-              </a>
-              <a href="https://sound.mirror.xyz/" target="_blank">
-                <MirrorIcon />
-              </a>
-            </SocialLinks>
-          </Column>
-        </Section>
-      </InnerContainer>
-    </SectionContainer>
+          </Section>
+        </InnerContainer>
+      </SectionContainer>
+      <SectionContainer>
+        <SubFooterContainer>
+          <p>
+            <span>© Copyright 2022 Sound.xyz</span> <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>{' '}
+            <span>All rights reserved.</span>
+          </p>
+          <p>
+            <ExternalLink href={LINKS.termsOfService}>Terms of Service</ExternalLink> &nbsp;&nbsp;|&nbsp;&nbsp;{' '}
+            <ExternalLink href={LINKS.privacyPolicy}>Privacy Policy</ExternalLink>
+          </p>
+        </SubFooterContainer>
+      </SectionContainer>
+    </>
   )
 }
 
@@ -196,3 +218,50 @@ const MirrorIcon = () => (
     <path d="M7 13C7 8.58172 10.5817 5 15 5C19.4183 5 23 8.58172 23 13V25H7V13Z" fill="#A3A3A3" />
   </svg>
 )
+
+const SubFooterContainer = styled('div', {
+  minHeight: 90,
+  background: '$bgDark',
+  color: 'white',
+  display: 'flex',
+  flexDirection: 'column',
+  fontSize: 14,
+
+  p: {
+    textAlign: 'center',
+    marginTop: 22,
+
+    '&:first-of-type': {
+      display: 'flex',
+      flexDirection: 'column',
+
+      '@tablet': {
+        flexDirection: 'row',
+      },
+    },
+
+    '&:last-of-type': {
+      marginBottom: 22,
+    },
+
+    span: {
+      whiteSpace: 'nowrap',
+
+      '&:nth-of-type(2)': {
+        display: 'none',
+
+        '@tablet': {
+          display: 'inline-block',
+        },
+      },
+    },
+  },
+
+  '@tablet': {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    p: {
+      textAlign: 'left',
+    },
+  },
+})
