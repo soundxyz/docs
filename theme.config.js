@@ -11,7 +11,7 @@ const SOCIAL_CARD_IMAGE = '/images/social-card-image.png'
 
 export default {
   logo: <SoundLogo fill="white" />,
-  titleSuffix: ' \u2013 Sound',
+  getNextSeoProps: () => ({ titleTemplate: '%s – Sound' }),
   docsRepositoryBase: 'https://github.com/soundxyz/docs/blob/main',
   editLink: {
     text: 'Edit this page on GitHub',
