@@ -5,6 +5,7 @@ import { SectionContainer } from '../components/Containers'
 import { SoundLogo } from '../components/SoundLogo'
 import Link from 'next/link'
 import { ExternalLink } from '../components/ExternalLink'
+import { useTheme } from 'nextra-theme-docs'
 
 const LINKS = {
   feed: 'https://sound.xyz/',
@@ -27,13 +28,15 @@ const LINKS = {
 
 export const Footer = () => {
   const router = useRouter()
+  const { theme: colorMode } = useTheme()
+  const isDarkMode = colorMode === 'dark' && router.pathname !== '/'
 
   return (
     <>
-      <SectionContainer css={{ backgroundColor: '$neutral100' }}>
-        <InnerContainer>
+      <SectionContainer css={{ backgroundColor: isDarkMode ? '$darkBg' : 'white' }}>
+        <InnerContainer css={{ color: isDarkMode ? 'white' : '$neutral900' }}>
           <Section>
-            <SoundLogo fillColor={theme.colors.darkBg.value} />
+            <SoundLogo fillColor={isDarkMode ? theme.colors.white.value : theme.colors.darkBg.value} />
             <LogoSubText>Empowering artists & collectors</LogoSubText>
           </Section>
           <Section>
@@ -100,7 +103,9 @@ export const Footer = () => {
           </Section>
         </InnerContainer>
       </SectionContainer>
-      <SectionContainer>
+      <SectionContainer
+        css={{ color: isDarkMode ? 'white' : '$neutral900', backgroundColor: isDarkMode ? '$bgDark' : 'white' }}
+      >
         <SubFooterContainer>
           <p>
             <span>© Copyright 2022 Sound.xyz</span> <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>{' '}
@@ -117,7 +122,6 @@ export const Footer = () => {
 }
 
 const InnerContainer = styled('footer', {
-  color: '$neutral900',
   paddingTop: 60,
   display: 'grid',
   gridTemplateColumns: '1fr',
@@ -221,8 +225,6 @@ const MirrorIcon = () => (
 
 const SubFooterContainer = styled('div', {
   minHeight: 90,
-  background: '$bgDark',
-  color: 'white',
   display: 'flex',
   flexDirection: 'column',
   fontSize: 14,

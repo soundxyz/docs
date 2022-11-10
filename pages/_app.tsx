@@ -24,13 +24,6 @@ export default function Nextra({ Component, pageProps }) {
 
   if (typeof window !== 'undefined') {
     htmlElement = window?.document?.querySelector('html')
-
-    // override header styles
-    headerContainer = window?.document?.querySelector('.nextra-nav-container')
-    headerContainer?.children[0]?.setAttribute(
-      'style',
-      'box-shadow: none !important; background-color: #111111 !important;',
-    )
   }
 
   // Force into dark mode when on landing page
@@ -39,9 +32,16 @@ export default function Nextra({ Component, pageProps }) {
     if (router.pathname === '/') {
       setLightOrDarkMode('dark')
 
-      console.log(headerContainer)
+      // override header styles
+      headerContainer = window?.document?.querySelector('.nextra-nav-container')
+      headerContainer?.children[0]?.setAttribute(
+        'style',
+        'box-shadow: none !important; background-color: #111111 !important;',
+      )
     } else {
       const currentTheme = localStorage.getItem('theme')
+      headerContainer = window?.document?.querySelector('.nextra-nav-container')
+      headerContainer?.children[0]?.setAttribute('style', 'box-shadow: initial; background-color: initial;')
       if (currentTheme === 'light') {
         setLightOrDarkMode('light')
       } else {
