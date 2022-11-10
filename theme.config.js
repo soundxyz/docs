@@ -7,7 +7,7 @@ import GitHub from '@geist-ui/react-icons/github'
 import { SoundLogo } from './components/SoundLogo'
 import { Footer } from './components/Footer'
 
-const SOCIAL_CARD_IMAGE = '/images/social-card-image.png'
+const SOCIAL_CARD_IMAGE = '/images/social-card-legacy-logo.png'
 
 export default {
   logo: <SoundLogo fill="white" />,
@@ -33,11 +33,8 @@ export default {
       <meta name="twitter:site:domain" content="www.sound.xyz" />
       <meta name="twitter:url" content="https://www.sound.xyz" />
 
-      {/* 
-        TODO: Uncomment this after we've launched the new logo.
       <meta name="twitter:image" content={SOCIAL_CARD_IMAGE} />
-      <meta property="og:image" content={SOCIAL_CARD_IMAGE} /> 
-      */}
+      <meta property="og:image" content={SOCIAL_CARD_IMAGE} />
 
       <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
       <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
