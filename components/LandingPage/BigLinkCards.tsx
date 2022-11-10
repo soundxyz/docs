@@ -42,7 +42,7 @@ const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
   const customBgStyles =
     type === 'apiExplorer'
       ? {
-          backgroundSize: '300px',
+          backgroundSize: 350,
           backgroundPosition: 'right bottom',
 
           '@media (min-width: 500px)': {
@@ -53,8 +53,12 @@ const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
             backgroundSize: '50%',
           },
 
+          '@laptop': {
+            backgroundSize: 360,
+          },
+
           '@desktop': {
-            backgroundSize: '400px',
+            backgroundSize: 420,
           },
         }
       : { backgroundPosition: 'center' }
