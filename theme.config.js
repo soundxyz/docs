@@ -5,6 +5,7 @@
 
 import GitHub from '@geist-ui/react-icons/github'
 import { SoundLogo } from './components/SoundLogo'
+import { Footer } from './components/Footer'
 
 export default {
   logo: <SoundLogo />,
@@ -42,5 +43,7 @@ export default {
     defaultMenuCollapsed: true,
   },
   font: false,
-  footer: false,
+  footer: {
+    component: <Footer />,
+  },
 }
