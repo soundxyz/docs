@@ -31,7 +31,14 @@ export const Hero = () => {
           width={359}
           height={331}
           layout="responsive"
-          css={{ width: '90%', maxWidth: 500, '@tablet': { display: 'none' } }}
+          css={{
+            width: '90%',
+            maxWidth: 500,
+            width: 'calc(100% + 48px)',
+            left: -24,
+            position: 'relative',
+            '@tablet': { display: 'none' },
+          }}
         />
         <WrappedImage
           src="/images/hero-desktop-right-grid.png"
@@ -41,9 +48,20 @@ export const Hero = () => {
           css={{
             alignSelf: 'end',
             marginLeft: 'auto',
-            width: '100%',
+            width: '120%',
             display: 'none',
+            right: -24,
+            position: 'relative',
+
             '@tablet': { display: 'block' },
+
+            '@tabletLandscape': {
+              right: -48,
+            },
+
+            '@laptop': {
+              right: -96,
+            },
           }}
         />
       </HeroContainer>
@@ -73,12 +91,12 @@ const HeroContainer = styled('div', {
   backgroundColor: '$darkBg',
   minHeight: 600,
   display: 'grid',
-  gridTemplateRows: '1fr 2.5fr',
+  gridTemplateRows: '1fr auto',
   position: 'relative',
 
   '@tablet': {
     gridTemplateRows: '1fr',
-    gridTemplateColumns: 'minMax(400px, 100%) minMax(500px, 800px)',
+    gridTemplateColumns: 'minMax(400px, 100%) minMax(500px, 1000px)',
   },
 })
 

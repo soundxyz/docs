@@ -3,6 +3,10 @@
   src: url(./fonts/DrukWideMedium.otf);
 }
 
+html {
+  font-family: Inter;
+}
+
 .graphiql-container * {
   box-sizing: border-box;
 

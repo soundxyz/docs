@@ -33,7 +33,7 @@ export const Footer = () => {
       <SectionContainer css={{ backgroundColor: '$neutral100' }}>
         <InnerContainer>
           <Section>
-            <SoundLogo />
+            <SoundLogo fillColor={theme.colors.darkBg.value} />
             <LogoSubText>Empowering artists & collectors</LogoSubText>
           </Section>
           <Section>
