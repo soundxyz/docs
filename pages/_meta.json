@@ -1,6 +1,7 @@
 {
   "index": {
     "hidden": true,
+    "title": "Sound Docs",
     "theme": {
       "sidebar": false,
       "layout": "raw"
