@@ -56,7 +56,7 @@ export const LinkCard = ({ type }: { type: 'protocol' | 'sdk' | 'api' }) => {
 
 export const LinkCards = () => {
   return (
-    <SectionContainer css={{ backgroundColor: '$neutral100' }}>
+    <SectionContainer css={{ backgroundColor: '$neutral50' }}>
       <MiddleLinks>
         <LinkCard type="protocol" />
         <LinkCard type="sdk" />
