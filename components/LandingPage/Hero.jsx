@@ -70,6 +70,7 @@ const BigH1 = styled('h1', {
 })
 
 const HeroContainer = styled('div', {
+  backgroundColor: '$darkBg',
   minHeight: 600,
   display: 'grid',
   gridTemplateRows: '1fr 2.5fr',
