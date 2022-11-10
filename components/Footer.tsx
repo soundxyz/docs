@@ -1,19 +1,18 @@
 import React from 'react'
-import { styled } from '../stitches.config'
+import { styled, theme } from '../stitches.config'
 import { useRouter } from 'next/router'
 import { SectionContainer } from '../components/Containers'
-import { SoundLogoSimple } from '../components/SoundLogo'
+import { SoundLogo } from '../components/SoundLogo'
 import Link from 'next/link'
 
 export const Footer = () => {
   const router = useRouter()
-  const isLandingPage = router.pathname === '/'
 
   return (
-    <SectionContainer css={{ backgroundColor: isLandingPage ? '$neutral50' : 'transparent' }}>
+    <SectionContainer css={{ backgroundColor: '$neutral100' }}>
       <InnerContainer>
         <Section>
-          <SoundLogoSimple />
+          <SoundLogo fillColor={theme.colors.darkBg.value} />
           <LogoSubText>Empowering artists & collectors</LogoSubText>
         </Section>
         <Section>

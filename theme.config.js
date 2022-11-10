@@ -10,7 +10,7 @@ import { Footer } from './components/Footer'
 const SOCIAL_CARD_IMAGE = '/images/social-card-image.png'
 
 export default {
-  logo: <SoundLogo />,
+  logo: <SoundLogo fill="white" />,
   titleSuffix: ' \u2013 Sound',
   docsRepositoryBase: 'https://github.com/soundxyz/docs/blob/main',
   editLink: {
@@ -22,14 +22,13 @@ export default {
       <meta name="theme-color" content="#ffffff" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta httpEquiv="Content-Language" content="en" />
-      <meta name="og:title" content="Sound Docs" />
       <meta name="apple-mobile-web-app-title" content="Sound Docs" />
 
       {['og:site_name', 'og:title', 'twitter:title'].map((property) => (
-        <meta key={property} property={property} content={title || APP_NAME} />
+        <meta key={property} property={property} content={'Sound Docs'} />
       ))}
       {['description', 'og:description', 'twitter:description'].map((property) => (
-        <meta key={property} name={property} content={'Sound Docs'} />
+        <meta key={property} name={property} content={'Tools for empowering artists & collectors'} />
       ))}
       <meta name="twitter:site:domain" content="www.sound.xyz" />
       <meta name="twitter:url" content="https://www.sound.xyz" />
