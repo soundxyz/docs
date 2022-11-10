@@ -12,6 +12,7 @@ globalStyles()
 export default function Nextra({ Component, pageProps }) {
   const router = useRouter()
   let htmlElement: HTMLHtmlElement | null = null
+  let headerContainer: HTMLDivElement | null = null
 
   const setLightOrDarkMode = (mode: 'light' | 'dark') => {
     if (!htmlElement) return
@@ -23,6 +24,13 @@ export default function Nextra({ Component, pageProps }) {
 
   if (typeof window !== 'undefined') {
     htmlElement = window?.document?.querySelector('html')
+
+    // override header styles
+    headerContainer = window?.document?.querySelector('.nextra-nav-container')
+    headerContainer?.children[0]?.setAttribute(
+      'style',
+      'box-shadow: none !important; background-color: #111111 !important;',
+    )
   }
 
   // Force into dark mode when on landing page
@@ -30,6 +38,8 @@ export default function Nextra({ Component, pageProps }) {
     if (!htmlElement) return
     if (router.pathname === '/') {
       setLightOrDarkMode('dark')
+
+      console.log(headerContainer)
     } else {
       const currentTheme = localStorage.getItem('theme')
       if (currentTheme === 'light') {
