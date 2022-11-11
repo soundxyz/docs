@@ -75,7 +75,16 @@ const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
           </Heading>
           <Description>{currentContent.description}</Description>
         </TextContainer>
-        <Button href={currentContent.path} external={currentContent.external}>
+        <Button
+          href={currentContent.path}
+          external={currentContent.external}
+          css={{
+            alignSelf: 'flex-start',
+            '@tabletLandscape': {
+              alignSelf: 'flex-end',
+            },
+          }}
+        >
           {currentContent.buttonText}
         </Button>
       </InnerContainer>

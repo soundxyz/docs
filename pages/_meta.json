@@ -7,6 +7,9 @@
       "layout": "raw"
     }
   },
+  "intro": {
+    "title": "Intro"
+  },
   "protocol": {
     "title": "Sound Protocol"
   },

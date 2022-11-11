@@ -2,6 +2,7 @@ import React from 'react'
 import { WrappedImage } from '../WrappedImage'
 import { styled } from '../../stitches.config'
 import { SectionContainer } from '../Containers'
+import { Button } from '../Button'
 
 export const Hero = () => {
   return (
@@ -22,10 +23,15 @@ export const Hero = () => {
             height={63}
             layout="responsive"
           />
-          <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
-            Tools for empowering <br />
-            artists & collectors
-          </BigH1>
+          <TextAndButtonContainer>
+            <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
+              Tools for empowering <br />
+              artists & collectors
+            </BigH1>
+            <Button href="/intro" css={{ alignSelf: 'flex-start' }}>
+              View Docs
+            </Button>
+          </TextAndButtonContainer>
         </HeroFlexContainer>
         <WrappedImage
           src="/images/hero-mobile-bottom-grid.png"
@@ -76,19 +82,13 @@ const BigH1 = styled('h1', {
   fontSize: 36,
   fontFamily: 'DrukWideMedium',
   fontWeight: 500,
-  margin: '60px auto',
   lineHeight: '110%',
   color: 'white',
 
   '@tablet': {
-    margin: '200px auto',
     textAlign: 'left',
     maxWidth: 800,
     fontSize: 40,
-  },
-
-  '@desktop': {
-    paddingLeft: 150,
   },
 })
 
@@ -102,6 +102,20 @@ const HeroContainer = styled('div', {
   '@tablet': {
     gridTemplateRows: '1fr',
     gridTemplateColumns: 'minMax(400px, 100%) minMax(500px, 1000px)',
+  },
+})
+
+const TextAndButtonContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '60px auto',
+
+  '@tablet': {
+    margin: '200px auto',
+  },
+
+  '@desktop': {
+    paddingLeft: 150,
   },
 })
 
