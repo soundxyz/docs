@@ -1,6 +1,7 @@
 import React from 'react'
 import { styled } from '../../stitches.config'
 import Link from 'next/link'
+import { Button } from '../Button'
 
 const content = {
   blogPost: {
@@ -21,23 +22,23 @@ const content = {
     external: false,
     bgImage: '/images/big-link-card-bg2.png',
     buttonText: 'Explore',
-    textContainerMaxWidth: 230,
+    textContainerMaxWidth: 300,
   },
 }
 
 const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
   const currentContent = content[type]
 
-  const ButtonLink = ({ children }: { children: React.ReactChild }) => {
-    const linkComponent = currentContent.external ? (
-      <a href={currentContent.path}>{children}</a>
-    ) : (
-      <Link href={currentContent.path}>
-        <a>{children}</a>
-      </Link>
-    )
-    return <Button>{linkComponent}</Button>
-  }
+  // const ButtonLink = ({ children }: { children: React.ReactChild }) => {
+  //   const linkComponent = currentContent.external ? (
+  //     <a href={currentContent.path}>{children}</a>
+  //   ) : (
+  //     <Link href={currentContent.path}>
+  //       <a>{children}</a>
+  //     </Link>
+  //   )
+  //   return <Button>{linkComponent}</Button>
+  // }
 
   const customBgStyles =
     type === 'apiExplorer'
@@ -54,11 +55,11 @@ const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
           },
 
           '@laptop': {
-            backgroundSize: 360,
+            backgroundSize: 330,
           },
 
           '@desktop': {
-            backgroundSize: 420,
+            backgroundSize: 400,
           },
         }
       : { backgroundPosition: 'center' }
@@ -67,11 +68,16 @@ const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
     <OuterContainer css={{ backgroundImage: `url(${currentContent.bgImage})`, ...customBgStyles }}>
       <InnerContainer>
         <TextContainer css={{ maxWidth: currentContent.textContainerMaxWidth }}>
-          <Heading>{currentContent.heading}</Heading>
-          <SubHeading>{currentContent.subHeading}</SubHeading>
+          <Heading>
+            {currentContent.heading}
+            <br />
+            {currentContent.subHeading}
+          </Heading>
           <Description>{currentContent.description}</Description>
         </TextContainer>
-        <ButtonLink>{currentContent.buttonText}</ButtonLink>
+        <Button href={currentContent.path} external={currentContent.external}>
+          {currentContent.buttonText}
+        </Button>
       </InnerContainer>
     </OuterContainer>
   )
@@ -99,7 +105,7 @@ const OuterContainer = styled('div', {
   backgroundColor: '$black',
   color: '$white',
   width: '100%',
-  height: 570,
+  height: 540,
   display: 'flex',
   borderRadius: 0,
   backgroundRepeat: 'no-repeat',
@@ -112,12 +118,13 @@ const OuterContainer = styled('div', {
 
 const InnerContainer = styled('div', {
   paddingTop: 40,
-  marginLeft: 'max(50px, 10%)',
+  marginLeft: 'max(24px, 10%)',
   display: 'grid',
   justifyItems: 'flex-start',
   gridTemplateRows: 'auto 1fr',
 
   '@tabletLandscape': {
+    marginLeft: 'max(48px, 10%)',
     gridTemplateRows: '180px min-content',
   },
 })
@@ -127,31 +134,12 @@ const TextContainer = styled('div', {
 })
 
 const Heading = styled('h2', {
-  fontSize: 34,
-  fontWeight: 700,
-})
-
-const SubHeading = styled('h3', {
-  fontSize: 34,
-  fontWeight: 400,
-  marginTop: 0,
-  lineHeight: 1,
+  fontFamily: 'DrukWideMedium',
+  fontSize: 22,
+  lineHeight: '26px',
 })
 
 const Description = styled('p', {
   marginTop: 16,
   color: '$neutral100',
-})
-
-const Button = styled('button', {
-  background: '$white',
-  color: '$neutral800',
-  padding: '12px 20px',
-  borderRadius: 6,
-  alignSelf: 'flex-start',
-  marginTop: 24,
-
-  '@tabletLandscape': {
-    alignSelf: 'flex-end',
-  },
 })

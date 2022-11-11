@@ -15,7 +15,8 @@ const content = {
   },
   sdk: {
     heading: 'Sound SDK',
-    description: 'The Sound SDK is a Typescript library for building applications on the Sound Protocol.',
+    description:
+      'The Sound SDK is a Typescript library that provides everything needed for building applications on the Sound Protocol.',
     icon: SoundSDKIcon,
     path: '/sdk',
     color: '$iconSDK',
@@ -69,6 +70,7 @@ export const LinkCards = () => {
 const MiddleLinks = styled('div', {
   display: 'flex',
   flexDirection: 'column',
+  paddingBottom: 60,
 
   '@tabletLandscape': {
     flexDirection: 'row',
@@ -84,9 +86,9 @@ const OuterContainer = styled('div', {
 })
 
 const InnerContainer = styled('div', {
-  padding: '50px 0',
-  maxWidth: 290,
+  paddingTop: 70,
   margin: '0 auto',
+  maxWidth: 280,
 
   svg: {
     opacity: 0.9,
@@ -97,10 +99,16 @@ const InnerContainer = styled('div', {
       opacity: 1,
     },
   },
+
+  '@laptop': {
+    maxWidth: 320,
+    padding: '85px 0 80px',
+  },
 })
 
 const Heading = styled('h2', {
-  fontSize: 34,
+  fontFamily: 'DrukWideMedium',
+  fontSize: 22,
   fontWeight: 500,
   marginTop: 32,
   color: '$neutral900',

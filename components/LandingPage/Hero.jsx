@@ -23,7 +23,8 @@ export const Hero = () => {
             layout="responsive"
           />
           <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
-            Tools for empowering artists & collectors
+            Tools for empowering <br />
+            artists & collectors
           </BigH1>
         </HeroFlexContainer>
         <WrappedImage
@@ -80,10 +81,14 @@ const BigH1 = styled('h1', {
   color: 'white',
 
   '@tablet': {
-    margin: '100px auto',
+    margin: '200px auto',
     textAlign: 'left',
-    maxWidth: 500,
-    fontSize: 50,
+    maxWidth: 800,
+    fontSize: 40,
+  },
+
+  '@desktop': {
+    paddingLeft: 150,
   },
 })
 

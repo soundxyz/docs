@@ -61,7 +61,7 @@ export const Footer = () => {
               <Column>
                 <ColumnHeader>Company</ColumnHeader>
                 {LINKS.company.map((link) => (
-                  <li>
+                  <li key={link.path}>
                     <ExternalLink href={link.path}>{link.text}</ExternalLink>
                   </li>
                 ))}
@@ -69,15 +69,17 @@ export const Footer = () => {
               <Column>
                 <ColumnHeader>Resources</ColumnHeader>
                 {LINKS.resources.map((link) => (
-                  <li>
-                    <ExternalLink href={link.path}>{link.text}</ExternalLink>
+                  <li key={link.path}>
+                    <ExternalLink key={link.path} href={link.path}>
+                      {link.text}
+                    </ExternalLink>
                   </li>
                 ))}
               </Column>
               <Column>
                 <ColumnHeader>Docs</ColumnHeader>
                 {LINKS.docs.map((link) => (
-                  <li>
+                  <li key={link.path}>
                     <Link href={link.path}>{link.text}</Link>
                   </li>
                 ))}
