@@ -7,124 +7,109 @@ import Link from 'next/link'
 import { ExternalLink } from '../components/ExternalLink'
 import { useTheme } from 'nextra-theme-docs'
 
-const LINKS = {
-  feed: 'https://sound.xyz/',
-  market: 'https://market.sound.xyz/',
-  trending: 'https://sound.xyz/trending',
-  protocol: '/protocol',
-  sdk: '/sdk',
-  api: '/sound-api',
-  about: 'https://sound.xyz/about',
-  careers: 'https://jobs.ashbyhq.com/sound.xyz',
-  faqs: 'https://help.sound.xyz',
-  twitter: 'https://twitter.com/soundxyz_',
-  instagram: 'https://www.instagram.com/soundxyz',
-  opensea: 'https://opensea.io/category/soundxyz',
-  discord: 'https://discord.gg/soundxyz',
-  mirror: 'https://sound.mirror.xyz',
-  termsOfService: 'https://soundxyz.notion.site/Terms-of-Service-782b54520f0047aca0afb81552e3b7fb',
-  privacyPolicy: 'https://soundxyz.notion.site/Privacy-Policy-dfa7fc4039444f0a86c4049450872a65',
-}
-
 export const Footer = () => {
   const router = useRouter()
   const { theme: colorMode } = useTheme()
   const isDarkMode = colorMode === 'dark' && router.pathname !== '/'
 
+  const LINKS = {
+    company: [
+      { text: 'Market', path: 'https://market.sound.xyz/' },
+      { text: 'Trending', path: 'https://sound.xyz/trending' },
+      { text: 'Careers', path: 'https://jobs.ashbyhq.com/sound.xyz' },
+      {
+        text: 'Terms Of Service',
+        path: 'https://soundxyz.notion.site/Terms-of-Service-782b54520f0047aca0afb81552e3b7fb',
+      },
+      { text: 'Privacy Policy', path: 'https://soundxyz.notion.site/Privacy-Policy-dfa7fc4039444f0a86c4049450872a65' },
+    ],
+    resources: [
+      { text: 'About', path: 'https://sound.xyz/about' },
+      { text: 'Blog', path: 'https://sound.mirror.xyz' },
+      { text: 'FAQ', path: 'https://help.sound.xyz' },
+    ],
+    docs: [
+      { text: 'Sound Protocol', path: '/protocol' },
+      { text: 'Sound SDK', path: '/sdk' },
+      { text: 'Sound API', path: '/sound-api' },
+    ],
+    social: [
+      { text: 'Twitter', path: 'https://twitter.com/soundxyz_', icon: TwitterIcon },
+      { text: 'Instagram', path: 'https://www.instagram.com/soundxyz', icon: InstagramIcon },
+      { text: 'OpenSea', path: 'https://opensea.io/category/soundxyz', icon: OpenSeaIcon },
+      { text: 'Discord', path: 'https://discord.gg/soundxyz', icon: DiscordIcon },
+      { text: 'Mirror', path: 'https://sound.mirror.xyz', icon: MirrorIcon },
+    ],
+  }
+
   return (
     <>
       <SectionContainer css={{ backgroundColor: isDarkMode ? '$darkBg' : 'white' }}>
         <InnerContainer css={{ color: isDarkMode ? 'white' : '$neutral900' }}>
-          <Section>
-            <SoundLogo fillColor={isDarkMode ? theme.colors.white.value : theme.colors.darkBg.value} />
-            <LogoSubText>Empowering artists & collectors</LogoSubText>
+          <Section css={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <ExternalLink href="https://sound.xyz">
+              <SoundLogo fillColor={isDarkMode ? theme.colors.white.value : theme.colors.darkBg.value} />
+            </ExternalLink>
+            <LogoSubText>
+              © Copyright 2022 Sound.xyz
+              <br />
+              All rights reserved.
+            </LogoSubText>
           </Section>
           <Section>
             <NavContainer>
               <Column>
-                <ColumnHeader>Sound.xyz</ColumnHeader>
-                <li>
-                  <ExternalLink href={LINKS.feed}>Feed</ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href={LINKS.market}>Market</ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href={LINKS.trending}>Trending</ExternalLink>
-                </li>
-              </Column>
-              <Column>
-                <ColumnHeader>Docs</ColumnHeader>
-                <li>
-                  <Link href={LINKS.protocol}>Sound Protocol</Link>
-                </li>
-                <li>
-                  <Link href={LINKS.sdk}>Sound SDK</Link>
-                </li>
-                <li>
-                  <Link href={LINKS.api}>Sound API</Link>
-                </li>
+                <ColumnHeader>Company</ColumnHeader>
+                {LINKS.company.map((link) => (
+                  <li>
+                    <ExternalLink href={link.path}>{link.text}</ExternalLink>
+                  </li>
+                ))}
               </Column>
               <Column>
                 <ColumnHeader>Resources</ColumnHeader>
-                <li>
-                  <ExternalLink href={LINKS.about}>About</ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href={LINKS.careers}>Careers</ExternalLink>
-                </li>
-                <li>
-                  <ExternalLink href={LINKS.faqs}>FAQs</ExternalLink>
-                </li>
+                {LINKS.resources.map((link) => (
+                  <li>
+                    <ExternalLink href={link.path}>{link.text}</ExternalLink>
+                  </li>
+                ))}
+              </Column>
+              <Column>
+                <ColumnHeader>Docs</ColumnHeader>
+                {LINKS.docs.map((link) => (
+                  <li>
+                    <Link href={link.path}>{link.text}</Link>
+                  </li>
+                ))}
               </Column>
             </NavContainer>
           </Section>
           <Section>
             <Column>
-              <ColumnHeader>Stay Connected</ColumnHeader>
+              <ColumnHeader>Follow Us</ColumnHeader>
               <SocialLinks>
-                <ExternalLink href={LINKS.twitter}>
-                  <TwitterIcon />
-                </ExternalLink>
-                <ExternalLink href={LINKS.instagram}>
-                  <InstagramIcon />
-                </ExternalLink>
-                <ExternalLink href={LINKS.opensea}>
-                  <OpenSeaIcon />
-                </ExternalLink>
-                <ExternalLink href={LINKS.discord}>
-                  <DiscordIcon />
-                </ExternalLink>
-                <ExternalLink href={LINKS.mirror}>
-                  <MirrorIcon />
-                </ExternalLink>
+                {LINKS.social.map((link) => (
+                  <li>
+                    <ExternalLink href={link.path} alt={link.text}>
+                      {link.icon()}
+                    </ExternalLink>
+                  </li>
+                ))}
               </SocialLinks>
             </Column>
           </Section>
         </InnerContainer>
-      </SectionContainer>
-      <SectionContainer
-        css={{ color: isDarkMode ? 'white' : '$neutral900', backgroundColor: isDarkMode ? '$bgDark' : 'white' }}
-      >
-        <SubFooterContainer>
-          <p>
-            <span>© Copyright 2022 Sound.xyz</span> <span>&nbsp;&nbsp;|&nbsp;&nbsp;</span>{' '}
-            <span>All rights reserved.</span>
-          </p>
-          <p>
-            <ExternalLink href={LINKS.termsOfService}>Terms of Service</ExternalLink> &nbsp;&nbsp;|&nbsp;&nbsp;{' '}
-            <ExternalLink href={LINKS.privacyPolicy}>Privacy Policy</ExternalLink>
-          </p>
-        </SubFooterContainer>
       </SectionContainer>
     </>
   )
 }
 
 const InnerContainer = styled('footer', {
-  paddingTop: 60,
+  paddingTop: 84,
+  paddingBottom: 84,
   display: 'grid',
   gridTemplateColumns: '1fr',
+  fontSize: 14,
 
   '@laptop': {
     gridTemplateColumns: '1.5fr 2fr 1fr',
@@ -132,7 +117,7 @@ const InnerContainer = styled('footer', {
 })
 
 const Section = styled('div', {
-  paddingBottom: 60,
+  marginBottom: 24,
 })
 
 const NavContainer = styled('div', {
@@ -148,15 +133,14 @@ const Column = styled('ul', {
   listStyle: 'none',
 
   li: {
+    color: '$neutral600',
     marginTop: 10,
-    fontSize: 16,
   },
 })
 
 const ColumnHeader = styled('div', {
-  fontSize: 18,
   marginTop: 20,
-  fontWeight: 500,
+  fontWeight: 600,
 
   '@tablet': {
     marginTop: 0,
@@ -164,9 +148,9 @@ const ColumnHeader = styled('div', {
 })
 
 const LogoSubText = styled('p', {
+  color: '$neutral600',
   marginTop: 16,
-  fontWeight: 400,
-  fontSize: 18,
+  fontSize: 12,
 })
 
 const SocialLinks = styled('div', {
@@ -222,48 +206,3 @@ const MirrorIcon = () => (
     <path d="M7 13C7 8.58172 10.5817 5 15 5C19.4183 5 23 8.58172 23 13V25H7V13Z" fill="#A3A3A3" />
   </svg>
 )
-
-const SubFooterContainer = styled('div', {
-  minHeight: 90,
-  display: 'flex',
-  flexDirection: 'column',
-  fontSize: 14,
-
-  p: {
-    textAlign: 'center',
-    marginTop: 22,
-
-    '&:first-of-type': {
-      display: 'flex',
-      flexDirection: 'column',
-
-      '@tablet': {
-        flexDirection: 'row',
-      },
-    },
-
-    '&:last-of-type': {
-      marginBottom: 22,
-    },
-
-    span: {
-      whiteSpace: 'nowrap',
-
-      '&:nth-of-type(2)': {
-        display: 'none',
-
-        '@tablet': {
-          display: 'inline-block',
-        },
-      },
-    },
-  },
-
-  '@tablet': {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    p: {
-      textAlign: 'left',
-    },
-  },
-})
