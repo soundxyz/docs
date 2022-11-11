@@ -29,17 +29,6 @@ const content = {
 const BigLinkCard = ({ type }: { type: 'blogPost' | 'apiExplorer' }) => {
   const currentContent = content[type]
 
-  // const ButtonLink = ({ children }: { children: React.ReactChild }) => {
-  //   const linkComponent = currentContent.external ? (
-  //     <a href={currentContent.path}>{children}</a>
-  //   ) : (
-  //     <Link href={currentContent.path}>
-  //       <a>{children}</a>
-  //     </Link>
-  //   )
-  //   return <Button>{linkComponent}</Button>
-  // }
-
   const customBgStyles =
     type === 'apiExplorer'
       ? {
