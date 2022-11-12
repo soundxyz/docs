@@ -135,13 +135,15 @@ export const Footer = () => {
 }
 
 const InnerContainer = styled('footer', {
-  padding: '60px 0',
+  padding: '60px 24px',
   display: 'grid',
   gridTemplateColumns: '1fr',
   fontSize: 14,
+  maxWidth: '90rem',
+  margin: '0 auto',
 
   '@laptop': {
-    padding: '84px 0',
+    padding: '84px 24px',
     gridTemplateColumns: '1.2fr 2.5fr 1fr',
   },
 })

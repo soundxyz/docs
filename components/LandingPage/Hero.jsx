@@ -22,7 +22,7 @@ export const Hero = () => {
               position: 'relative',
               width: 84,
               height: 'auto',
-              '@laptop': { left: 0, top: 0, width: 140 },
+              '@laptop': { left: -50, top: 0, width: 140 },
             }}
             src="/images/hero-small-grid.png"
             width={84}
@@ -30,7 +30,7 @@ export const Hero = () => {
             layout="responsive"
           />
           <TextAndButtonContainer>
-            <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
+            <BigH1>
               Tools for empowering <br />
               artists & collectors
             </BigH1>
@@ -63,9 +63,10 @@ export const Hero = () => {
             alignSelf: 'end',
             marginLeft: 'auto',
             width: '70%',
-            maxWidth: 900,
+            maxWidth: 804,
             display: 'none',
             right: -24,
+            bottom: 40,
             display: 'none',
 
             '@tabletLandscape': {
@@ -118,7 +119,7 @@ const TextAndButtonContainer = styled('div', {
   },
 
   '@desktop': {
-    paddingLeft: 150,
+    paddingLeft: 100,
   },
 })
 
