@@ -5,8 +5,14 @@ import { SectionContainer } from '../Containers'
 import { Button } from '../Button'
 
 export const Hero = () => {
+  const [backgroundImage, setBackgroundImage] = React.useState('none')
+
   return (
-    <SectionContainer css={{ backgroundColor: '$darkBg' }}>
+    <SectionContainer
+      css={{
+        backgroundColor: '$darkBg',
+      }}
+    >
       <HeroContainer>
         <HeroFlexContainer>
           <WrappedImage
@@ -16,7 +22,7 @@ export const Hero = () => {
               position: 'relative',
               width: 84,
               height: 'auto',
-              '@tablet': { top: 0, width: 140 },
+              '@laptop': { left: 0, top: 0, width: 140 },
             }}
             src="/images/hero-small-grid.png"
             width={84}
@@ -28,7 +34,7 @@ export const Hero = () => {
               Tools for empowering <br />
               artists & collectors
             </BigH1>
-            <Button href="/intro" css={{ alignSelf: 'flex-start' }}>
+            <Button href="/intro" css={{ alignSelf: 'center', '@laptop': { alignSelf: 'flex-start' } }}>
               View Docs
             </Button>
           </TextAndButtonContainer>
@@ -40,11 +46,11 @@ export const Hero = () => {
           layout="responsive"
           css={{
             width: '90%',
-            maxWidth: 500,
+            maxWidth: 900,
             width: 'calc(100% + 48px)',
             left: -24,
             position: 'relative',
-            '@tablet': { display: 'none' },
+            '@laptop': { display: 'none' },
           }}
         />
         <WrappedImage
@@ -53,20 +59,21 @@ export const Hero = () => {
           height={483}
           layout="responsive"
           css={{
+            position: 'absolute',
             alignSelf: 'end',
             marginLeft: 'auto',
-            width: '120%',
+            width: '70%',
+            maxWidth: 900,
             display: 'none',
             right: -24,
-            position: 'relative',
-
-            '@tablet': { display: 'block' },
+            display: 'none',
 
             '@tabletLandscape': {
               right: -48,
             },
 
             '@laptop': {
+              display: 'block',
               right: -96,
             },
           }}
@@ -78,14 +85,13 @@ export const Hero = () => {
 
 const BigH1 = styled('h1', {
   textAlign: 'center',
-  maxWidth: 360,
   fontSize: 36,
   fontFamily: 'DrukWideMedium',
   fontWeight: 500,
   lineHeight: '110%',
   color: 'white',
 
-  '@tablet': {
+  '@laptop': {
     textAlign: 'left',
     maxWidth: 800,
     fontSize: 40,
@@ -93,25 +99,22 @@ const BigH1 = styled('h1', {
 })
 
 const HeroContainer = styled('div', {
-  backgroundColor: '$darkBg',
-  minHeight: 600,
   display: 'grid',
   gridTemplateRows: '1fr auto',
   position: 'relative',
 
-  '@tablet': {
+  '@laptop': {
     gridTemplateRows: '1fr',
-    gridTemplateColumns: 'minMax(400px, 100%) minMax(500px, 1000px)',
   },
 })
 
 const TextAndButtonContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  margin: '60px auto',
+  margin: '60px auto 40px',
 
-  '@tablet': {
-    margin: '200px auto',
+  '@laptop': {
+    margin: '165px auto 125px 0',
   },
 
   '@desktop': {
@@ -123,7 +126,7 @@ const HeroFlexContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
-  '@tablet': {
+  '@laptop': {
     flexDirection: 'column-reverse',
   },
 })

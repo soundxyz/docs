@@ -91,7 +91,7 @@ export const Footer = () => {
               <ColumnHeader>Follow Us</ColumnHeader>
               <SocialLinks>
                 {LINKS.social.map((link) => (
-                  <li>
+                  <li key={link.path}>
                     <ExternalLink href={link.path} alt={link.text}>
                       {link.icon()}
                     </ExternalLink>
@@ -107,19 +107,19 @@ export const Footer = () => {
 }
 
 const InnerContainer = styled('footer', {
-  paddingTop: 84,
-  paddingBottom: 84,
+  padding: '60px 0',
   display: 'grid',
   gridTemplateColumns: '1fr',
   fontSize: 14,
 
   '@laptop': {
-    gridTemplateColumns: '1.5fr 2fr 1fr',
+    padding: '84px 0',
+    gridTemplateColumns: '1.2fr 2.5fr 1fr',
   },
 })
 
 const Section = styled('div', {
-  marginBottom: 24,
+  marginBottom: 32,
 })
 
 const NavContainer = styled('div', {
