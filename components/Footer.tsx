@@ -10,7 +10,35 @@ import { useTheme } from 'nextra-theme-docs'
 export const Footer = () => {
   const router = useRouter()
   const { theme: colorMode } = useTheme()
-  const isDarkMode = colorMode === 'dark' && router.pathname !== '/'
+  const [isDarkMode, setIsDarkMode] = React.useState(colorMode === 'dark' && router.pathname !== '/')
+
+  const darkModeSetter = (event) => {
+    if (event.matches) {
+      setIsDarkMode(true)
+    } else {
+      setIsDarkMode(false)
+    }
+  }
+
+  React.useEffect(() => {
+    // Don't change theme if on the homepage
+    if (router.pathname === '/') {
+      setIsDarkMode(false)
+      return
+    }
+
+    if (typeof window !== 'undefined') {
+      if (colorMode === 'system') {
+        setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches)
+      } else {
+        setIsDarkMode(colorMode === 'dark')
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', darkModeSetter)
+    }
+    return () => {
+      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', darkModeSetter)
+    }
+  }, [colorMode, router.pathname])
 
   const LINKS = {
     company: [
