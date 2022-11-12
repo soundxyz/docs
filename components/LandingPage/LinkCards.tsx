@@ -71,6 +71,8 @@ const MiddleLinks = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   paddingBottom: 60,
+  maxWidth: '105rem',
+  margin: '0 auto',
 
   '@tabletLandscape': {
     flexDirection: 'row',
@@ -81,12 +83,15 @@ const OuterContainer = styled('div', {
   color: '$darkBg',
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
   borderRadius: 0,
+
+  '@tablet': {
+    justifyContent: 'center',
+  },
 })
 
 const InnerContainer = styled('div', {
-  paddingTop: 70,
+  paddingTop: 60,
   margin: '0 auto',
   maxWidth: 280,
 

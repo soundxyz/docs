@@ -118,13 +118,16 @@ const OuterContainer = styled('div', {
 })
 
 const InnerContainer = styled('div', {
-  marginLeft: 'max(24px, 10%)',
+  marginLeft: 24,
   display: 'grid',
   justifyItems: 'flex-start',
   gridTemplateRows: 'auto 1fr',
 
-  '@tabletLandscape': {
+  '@tablet': {
     marginLeft: 48,
+  },
+
+  '@tabletLandscape': {
     gridTemplateRows: '180px min-content',
   },
 

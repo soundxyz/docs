@@ -135,7 +135,7 @@ export const Footer = () => {
 }
 
 const InnerContainer = styled('footer', {
-  padding: '60px 24px',
+  padding: '60px 0',
   display: 'grid',
   gridTemplateColumns: '1fr',
   fontSize: 14,

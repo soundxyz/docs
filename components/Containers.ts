@@ -4,12 +4,12 @@ export const SectionContainer = styled('div', {
   paddingLeft: 24,
   paddingRight: 24,
 
-  '@tabletLandscape': {
+  '@laptop': {
     paddingLeft: 48,
     paddingRight: 48,
   },
 
-  '@laptop': {
+  '@desktop': {
     paddingLeft: 96,
     paddingRight: 96,
   },

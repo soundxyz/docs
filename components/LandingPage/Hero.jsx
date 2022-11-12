@@ -113,13 +113,11 @@ const TextAndButtonContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   margin: '60px auto 40px',
+  maxWidth: 'calc(90rem - 48px)',
+  width: '100%',
 
   '@laptop': {
-    margin: '165px auto 125px 0',
-  },
-
-  '@desktop': {
-    paddingLeft: 100,
+    margin: '165px auto 125px auto',
   },
 })
 
