@@ -124,8 +124,12 @@ const InnerContainer = styled('div', {
   gridTemplateRows: 'auto 1fr',
 
   '@tabletLandscape': {
-    marginLeft: 'max(48px, 10%)',
+    marginLeft: 48,
     gridTemplateRows: '180px min-content',
+  },
+
+  '@desktop': {
+    marginLeft: 96,
   },
 })
 
