@@ -1,6 +1,5 @@
 import React from 'react'
 import { styled } from '../../stitches.config'
-import Link from 'next/link'
 import { Button } from '../Button'
 
 const content = {
@@ -100,22 +99,25 @@ const BigLinksFlexContainer = styled('div', {
 })
 
 const OuterContainer = styled('div', {
+  display: 'flex',
+  alignItems: 'flex-start',
+  paddingTop: 50,
   backgroundColor: '$black',
   color: '$white',
   width: '100%',
   height: 540,
-  display: 'flex',
   borderRadius: 0,
   backgroundRepeat: 'no-repeat',
   backgroundSize: 'cover',
 
   '@tabletLandscape': {
-    height: 340,
+    alignItems: 'center',
+    paddingTop: 0,
+    height: 380,
   },
 })
 
 const InnerContainer = styled('div', {
-  paddingTop: 40,
   marginLeft: 'max(24px, 10%)',
   display: 'grid',
   justifyItems: 'flex-start',
