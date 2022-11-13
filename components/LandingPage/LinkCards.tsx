@@ -71,8 +71,8 @@ const MiddleLinks = styled('div', {
   display: 'flex',
   flexDirection: 'column',
   paddingBottom: 60,
-  maxWidth: '105rem',
   margin: '0 auto',
+  maxWidth: 'calc(90rem - 48px)',
 
   '@tabletLandscape': {
     flexDirection: 'row',
@@ -81,13 +81,18 @@ const MiddleLinks = styled('div', {
 })
 
 const OuterContainer = styled('div', {
-  color: '$darkBg',
   width: '100%',
   display: 'flex',
   borderRadius: 0,
 
-  '@tablet': {
-    justifyContent: 'center',
+  '@laptop': {
+    '&:nth-of-type(2)': {
+      justifyContent: 'center',
+    },
+
+    '&:nth-of-type(3)': {
+      justifyContent: 'flex-end',
+    },
   },
 })
 
@@ -108,7 +113,8 @@ const InnerContainer = styled('div', {
 
   '@laptop': {
     maxWidth: 320,
-    padding: '85px 0 80px',
+    paddingTop: 85,
+    paddingBottom: 80,
   },
 })
 

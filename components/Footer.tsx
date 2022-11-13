@@ -110,11 +110,11 @@ const InnerContainer = styled('footer', {
   display: 'grid',
   gridTemplateColumns: '1fr',
   fontSize: 14,
-  maxWidth: '90rem',
+  maxWidth: 'calc(90rem - 48px)',
   margin: '0 auto',
 
   '@laptop': {
-    padding: '84px 24px',
+    padding: '84px 0',
     gridTemplateColumns: '1.2fr 2.5fr 1fr',
   },
 })
