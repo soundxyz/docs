@@ -4,13 +4,13 @@
  */
 
 import GitHub from '@geist-ui/react-icons/github'
-import { SoundLogo } from './components/SoundLogo'
+import { HeaderLogo } from './components/HeaderLogo'
 import { Footer } from './components/Footer'
 
 const SOCIAL_CARD_IMAGE = '/images/social-card-legacy-logo.png'
 
 export default {
-  logo: <SoundLogo fill="white" />,
+  logo: <HeaderLogo />,
   getNextSeoProps: () => ({ titleTemplate: '%s – Sound' }),
   docsRepositoryBase: 'https://github.com/soundxyz/docs/blob/main',
   editLink: {
@@ -60,5 +60,8 @@ export default {
   font: false,
   footer: {
     component: <Footer />,
+  },
+  chat: {
+    icon: '',
   },
 }

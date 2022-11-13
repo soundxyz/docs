@@ -39,7 +39,7 @@ export const SoundLogo = ({ fillColor }: { fillColor?: string }) => {
   }, [router.pathname])
 
   return (
-    <div style={{ width: 150 }}>
+    <div>
       {/* 
         TODO: swap this out when we've launched the new logo on sound.xyz
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 250 40">

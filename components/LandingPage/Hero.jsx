@@ -22,7 +22,7 @@ export const Hero = () => {
               position: 'relative',
               width: 84,
               height: 'auto',
-              '@laptop': { left: -50, top: 0, width: 140 },
+              '@laptop': { left: -100, top: -40, width: 140 },
             }}
             src="/images/hero-small-grid.png"
             width={84}

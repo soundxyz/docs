@@ -11,7 +11,7 @@ const content = {
       'The Sound Protocol is a permissionless, open-source, modular smart contract framework for musicians and creators.',
     icon: SoundProtocolIcon,
     path: '/protocol/overview',
-    color: '$iconProtocol',
+    color: '$brandPink500',
   },
   sdk: {
     heading: 'Sound SDK',
@@ -76,6 +76,7 @@ const MiddleLinks = styled('div', {
 
   '@tabletLandscape': {
     flexDirection: 'row',
+    paddingBottom: 20,
   },
 })
 
@@ -125,7 +126,7 @@ const Description = styled('p', {
 })
 
 const IconContainer = styled('div', {
-  backgroundColor: '$black',
+  backgroundColor: 'black',
   width: 100,
   height: 100,
   display: 'flex',
@@ -133,6 +134,6 @@ const IconContainer = styled('div', {
   justifyContent: 'center',
   borderRadius: 8,
   borderWidth: 2,
-  borderColor: '$black',
+  borderColor: 'black',
   transition: 'all 0.2s ease-in-out',
 })
