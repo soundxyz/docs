@@ -6,10 +6,17 @@ import { useRouter } from 'next/router'
 
 export function HeaderLogo() {
   const router = useRouter()
+  const [opacity, setOpacity] = React.useState(0)
   const isDarkMode = router.pathname === '/' || useIsDarkMode()
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      setOpacity(1)
+    }, 0)
+  }, [])
+
   return (
-    <Container>
+    <Container css={{ opacity }}>
       <SoundLogo />
       <PlainText css={{ color: isDarkMode ? 'white' : 'black' }}>Developer</PlainText>
       <PinkText>Docs</PinkText>
@@ -18,6 +25,7 @@ export function HeaderLogo() {
 }
 
 const Container = styled('div', {
+  transition: 'opacity 300ms',
   display: 'flex',
   alignItems: 'center',
   fontWeight: 600,
