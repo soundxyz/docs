@@ -1,12 +1,17 @@
 import React from 'react'
 import { SoundLogo } from './SoundLogo'
 import { styled } from '../stitches.config'
+import { useIsDarkMode } from '../hooks/useIsDarkMode'
+import { useRouter } from 'next/router'
 
 export function HeaderLogo() {
+  const router = useRouter()
+  const isDarkMode = router.pathname === '/' || useIsDarkMode()
+
   return (
     <Container>
       <SoundLogo />
-      <WhiteText>Developer</WhiteText>
+      <PlainText css={{ color: isDarkMode ? 'white' : 'black' }}>Developer</PlainText>
       <PinkText>Docs</PinkText>
     </Container>
   )
@@ -24,7 +29,6 @@ const PinkText = styled('span', {
   paddingLeft: 8,
 })
 
-const WhiteText = styled('span', {
-  color: '$white',
+const PlainText = styled('span', {
   paddingLeft: 16,
 })

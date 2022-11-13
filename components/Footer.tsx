@@ -5,40 +5,11 @@ import { SectionContainer } from '../components/Containers'
 import { SoundLogo } from '../components/SoundLogo'
 import Link from 'next/link'
 import { ExternalLink } from '../components/ExternalLink'
-import { useTheme } from 'nextra-theme-docs'
+import { useIsDarkMode } from '../hooks/useIsDarkMode'
 
 export const Footer = () => {
   const router = useRouter()
-  const { theme: colorMode } = useTheme()
-  const [isDarkMode, setIsDarkMode] = React.useState(colorMode === 'dark' && router.pathname !== '/')
-
-  const darkModeSetter = (event) => {
-    if (event.matches) {
-      setIsDarkMode(true)
-    } else {
-      setIsDarkMode(false)
-    }
-  }
-
-  React.useEffect(() => {
-    // Don't change theme if on the homepage
-    if (router.pathname === '/') {
-      setIsDarkMode(false)
-      return
-    }
-
-    if (typeof window !== 'undefined') {
-      if (colorMode === 'system') {
-        setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches)
-      } else {
-        setIsDarkMode(colorMode === 'dark')
-      }
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', darkModeSetter)
-    }
-    return () => {
-      window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', darkModeSetter)
-    }
-  }, [colorMode, router.pathname])
+  const isDarkMode = useIsDarkMode()
 
   const LINKS = {
     company: [
