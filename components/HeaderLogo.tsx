@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 export function HeaderLogo() {
   const router = useRouter()
   const [opacity, setOpacity] = React.useState(0)
-  const isDarkMode = router.pathname === '/' || useIsDarkMode()
+  const isDarkMode = useIsDarkMode(router.pathname === '/')
 
   React.useEffect(() => {
     setTimeout(() => {
