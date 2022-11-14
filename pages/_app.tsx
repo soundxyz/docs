@@ -1,5 +1,5 @@
 import React from 'react'
-import { globalStyles } from '../stitches.config.ts'
+import { globalStyles } from '../stitches.config'
 import { useRouter } from 'next/router'
 import { Prism } from 'prism-react-renderer'
 ;(typeof global !== 'undefined' ? global : window).Prism = Prism
@@ -13,6 +13,7 @@ export default function Nextra({ Component, pageProps }) {
   const router = useRouter()
   let htmlElement: HTMLHtmlElement | null = null
   let headerContainer: HTMLDivElement | null = null
+  let themeButton: HTMLButtonElement | null = null
 
   const setLightOrDarkMode = (mode: 'light' | 'dark') => {
     if (!htmlElement) return
@@ -24,28 +25,37 @@ export default function Nextra({ Component, pageProps }) {
 
   if (typeof window !== 'undefined') {
     htmlElement = window?.document?.querySelector('html')
+    headerContainer = window?.document?.querySelector('.nextra-nav-container')
+    themeButton = window?.document?.querySelector('button[title="Change theme"]')
   }
 
   // Force into dark mode when on landing page
   React.useEffect(() => {
     if (!htmlElement) return
+    if (!themeButton) return
+    if (typeof window === 'undefined') return
+
     if (router.pathname === '/') {
       setLightOrDarkMode('dark')
+      themeButton.style.display = 'none'
 
       // override header styles
-      headerContainer = window?.document?.querySelector('.nextra-nav-container')
       headerContainer?.children[0]?.setAttribute(
         'style',
-        'box-shadow: none !important; background-color: #111111 !important;',
+        'box-shadow: none !important; background-color: rgb(23, 23, 23, 0.9) !important;',
       )
     } else {
-      const currentTheme = localStorage.getItem('theme')
-      headerContainer = window?.document?.querySelector('.nextra-nav-container')
+      themeButton.style.display = 'block'
+      headerContainer = window.document?.querySelector('.nextra-nav-container')
       headerContainer?.children[0]?.setAttribute('style', 'box-shadow: initial; background-color: initial;')
-      if (currentTheme === 'light') {
-        setLightOrDarkMode('light')
+
+      const currentTheme = localStorage.getItem('theme')
+
+      if (currentTheme === 'system') {
+        setLightOrDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
       } else {
-        setLightOrDarkMode('dark')
+        const newTheme = currentTheme === 'dark' ? 'dark' : 'light'
+        setLightOrDarkMode(newTheme)
       }
     }
   }, [router.pathname])
