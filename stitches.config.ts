@@ -84,9 +84,9 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
 })
 
 export const globalStyles = globalCss({
-  'a.nx-text-primary-500': { color: theme.colors.brand500.value },
+  'a.nx-text-primary-500': { color: theme.colors.brandPink500.value },
   '*::selection': {
-    background: theme.colors.brand500.value,
+    background: theme.colors.brandPink500.value,
     color: '#fff',
   },
 })

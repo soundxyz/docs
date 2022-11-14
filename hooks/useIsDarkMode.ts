@@ -20,6 +20,7 @@ export function useIsDarkMode(override?: boolean) {
 
     if (typeof window !== 'undefined') {
       if (colorMode === 'system') {
+        const themeInLocalStorage = localStorage.getItem('theme')
         setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches)
       } else {
         const themeInLocalStorage = localStorage.getItem('theme')
