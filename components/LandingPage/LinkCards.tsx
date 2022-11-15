@@ -70,7 +70,7 @@ export const LinkCards = () => {
 const MiddleLinks = styled('div', {
   display: 'flex',
   flexDirection: 'column',
-  paddingBottom: 60,
+  paddingBottom: 20,
   margin: '0 auto',
   maxWidth: 'calc(90rem - 48px)',
 
@@ -97,9 +97,10 @@ const OuterContainer = styled('div', {
 })
 
 const InnerContainer = styled('div', {
-  paddingTop: 60,
+  paddingTop: 24,
+  paddingBottom: 20,
   margin: '0 auto',
-  maxWidth: 280,
+  maxWidth: 340,
 
   svg: {
     opacity: 0.9,
@@ -112,7 +113,6 @@ const InnerContainer = styled('div', {
   },
 
   '@laptop': {
-    maxWidth: 320,
     paddingTop: 85,
     paddingBottom: 80,
   },
@@ -122,19 +122,27 @@ const Heading = styled('h2', {
   fontFamily: 'DrukWideMedium',
   fontSize: 22,
   fontWeight: 500,
-  marginTop: 32,
+  marginTop: 16,
   color: '$neutral900',
+
+  '@laptop': {
+    marginTop: 32,
+  },
 })
 
 const Description = styled('p', {
-  marginTop: 16,
+  marginTop: 8,
   color: '$neutral700',
+
+  '@laptop': {
+    marginTop: 16,
+  },
 })
 
 const IconContainer = styled('div', {
   backgroundColor: 'black',
-  width: 100,
-  height: 100,
+  width: 80,
+  height: 80,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -142,4 +150,22 @@ const IconContainer = styled('div', {
   borderWidth: 2,
   borderColor: 'black',
   transition: 'all 0.2s ease-in-out',
+
+  svg: {
+    width: '80%',
+  },
+
+  '@tablet': {
+    width: 100,
+    height: 100,
+
+    svg: {
+      width: '100%',
+    },
+  },
+})
+
+const InnerIconContainer = styled('div', {
+  width: 50,
+  height: 50,
 })
