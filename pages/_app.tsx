@@ -37,14 +37,17 @@ export default function Nextra({ Component, pageProps }) {
 
     if (router.pathname === '/') {
       setLightOrDarkMode('dark')
+
+      // Hide theme button when on landing page
       themeButton.style.display = 'none'
 
-      // override header styles
+      // Override header styles
       headerContainer?.children[0]?.setAttribute(
         'style',
         'box-shadow: none !important; background-color: rgb(23, 23, 23, 0.9) !important;',
       )
     } else {
+      // Reset styles when not on landing page
       themeButton.style.display = 'block'
       headerContainer = window.document?.querySelector('.nextra-nav-container')
       headerContainer?.children[0]?.setAttribute('style', 'box-shadow: initial; background-color: initial;')

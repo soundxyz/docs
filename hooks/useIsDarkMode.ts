@@ -23,6 +23,8 @@ export function useIsDarkMode(override?: boolean) {
         setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches)
       } else {
         const themeInLocalStorage = localStorage.getItem('theme')
+        // colorMode is initially undefined so we check themeInLocalStorage,
+        // but after the first render colorMode takes prescedent
         setIsDarkMode(colorMode ? colorMode === 'dark' : themeInLocalStorage === 'dark')
       }
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', darkModeSetter)
