@@ -12,7 +12,7 @@ export function useIsDarkMode(override?: boolean) {
   }
 
   React.useEffect(() => {
-    // Don't change theme if on the homepage
+    // Defaults to light mode when on the homepage
     if (router.pathname === '/') {
       setIsDarkMode(false)
       return
