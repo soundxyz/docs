@@ -56,7 +56,9 @@ export default function Nextra({ Component, pageProps }) {
 
       if (currentTheme === 'system') {
         setLightOrDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      } else {
+
+        // If currentTheme is undefined, we don't need to do anything (browser will handle it)
+      } else if (currentTheme) {
         const newTheme = currentTheme === 'dark' ? 'dark' : 'light'
         setLightOrDarkMode(newTheme)
       }
