@@ -1,17 +1,14 @@
-# Sound Docs
+import React from 'react'
+import { Hero } from '../components/LandingPage/Hero'
+import { LinkCards } from '../components/LandingPage/LinkCards'
+import { BigLinkCards } from '../components/LandingPage/BigLinkCards'
 
-### [Sound Protocol](/protocol/overview)
-
-The Sound Protocol is a permissionless, open-source, modular smart contract framework for efficient creation of digital collectibles by musicians, artists, and creators.
-
-### [Sound SDK](/sdk)
-
-The Sound SDK is a Typescript library for building applications on the Sound Protocol.
-
-### [Sound API](/sound-api)
-
-Our official GraphQL API serves indexed event data from Sound Protocol, including metadata like image and audio URLs. It is a convenient way to integrate Sound data directly into your own tech stack.
-
-### [API Explorer](/api-explorer)
-
-Check out our API Explorer to practice with live queries.
+export default () => {
+  return (
+    <>
+      <Hero />
+      <LinkCards />
+      <BigLinkCards />
+    </>
+  )
+}

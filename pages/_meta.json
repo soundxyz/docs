@@ -1,5 +1,15 @@
 {
-  "index": "Introduction",
+  "index": {
+    "display": "hidden",
+    "hidden": true,
+    "theme": {
+      "sidebar": false,
+      "layout": "raw"
+    }
+  },
+  "intro": {
+    "title": "Sound Docs"
+  },
   "protocol": {
     "title": "Sound Protocol"
   },

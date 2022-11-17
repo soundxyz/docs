@@ -11,4 +11,13 @@ const withNextra = nextra({
 
 export default withNextra({
   reactStrictMode: true,
+  redirects: async () => {
+    return [
+      {
+        source: '/protocol',
+        destination: '/protocol/overview',
+        permanent: false,
+      },
+    ]
+  },
 })

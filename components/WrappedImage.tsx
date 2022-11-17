@@ -4,17 +4,16 @@ import { styled } from '../stitches.config'
 import type { CSS } from '@stitches/react'
 
 export const WrappedImage = (props: ImageProps & { css?: CSS }) => {
+  const [opacity, setOpacity] = React.useState(0)
   const { css, ...rest } = props
-  const ref = React.useRef<HTMLDivElement>(null)
 
-  const fadeIn = (e: any) => {
-    const img = e?.target
-    img.classList.remove('opacity-0')
+  const fadeIn = () => {
+    setOpacity(1)
   }
 
   return (
-    <Wrapper css={css}>
-      <Image {...rest} onLoad={fadeIn} className="opacity-0 transition-opacity duration-300" />
+    <Wrapper css={{ ...css, opacity, transition: 'opacity 300ms' }}>
+      <Image {...rest} onLoad={fadeIn} />
     </Wrapper>
   )
 }
