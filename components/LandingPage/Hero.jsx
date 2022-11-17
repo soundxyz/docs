@@ -2,10 +2,17 @@ import React from 'react'
 import { WrappedImage } from '../WrappedImage'
 import { styled } from '../../stitches.config'
 import { SectionContainer } from '../Containers'
+import { Button } from '../Button'
 
 export const Hero = () => {
+  const [backgroundImage, setBackgroundImage] = React.useState('none')
+
   return (
-    <SectionContainer css={{ backgroundColor: '$darkBg' }}>
+    <SectionContainer
+      css={{
+        backgroundColor: '$darkBg',
+      }}
+    >
       <HeroContainer>
         <HeroFlexContainer>
           <WrappedImage
@@ -15,16 +22,22 @@ export const Hero = () => {
               position: 'relative',
               width: 84,
               height: 'auto',
-              '@tablet': { top: 0, width: 140 },
+              '@laptop': { left: -100, top: -40, width: 140 },
             }}
             src="/images/hero-small-grid.png"
             width={84}
             height={63}
             layout="responsive"
           />
-          <BigH1 className="pl-[max(env(safe-area-inset-left),1.5rem)] pr-[max(env(safe-area-inset-right),1.5rem)]">
-            Tools for empowering artists & collectors
-          </BigH1>
+          <TextAndButtonContainer>
+            <BigH1>
+              Tools for empowering <br />
+              artists & collectors
+            </BigH1>
+            <Button href="/intro" css={{ alignSelf: 'center', '@laptop': { alignSelf: 'flex-start' } }}>
+              View Docs
+            </Button>
+          </TextAndButtonContainer>
         </HeroFlexContainer>
         <WrappedImage
           src="/images/hero-mobile-bottom-grid.png"
@@ -33,11 +46,11 @@ export const Hero = () => {
           layout="responsive"
           css={{
             width: '90%',
-            maxWidth: 500,
+            maxWidth: 900,
             width: 'calc(100% + 48px)',
             left: -24,
             position: 'relative',
-            '@tablet': { display: 'none' },
+            '@laptop': { display: 'none' },
           }}
         />
         <WrappedImage
@@ -46,20 +59,22 @@ export const Hero = () => {
           height={483}
           layout="responsive"
           css={{
+            position: 'absolute',
             alignSelf: 'end',
             marginLeft: 'auto',
-            width: '120%',
+            width: '70%',
+            maxWidth: 804,
             display: 'none',
             right: -24,
-            position: 'relative',
-
-            '@tablet': { display: 'block' },
+            bottom: 40,
+            display: 'none',
 
             '@tabletLandscape': {
               right: -48,
             },
 
             '@laptop': {
+              display: 'block',
               right: -96,
             },
           }}
@@ -71,32 +86,38 @@ export const Hero = () => {
 
 const BigH1 = styled('h1', {
   textAlign: 'center',
-  maxWidth: 360,
   fontSize: 36,
   fontFamily: 'DrukWideMedium',
   fontWeight: 500,
-  margin: '60px auto',
   lineHeight: '110%',
   color: 'white',
 
-  '@tablet': {
-    margin: '100px auto',
+  '@laptop': {
     textAlign: 'left',
-    maxWidth: 500,
-    fontSize: 50,
+    maxWidth: 800,
+    fontSize: 40,
   },
 })
 
 const HeroContainer = styled('div', {
-  backgroundColor: '$darkBg',
-  minHeight: 600,
   display: 'grid',
   gridTemplateRows: '1fr auto',
   position: 'relative',
 
-  '@tablet': {
+  '@laptop': {
     gridTemplateRows: '1fr',
-    gridTemplateColumns: 'minMax(400px, 100%) minMax(500px, 1000px)',
+  },
+})
+
+const TextAndButtonContainer = styled('div', {
+  display: 'flex',
+  flexDirection: 'column',
+  margin: '60px auto 40px',
+  maxWidth: 'calc(90rem - 48px)',
+  width: '100%',
+
+  '@laptop': {
+    margin: '165px auto 125px auto',
   },
 })
 
@@ -104,7 +125,7 @@ const HeroFlexContainer = styled('div', {
   display: 'flex',
   flexDirection: 'column',
 
-  '@tablet': {
+  '@laptop': {
     flexDirection: 'column-reverse',
   },
 })

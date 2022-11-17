@@ -39,7 +39,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       brandAccent60: '#C3ECE2',
       brandAccent80: '#B2E9DB',
       brandAccent100: '#A1E6D5',
-      iconProtocol: '#F773FF',
+      brandPink500: '#F773FF',
       iconSDK: '#36F6EC',
       iconAPI: '#FF753A',
       accent300: '#F0ABFC',
@@ -58,7 +58,7 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       education200: '#605DEC',
 
       white: '#fff',
-      darkBg: '#111111',
+      darkBg: '#171717',
       black: '#0E1213',
       blue400: '#4299E1',
       grey100: '#F3F4F6',
@@ -84,9 +84,9 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
 })
 
 export const globalStyles = globalCss({
-  'a.text-primary-500': { color: theme.colors.brand500.value },
+  'a.nx-text-primary-500': { color: theme.colors.brandPink500.value },
   '*::selection': {
-    background: theme.colors.brand500.value,
+    background: theme.colors.brandPink500.value,
     color: '#fff',
   },
 })

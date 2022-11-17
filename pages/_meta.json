@@ -1,11 +1,14 @@
 {
   "index": {
+    "display": "hidden",
     "hidden": true,
-    "title": "Sound Docs",
     "theme": {
       "sidebar": false,
       "layout": "raw"
     }
+  },
+  "intro": {
+    "title": "Sound Docs"
   },
   "protocol": {
     "title": "Sound Protocol"

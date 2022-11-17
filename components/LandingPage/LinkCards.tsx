@@ -11,11 +11,12 @@ const content = {
       'The Sound Protocol is a permissionless, open-source, modular smart contract framework for musicians and creators.',
     icon: SoundProtocolIcon,
     path: '/protocol/overview',
-    color: '$iconProtocol',
+    color: '$brandPink500',
   },
   sdk: {
     heading: 'Sound SDK',
-    description: 'The Sound SDK is a Typescript library for building applications on the Sound Protocol.',
+    description:
+      'The Sound SDK is a Typescript library that provides everything needed for building applications on the Sound Protocol.',
     icon: SoundSDKIcon,
     path: '/sdk',
     color: '$iconSDK',
@@ -69,24 +70,37 @@ export const LinkCards = () => {
 const MiddleLinks = styled('div', {
   display: 'flex',
   flexDirection: 'column',
+  paddingBottom: 20,
+  margin: '0 auto',
+  maxWidth: 'calc(90rem - 48px)',
 
   '@tabletLandscape': {
     flexDirection: 'row',
+    paddingBottom: 20,
   },
 })
 
 const OuterContainer = styled('div', {
-  color: '$darkBg',
   width: '100%',
   display: 'flex',
-  justifyContent: 'center',
   borderRadius: 0,
+
+  '@laptop': {
+    '&:nth-of-type(2)': {
+      justifyContent: 'center',
+    },
+
+    '&:nth-of-type(3)': {
+      justifyContent: 'flex-end',
+    },
+  },
 })
 
 const InnerContainer = styled('div', {
-  padding: '50px 0',
-  maxWidth: 290,
+  paddingTop: 24,
+  paddingBottom: 20,
   margin: '0 auto',
+  maxWidth: 340,
 
   svg: {
     opacity: 0.9,
@@ -97,29 +111,61 @@ const InnerContainer = styled('div', {
       opacity: 1,
     },
   },
+
+  '@laptop': {
+    paddingTop: 85,
+    paddingBottom: 80,
+  },
 })
 
 const Heading = styled('h2', {
-  fontSize: 34,
+  fontFamily: 'DrukWideMedium',
+  fontSize: 22,
   fontWeight: 500,
-  marginTop: 32,
+  marginTop: 16,
   color: '$neutral900',
+
+  '@laptop': {
+    marginTop: 32,
+  },
 })
 
 const Description = styled('p', {
-  marginTop: 16,
+  marginTop: 8,
   color: '$neutral700',
+
+  '@laptop': {
+    marginTop: 16,
+  },
 })
 
 const IconContainer = styled('div', {
-  backgroundColor: '$black',
-  width: 100,
-  height: 100,
+  backgroundColor: 'black',
+  width: 80,
+  height: 80,
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   borderRadius: 8,
   borderWidth: 2,
-  borderColor: '$black',
+  borderColor: 'black',
   transition: 'all 0.2s ease-in-out',
+
+  svg: {
+    width: '80%',
+  },
+
+  '@tablet': {
+    width: 100,
+    height: 100,
+
+    svg: {
+      width: '100%',
+    },
+  },
+})
+
+const InnerIconContainer = styled('div', {
+  width: 50,
+  height: 50,
 })

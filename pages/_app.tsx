@@ -37,6 +37,7 @@ export default function Nextra({ Component, pageProps }) {
 
     if (router.pathname === '/') {
       setLightOrDarkMode('dark')
+      themeButton.style.display = 'none'
 
       // Hide theme button when on landing page
       themeButton.style.display = 'none'
