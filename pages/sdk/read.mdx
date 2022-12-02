@@ -177,66 +177,93 @@ const editionApiInfo = await client.editionInfo({
 
 ```ts
 export type EditionApiInfo = {
+  trackAudio: Promise<{
+    id: string
+    duration: number
+    revealTime: number
+    audio?:
+      | {
+          id: string
+          url: string
+        }
+      | null
+      | undefined
+  }>
   id: string
   contractAddress: string
-  editionId?: string | null
+  editionId?: string | null | undefined
   type: 'ALBUM' | 'COMPILATION' | 'EP' | 'PLAYLIST' | 'SINGLE'
-  externalUrl?: string | null
-  openseaUrl?: string | null
-  layloUrl?: string | null
+  externalUrl?: string | null | undefined
+  openseaUrl?: string | null | undefined
+  layloUrl?: string | null | undefined
   title: string
   behindTheMusic: string
-  season?: string | null
+  season?: string | null | undefined
   totalRaised: string
   totalRaisedPrimaryUsd: number
   totalRaisedSecondaryUsd: number
-  genre: { id: string; name: string }
-  track: { id: string; duration: number; normalizedPeaks: Array<number> }
+  genre: {
+    id: string
+    name: string
+  }
+  track: {
+    id: string
+    duration: number
+    normalizedPeaks: number[]
+  }
   artist: {
     id: string
-    gemCollectionUrl?: string | null
-    openseaCollectionUrl?: string | null
-    season?: string | null
-    soundHandle?: string | null
-    spotifyUrl?: string | null
-    bannerImage?: { id: string; url: string } | null
+    gemCollectionUrl?: string | null | undefined
+    openseaCollectionUrl?: string | null | undefined
+    season?: string | null | undefined
+    soundHandle?: string | null | undefined
+    spotifyUrl?: string | null | undefined
+    bannerImage?:
+      | {
+          id: string
+          url: string
+        }
+      | null
+      | undefined
     user: {
       id: string
       publicAddress: string
-      description?: string | null
-      displayName?: string | null
-      email?: string | null
-      twitterHandle?: string | null
-      avatar?: { id: string; url: string } | null
-      bannerImage?: { id: string; url: string } | null
+      description?: string | null | undefined
+      displayName?: string | null | undefined
+      email?: string | null | undefined
+      twitterHandle?: string | null | undefined
+      avatar?:
+        | {
+            id: string
+            url: string
+          }
+        | null
+        | undefined
+      bannerImage?:
+        | {
+            id: string
+            url: string
+          }
+        | null
+        | undefined
     }
   }
-  rewards: Array<{ id: string; description: string; numOfBackers: number; price: string; title: string }>
-  coverImage: { id: string; url: string }
-  goldenEggImage: { id: string; url: string }
+  rewards: {
+    id: string
+    description: string
+    numOfBackers: number
+    price: string
+    title: string
+  }[]
+  coverImage: {
+    id: string
+    url: string
+  }
+  goldenEggImage: {
+    id: string
+    url: string
+  }
 }
-```
-
-#### `.trackAudio`
-
-> Requires `soundAPI`
-
-Due to the nature of the editions associated music being revealed after specific dates, to get the track information it is required an extra step after getting the initial edition information.
-
-```ts
-const editionApiInfo = await client.editionInfo({
-  contractAddress: '0x...',
-}).api
-
-/**
- *  {
- *     id: string;
- *     duration: number;
- *     revealTime: number;
- *     audio?: { id: string; url: string } | null
- *  }
- */
-const trackAudio = await editionApiInfo.trackAudio
 ```
 
 ## expectedEditionAddress
@@ -271,4 +298,153 @@ const {
   deployer: '0x...',
   salt,
 })
+```
+
+## numberOfTokensOwned
+
+> Requires either `signer` or `provider`
+
+Returns the number of tokens owned by user for a given edition
+
+```ts
+const userAddress = '0x...'
+
+const editionAddress = '0x...'
+
+const tokensOwnedTotal = await client.numberOfTokensOwned({
+  editionAddress,
+  userAddress,
+})
+```
+
+## getMerkleProof
+
+> Requires merkleProvider
+
+```ts
+import { SoundClient } from '@soundxyz/sdk'
+import { LanyardMerkleProofProvider } from '@soundxyz/sdk/merkle/lanyard'
+
+const client = SoundClient({
+  // ...
+
+  merkleProvider: LanyardMerkleProofProvider, // Or any other compatible merkle proof provider
+})
+
+const merkleProof = await client.getMerkleProof({
+  merkleRoot: '0x...',
+  userAddress: '0x...',
+})
+```
+
+## editionRegisteredMinters
+
+> Requires either `signer` or `provider`
+
+Returns the addresses with [`MINTER_ROLE`](/protocol/core/sound-edition-v1#minter_role) for a given edition address.
+
+```ts
+const editionAddress = '0x...'
+
+const fromBlockOrBlockHash = 16093064 // Optional string or number
+
+const minterAddresses: string[] = await client.editionRegisteredMinters({
+  editionAddress,
+  fromBlockOrBlockHash,
+})
+```
+
+## editionMinterMintIds
+
+> Requires either `signer` or `provider`
+
+Returns an array of mint ids for a given edition address and minter address.
+
+```ts
+const editionAddress = '0x...'
+
+const minterAddress = '0x...'
+
+const fromBlockOrBlockHash = 16093064 // Optional string or number
+
+const mintIds: number[] = await client.editionMinterMintIds({
+  editionAddress,
+  minterAddress,
+  fromBlockOrBlockHash,
+})
+```
+
+## editionScheduleIds
+
+> Requires either `signer` or `provider`
+
+Returns an array of objects, each containing a minter address and array of mint ids.
+
+```ts
+const editionAddress = '0x...'
+
+const fromBlockOrBlockHash = 16093064 // Optional string or number
+
+const scheduleIds: Array<{ minterAddress: string; mintIds: number[] }> = await client.editionScheduleIds({
+  editionAddress,
+  fromBlockOrBlockHash,
+})
+```
+
+## editionMintSchedules
+
+> Requires either `signer` or `provider`
+
+Returns an array of [MintSchedules](read#mintschedule-type), each containing a minter address and array of mint ids.
+
+```ts
+const editionAddress = '0x...'
+
+const scheduleIds = [
+  {
+    minterAddress: '0x...123',
+    mintIds: [1, 2, 3],
+  },
+  {
+    minterAddress: '0x...345',
+    mintIds: [1, 2, 3],
+  },
+]
+
+const mintSchedules: MintSchedule[] = await client.editionScheduleIds({
+  editionAddress,
+  scheduleIds,
+})
+```
+
+#### `MintSchedule` type
+
+```ts
+type MintSchedule = RangeEditionSchedule | MerkleDropSchedule
+
+type RangeEditionSchedule = MintScheduleBase & {
+  mintType: 'RangeEdition'
+  maxMintableLower: number
+  maxMintableUpper: number
+  cutoffTime: number
+  maxMintable: (unixTimestamp?: number) => number
+}
+
+type MerkleDropSchedule = MintScheduleBase & {
+  mintType: 'MerkleDrop'
+  maxMintable: number
+  merkleRoot: string
+}
+
+type MintScheduleBase = {
+  editionAddress: string
+  minterAddress: string
+  mintId: number
+  startTime: number
+  endTime: number
+  mintPaused: boolean
+  price: BigNumber
+  maxMintablePerAccount: number
+  totalMinted: number
+}
 ```
