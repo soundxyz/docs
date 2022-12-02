@@ -30,7 +30,7 @@
     "autoprefixer": "^10.4.12",
     "husky": "^7.0.4",
     "next": "^12.3.0",
-    "nextra": "2.0.0-beta.29",
+    "nextra": "2.0.0",
     "nextra-theme-docs": "2.0.0-beta.41",
     "postcss": "^8.4.17",
     "prettier": "^2.7.1",

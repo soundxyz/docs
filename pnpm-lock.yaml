@@ -20,7 +20,7 @@ importers:
       husky: ^7.0.4
       isomorphic-fetch: ^3.0.0
       next: ^12.3.0
-      nextra: 2.0.0-beta.29
+      nextra: 2.0.0
       nextra-theme-docs: 2.0.0-beta.41
       postcss: ^8.4.17
       prettier: ^2.7.1
@@ -54,7 +54,7 @@ importers:
       autoprefixer: 10.4.12_postcss@8.4.17
       husky: 7.0.4
       next: 12.3.1_sfoxds7t5ydpegc3knd667wn6m
-      nextra: 2.0.0-beta.29_dty4et2pnba4zo7o4cegg6bk2e
+      nextra: 2.0.0_dty4et2pnba4zo7o4cegg6bk2e
       nextra-theme-docs: 2.0.0-beta.41_dty4et2pnba4zo7o4cegg6bk2e
       postcss: 8.4.17
       prettier: 2.7.1
@@ -2275,6 +2275,33 @@ packages:
 
   /nextra/2.0.0-beta.29_dty4et2pnba4zo7o4cegg6bk2e:
     resolution: {integrity: sha512-UjsaoMNsJRG0fbzqgoLDXgvJwcSJxwPr+ojBBjJsaZ6fu5+cwbCx8wXazA0y5sSxGw75fG6D1I7rS6pflHctuQ==}
+    peerDependencies:
+      next: '>=9.5.3'
+      react: '>=16.13.1'
+      react-dom: '>=16.13.1'
+    dependencies:
+      '@mdx-js/mdx': 2.1.3
+      '@napi-rs/simple-git': 0.1.8
+      github-slugger: 1.4.0
+      graceful-fs: 4.2.10
+      gray-matter: 4.0.3
+      next: 12.3.1_sfoxds7t5ydpegc3knd667wn6m
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      rehype-mdx-title: 1.0.0
+      rehype-pretty-code: 0.2.4_shiki@0.10.1
+      remark-gfm: 3.0.1
+      remark-reading-time: 2.0.1
+      shiki: 0.10.1
+      slash: 3.0.0
+      title: 3.5.3
+      unist-util-visit: 4.1.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /nextra/2.0.0_dty4et2pnba4zo7o4cegg6bk2e:
+    resolution: {integrity: sha512-3mf5aX+ZJVz7HRtxwtWIo1kw51xrF5MsqoUl0cQDTbFiktCn/Af5AX1gBuiX8/Z4mSEedalvTZUfR6+LxumLFg==}
     peerDependencies:
       next: '>=9.5.3'
       react: '>=16.13.1'
