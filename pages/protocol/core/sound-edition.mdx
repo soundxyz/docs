@@ -1,6 +1,6 @@
-# SoundEditionV1
+# SoundEdition
 
-**[`contracts/core/SoundEditionV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1.sol)**
+**[`contracts/core/SoundEditionV1_1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1_1.sol)**
 
 The Sound Protocol NFT contract.
 
@@ -125,7 +125,7 @@ Each token will be assigned a token ID that is consecutively increasing.
 **Calling conditions:**
 
 - The caller must be the owner of the contract, or have either the
-  [`ADMIN_ROLE`](sound-edition-v1#admin_role), [`MINTER_ROLE`](sound-edition-v1#minter_role), which can be granted via `grantRoles`.
+  [`ADMIN_ROLE`](sound-edition#admin_role), [`MINTER_ROLE`](sound-edition#minter_role), which can be granted via `grantRoles`.
   Multiple minters, such as different minter contracts,
   can be authorized simultaneously.
 
@@ -147,7 +147,7 @@ Mints `quantity` tokens to each of the addresses in `to`.
 **Calling conditions:**
 
 - The caller must be the owner of the contract, or have the
-  [`ADMIN_ROLE`](sound-edition-v1#admin_role), which can be granted via `grantRoles`.
+  [`ADMIN_ROLE`](sound-edition#admin_role), which can be granted via `grantRoles`.
 
 | Params:    |                           |
 | ---------- | ------------------------- |
@@ -186,7 +186,7 @@ Sets metadata module.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:          |                             |
 | ---------------- | --------------------------- |
@@ -202,7 +202,7 @@ Sets global base URI.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:   |                         |
 | --------- | ----------------------- |
@@ -218,7 +218,7 @@ Sets contract URI.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:       |                             |
 | ------------- | --------------------------- |
@@ -234,7 +234,7 @@ Freezes metadata by preventing any more changes to base URI.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 ### setFundingRecipient
 
@@ -246,7 +246,7 @@ Sets funding recipient address.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:            |                                                 |
 | ------------------ | ----------------------------------------------- |
@@ -262,7 +262,7 @@ Sets royalty amount in bps (basis points).
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params: |                                         |
 | ------- | --------------------------------------- |
@@ -281,7 +281,7 @@ Sets the edition max mintable range.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:                    |                                                                     |
 | -------------------------- | ------------------------------------------------------------------- |
@@ -298,7 +298,7 @@ Sets the timestamp after which, the `editionMaxMintable` drops from `editionMaxM
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:              |                |
 | -------------------- | -------------- |
@@ -314,7 +314,7 @@ Sets whether the `mintRandomness` is enabled.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:                  |                    |
 | ------------------------ | ------------------ |
@@ -352,6 +352,7 @@ See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-i
 | `ERC721`                 | `0x80ac58cd` |
 | `ERC721Metadata`         | `0x5b5e139f` |
 | `ISoundEditionV1`        | `0x50899e54` |
+| `ISoundEditionV1_1`      | `0x425aac3d` |
 
 ### MINTER_ROLE
 

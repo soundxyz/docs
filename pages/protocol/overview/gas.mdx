@@ -29,8 +29,8 @@ The following are some scenarios that can be used to estimate the gas cost of de
 <Div1>Gas total: **{gasFigures.CREATE_EDITION_1.toLocaleString()}**</Div1>
 <Div2>Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_1)}**</Div2>
 
-- 229,073 gas to deploy & initialize the minimal proxy of [SoundEditionV1](/protocol/core/sound-edition-v1).
-- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
+- 229,073 gas to deploy & initialize the minimal proxy of [SoundEdition](/protocol/core/sound-edition).
+- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEdition.grantRoles`).
 - 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint).
 
 ### Public sale + 1 presale
@@ -38,9 +38,9 @@ The following are some scenarios that can be used to estimate the gas cost of de
 <Div1>Gas total: **{gasFigures.CREATE_EDITION_2.toLocaleString()}**</Div1>
 <Div2>Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_2)}**</Div2>
 
-- 229,073 gas to deploy & initialize the minimal proxy of [SoundEditionV1](/protocol/core/sound-edition-v1).
-- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
-- 24,264 gas to register `MINTER_ROLE` for [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) (`SoundEditionV1.grantRoles`).
+- 229,073 gas to deploy & initialize the minimal proxy of [SoundEdition](/protocol/core/sound-edition).
+- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEdition.grantRoles`).
+- 24,264 gas to register `MINTER_ROLE` for [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) (`SoundEdition.grantRoles`).
 - 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint) public sale config.
 - 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) presale config.
 
@@ -49,9 +49,9 @@ The following are some scenarios that can be used to estimate the gas cost of de
 <Div1>Gas total: **{gasFigures.CREATE_EDITION_3.toLocaleString()}**</Div1>
 <Div2>Price estimate: **{getDollarEstimate(gasFigures.CREATE_EDITION_3)}**</Div2>
 
-- 229,073 gas to deploy & initialize the minimal proxy of [SoundEditionV1](/protocol/core/sound-edition-v1).
-- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEditionV1.grantRoles`).
-- 24,264 gas to register `MINTER_ROLE` for [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) (`SoundEditionV1.grantRoles`).
+- 229,073 gas to deploy & initialize the minimal proxy of [SoundEdition](/protocol/core/sound-edition).
+- 24,264 gas to register `MINTER_ROLE` for [EditionMaxMinter](/protocol/modules/minters/edition-max-minter) (`SoundEdition.grantRoles`).
+- 24,264 gas to register `MINTER_ROLE` for [MerkleDropMinter](/protocol/modules/minters/merkle-drop-minter) (`SoundEdition.grantRoles`).
 - 74,927 gas for [`EditionMaxMinter.createEditionMint`](/protocol/modules/minters/edition-max-minter#createeditionmint) public sale config.
 - 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) free mint config.
 - 98,515 gas for [`MerkleDropMinter.createEditionMint`](/protocol/modules/minters/merkle-drop-minter#createeditionmint) presale config.
