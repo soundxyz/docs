@@ -19,7 +19,8 @@ Inherits:
 - [ERC721AUpgradeable](/protocol/libraries/erc721a-upgradeable)
 - [ERC721ABurnableUpgradeable](/protocol/libraries/erc721a-burnable-upgradeable)
 - [ERC721AQueryableUpgradeable](/protocol/libraries/erc721a-queryable-upgradeable)
-- [OwnableRoles](/protocol/libraries/ownable-roles)
+- [OwnableRoles](/protocol/libraries/ownable-roles) from Solady
+- [OperatorFilterer](https://github.com/Vectorized/closedsea/blob/main/src/OperatorFilterer.sol) from ClosedSea
 
 ## Structs
 
@@ -382,21 +383,21 @@ Prevents the first-time transfer costs for tokens near the end of large mint bat
 
 See: https://chiru-labs.github.io/ERC721A/#/tips?id=batch-size
 
-### METADATA_IS_FROZEN_FLAG
+### Initialization flags
+
+Each flag is a bit in the `uint256 _flags` passed to the `initialze` function.
+
+- `METADATA_IS_FROZEN_FLAG` - If set, the metadata is frozen and cannot be changed.
+- `MINT_RANDOMNESS_ENABLED_FLAG` - If set, the `mintRandomness` function is enabled.
+- `OPERATOR_FILTERING_ENABLED_FLAG` - If set, the edition will be compatible with OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry) for creator fees.
+
+Each flag's base-10 value can be retrieved by calling its name as a function.
 
 ```solidity
-function METADATA_IS_FROZEN_FLAG() external pure returns (uint8)
+function METADATA_IS_FROZEN_FLAG() external pure returns (uint8);
+function MINT_RANDOMNESS_ENABLED_FLAG() external pure returns (uint8);
+function OPERATOR_FILTERING_ENABLED_FLAG() external pure returns (uint8);
 ```
-
-Returns the bit flag to freeze the metadata on initialization.
-
-### MINT_RANDOMNESS_ENABLED_FLAG
-
-```solidity
-function MINT_RANDOMNESS_ENABLED_FLAG() external pure returns (uint8)
-```
-
-Returns the bit flag to enable the mint randomness feature on initialization.
 
 ### baseURI
 
@@ -482,6 +483,14 @@ function mintRandomnessEnabled() external view returns (bool)
 ```
 
 Returns whether the `mintRandomness` has been enabled.
+
+### operatorFilteringEnabled
+
+```solidity
+function operatorFilteringEnabled() external view returns (bool)
+```
+
+Returns whether the edition implements OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry)
 
 ### mintConcluded
 
@@ -706,6 +715,63 @@ Emitted upon initialization.
 | `editionMaxMintableUpper_` | The upper bound of the max mintable quantity for the edition.                                                                                                                            |
 | `editionCutoffTime_`       | The timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `max(_totalMinted(), editionMaxMintableLower)`.                                                   |
 | `flags_`                   | The bitwise OR result of the initialization flags. <br/>See: [METADATA_IS_FROZEN_FLAG](#metadata_is_frozen_flag) <br/>See: [MINT_RANDOMNESS_ENABLED_FLAG](#mint_randomness_enabled_flag) |
+
+### ETHWithdrawn
+
+```solidity
+event ETHWithdrawn(address recipient, uint256 amount, address caller)
+```
+
+Emitted upon ETH withdrawal.
+
+| Params:     |                                            |
+| ----------- | ------------------------------------------ |
+| `recipient` | The recipient of the withdrawal..          |
+| `amount`    | The amount withdrawn.                      |
+| `caller`    | The account that initiated the withdrawal. |
+
+### ERC20Withdrawn
+
+```solidity
+event ERC20Withdrawn(address recipient, uint256 amount, address caller)
+```
+
+Emitted upon ERC20 withdrawal.
+
+| Params:     |                                            |
+| ----------- | ------------------------------------------ |
+| `recipient` | The recipient of the withdrawal..          |
+| `tokens`    | The addresses of the ERC20 tokens.         |
+| `amount`    | The amount of each token withdrawn.        |
+| `caller`    | The account that initiated the withdrawal. |
+
+### Minted
+
+```solidity
+event Minted(address to, uint256 quantity, uint256 fromTokenId);
+```
+
+Emitted upon a mint.
+
+| Params:       |                            |
+| ------------- | -------------------------- |
+| `to`          | The address to mint to.    |
+| `quantity`    | The number of minted.      |
+| `fromTokenId` | The first token ID minted. |
+
+### Airdropped
+
+```solidity
+event Minted(address to, uint256 quantity, uint256 fromTokenId);
+```
+
+Emitted upon an airdrop.
+
+| Params:       |                                                          |
+| ------------- | -------------------------------------------------------- |
+| `to`          | The recipients of the airdrop.                           |
+| `quantity`    | The number of tokens airdropped to each address in `to`. |
+| `fromTokenId` | The first token ID minted to the first address in `to`.  |
 
 ## Errors
 
