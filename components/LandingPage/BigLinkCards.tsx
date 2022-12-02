@@ -102,7 +102,7 @@ const OuterContainer = styled('div', {
   display: 'flex',
   alignItems: 'flex-start',
   paddingTop: 50,
-  backgroundColor: 'black',
+  backgroundColor: '$darkBg',
   color: '$white',
   width: '100%',
   height: 540,

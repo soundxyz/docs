@@ -140,7 +140,7 @@ const Description = styled('p', {
 })
 
 const IconContainer = styled('div', {
-  backgroundColor: 'black',
+  backgroundColor: '$darkBg',
   width: 80,
   height: 80,
   display: 'flex',
@@ -148,7 +148,7 @@ const IconContainer = styled('div', {
   justifyContent: 'center',
   borderRadius: 8,
   borderWidth: 2,
-  borderColor: 'black',
+  borderColor: '$darkBg',
   transition: 'all 0.2s ease-in-out',
 
   svg: {
