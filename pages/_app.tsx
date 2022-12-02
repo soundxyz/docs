@@ -45,7 +45,7 @@ export default function Nextra({ Component, pageProps }) {
       // Override header styles
       headerContainer?.children[0]?.setAttribute(
         'style',
-        'box-shadow: none !important; background-color: rgb(23, 23, 23, 0.9) !important;',
+        'box-shadow: none !important; background-color: rgb(23, 23, 23, 1) !important;',
       )
     } else {
       // Reset styles when not on landing page
