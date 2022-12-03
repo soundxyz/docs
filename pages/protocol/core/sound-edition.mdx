@@ -1,6 +1,6 @@
-# SoundEditionV1
+# SoundEdition
 
-**[`contracts/core/SoundEditionV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1.sol)**
+**[`contracts/core/SoundEditionV1_1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1_1.sol)**
 
 The Sound Protocol NFT contract.
 
@@ -19,7 +19,8 @@ Inherits:
 - [ERC721AUpgradeable](/protocol/libraries/erc721a-upgradeable)
 - [ERC721ABurnableUpgradeable](/protocol/libraries/erc721a-burnable-upgradeable)
 - [ERC721AQueryableUpgradeable](/protocol/libraries/erc721a-queryable-upgradeable)
-- [OwnableRoles](/protocol/libraries/ownable-roles)
+- [OwnableRoles](/protocol/libraries/ownable-roles) from Solady
+- [OperatorFilterer](https://github.com/Vectorized/closedsea/blob/main/src/OperatorFilterer.sol) from ClosedSea
 
 ## Structs
 
@@ -125,7 +126,7 @@ Each token will be assigned a token ID that is consecutively increasing.
 **Calling conditions:**
 
 - The caller must be the owner of the contract, or have either the
-  [`ADMIN_ROLE`](sound-edition-v1#admin_role), [`MINTER_ROLE`](sound-edition-v1#minter_role), which can be granted via `grantRoles`.
+  [`ADMIN_ROLE`](sound-edition#admin_role), [`MINTER_ROLE`](sound-edition#minter_role), which can be granted via `grantRoles`.
   Multiple minters, such as different minter contracts,
   can be authorized simultaneously.
 
@@ -147,7 +148,7 @@ Mints `quantity` tokens to each of the addresses in `to`.
 **Calling conditions:**
 
 - The caller must be the owner of the contract, or have the
-  [`ADMIN_ROLE`](sound-edition-v1#admin_role), which can be granted via `grantRoles`.
+  [`ADMIN_ROLE`](sound-edition#admin_role), which can be granted via `grantRoles`.
 
 | Params:    |                           |
 | ---------- | ------------------------- |
@@ -186,7 +187,7 @@ Sets metadata module.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:          |                             |
 | ---------------- | --------------------------- |
@@ -202,7 +203,7 @@ Sets global base URI.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:   |                         |
 | --------- | ----------------------- |
@@ -218,7 +219,7 @@ Sets contract URI.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:       |                             |
 | ------------- | --------------------------- |
@@ -234,7 +235,7 @@ Freezes metadata by preventing any more changes to base URI.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 ### setFundingRecipient
 
@@ -246,7 +247,7 @@ Sets funding recipient address.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:            |                                                 |
 | ------------------ | ----------------------------------------------- |
@@ -262,7 +263,7 @@ Sets royalty amount in bps (basis points).
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params: |                                         |
 | ------- | --------------------------------------- |
@@ -281,7 +282,7 @@ Sets the edition max mintable range.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:                    |                                                                     |
 | -------------------------- | ------------------------------------------------------------------- |
@@ -298,7 +299,7 @@ Sets the timestamp after which, the `editionMaxMintable` drops from `editionMaxM
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:              |                |
 | -------------------- | -------------- |
@@ -314,11 +315,116 @@ Sets whether the `mintRandomness` is enabled.
 
 **Calling conditions:**
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition-v1#admin_role).
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
 
 | Params:                  |                    |
 | ------------------------ | ------------------ |
 | `mintRandomnessEnabled_` | The boolean value. |
+
+### setOperatorFilteringEnabled
+
+```solidity
+function setOperatorFilteringEnabled(bool operatorFilteringEnabled_) external
+```
+
+Sets whether OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry) is enabled.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+
+| Params:                     |                    |
+| --------------------------- | ------------------ |
+| `operatorFilteringEnabled_` | The boolean value. |
+
+### setApprovalForAll
+
+```solidity
+function setApprovalForAll(address operator, bool approved) external
+```
+
+Approves or removes `operator` as an operator for the caller.
+Operators can call `transferFrom` or ` safeTransferFrom` for any token owned by the caller. If the `OPERATOR_FILTERING_ENABLED_FLAG` is set,
+this function will revert if the operator is not approved by the [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry).
+
+**Calling conditions:**
+
+- The `operator` cannot be the caller.
+
+| Params:    |                                          |
+| ---------- | ---------------------------------------- |
+| `operator` | The operator address.                    |
+| `approved` | Whether or not the operator is approved. |
+
+### approve
+
+```solidity
+function approve(address operator, bool approved) external
+```
+
+Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. If the `OPERATOR_FILTERING_ENABLED_FLAG` is set,
+this function will revert if the operator is not approved by the [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry).
+
+**Calling conditions:**
+
+- The `operator` cannot be the caller.
+
+| Params:   |                            |
+| --------- | -------------------------- |
+| `to`      | The permissioned operator. |
+| `tokenId` | The permissioned token.    |
+
+### transferFrom
+
+```solidity
+ function transferFrom(address from, address to, uint256 tokenId) external payable
+```
+
+Transfers `tokenId` token from `from` to `to`.
+
+> **WARNING:
+> Usage of this method is discouraged, use `safeTransferFrom` whenever possible.**
+
+**Calling conditions:**
+
+- `from` cannot be the zero address.
+- `from` can only be approved operators (if `OPERATOR_FILTERING_ENABLED_FLAG` is set)
+- `to` cannot be the zero address.
+- `tokenId` token must be owned by `from`.
+- If the caller is not `from`, it must be approved to move this token
+  by either `approve` or `setApprovalForAll`.
+
+| Params:   |                         |
+| --------- | ----------------------- |
+| `from`    | The sender.             |
+| `to`      | The receiver.           |
+| `tokenId` | The permissioned token. |
+
+### safeTransferFrom
+
+```solidity
+ function safeTransferFrom(address from, address to, bytes calldata data) external payable
+```
+
+Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients are aware of the ERC721 protocol to prevent tokens from being forever locked.
+
+**Calling conditions:**
+
+- `from` cannot be the zero address.
+- `from` can only be approved operators (if `OPERATOR_FILTERING_ENABLED_FLAG` is set)
+  `to` cannot be the zero address.
+  `tokenId` token must exist and be owned by `from`.
+  If the caller is not `from`, it must be have been allowed to move
+  this token by either `approve` or `setApprovalForAll`.
+  If `to` refers to a smart contract, it must implement
+  `IERC721Receiver-onERC721Received`, which is called upon a safe transfer.
+
+| Params:   |                                                                       |
+| --------- | --------------------------------------------------------------------- |
+| `from`    | The sender.                                                           |
+| `to`      | The receiver.                                                         |
+| `tokenId` | The permissioned token.                                               |
+| `data`    | Optional data to be used by receiver if receiver is a smart contract. |
 
 ## Read-only Functions
 
@@ -352,6 +458,7 @@ See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-i
 | `ERC721`                 | `0x80ac58cd` |
 | `ERC721Metadata`         | `0x5b5e139f` |
 | `ISoundEditionV1`        | `0x50899e54` |
+| `ISoundEditionV1_1`      | `0x425aac3d` |
 
 ### MINTER_ROLE
 
@@ -381,21 +488,21 @@ Prevents the first-time transfer costs for tokens near the end of large mint bat
 
 See: https://chiru-labs.github.io/ERC721A/#/tips?id=batch-size
 
-### METADATA_IS_FROZEN_FLAG
+### Initialization flags
+
+Each flag is a bit in the `uint256 _flags` passed to the `initialze` function.
+
+- `METADATA_IS_FROZEN_FLAG` - If set, the metadata is frozen and cannot be changed.
+- `MINT_RANDOMNESS_ENABLED_FLAG` - If set, the `mintRandomness` function is enabled.
+- `OPERATOR_FILTERING_ENABLED_FLAG` - If set, the edition will be compatible with OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry) for creator fees.
+
+Each flag's base-10 value can be retrieved by calling its name as a function.
 
 ```solidity
-function METADATA_IS_FROZEN_FLAG() external pure returns (uint8)
+function METADATA_IS_FROZEN_FLAG() external pure returns (uint8);
+function MINT_RANDOMNESS_ENABLED_FLAG() external pure returns (uint8);
+function OPERATOR_FILTERING_ENABLED_FLAG() external pure returns (uint8);
 ```
-
-Returns the bit flag to freeze the metadata on initialization.
-
-### MINT_RANDOMNESS_ENABLED_FLAG
-
-```solidity
-function MINT_RANDOMNESS_ENABLED_FLAG() external pure returns (uint8)
-```
-
-Returns the bit flag to enable the mint randomness feature on initialization.
 
 ### baseURI
 
@@ -471,7 +578,7 @@ function mintRandomness() external view returns (uint256)
 
 Returns a pseudorandom number based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
 
-> :warning:
+> **WARNING**
 > This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain pseudorandom mechanism.
 
 ### mintRandomnessEnabled
@@ -481,6 +588,14 @@ function mintRandomnessEnabled() external view returns (bool)
 ```
 
 Returns whether the `mintRandomness` has been enabled.
+
+### operatorFilteringEnabled
+
+```solidity
+function operatorFilteringEnabled() external view returns (bool)
+```
+
+Returns whether the edition implements OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry)
 
 ### mintConcluded
 
@@ -705,6 +820,63 @@ Emitted upon initialization.
 | `editionMaxMintableUpper_` | The upper bound of the max mintable quantity for the edition.                                                                                                                            |
 | `editionCutoffTime_`       | The timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `max(_totalMinted(), editionMaxMintableLower)`.                                                   |
 | `flags_`                   | The bitwise OR result of the initialization flags. <br/>See: [METADATA_IS_FROZEN_FLAG](#metadata_is_frozen_flag) <br/>See: [MINT_RANDOMNESS_ENABLED_FLAG](#mint_randomness_enabled_flag) |
+
+### ETHWithdrawn
+
+```solidity
+event ETHWithdrawn(address recipient, uint256 amount, address caller)
+```
+
+Emitted upon ETH withdrawal.
+
+| Params:     |                                            |
+| ----------- | ------------------------------------------ |
+| `recipient` | The recipient of the withdrawal..          |
+| `amount`    | The amount withdrawn.                      |
+| `caller`    | The account that initiated the withdrawal. |
+
+### ERC20Withdrawn
+
+```solidity
+event ERC20Withdrawn(address recipient, uint256 amount, address caller)
+```
+
+Emitted upon ERC20 withdrawal.
+
+| Params:     |                                            |
+| ----------- | ------------------------------------------ |
+| `recipient` | The recipient of the withdrawal..          |
+| `tokens`    | The addresses of the ERC20 tokens.         |
+| `amount`    | The amount of each token withdrawn.        |
+| `caller`    | The account that initiated the withdrawal. |
+
+### Minted
+
+```solidity
+event Minted(address to, uint256 quantity, uint256 fromTokenId);
+```
+
+Emitted upon a mint.
+
+| Params:       |                            |
+| ------------- | -------------------------- |
+| `to`          | The address to mint to.    |
+| `quantity`    | The number of minted.      |
+| `fromTokenId` | The first token ID minted. |
+
+### Airdropped
+
+```solidity
+event Minted(address to, uint256 quantity, uint256 fromTokenId);
+```
+
+Emitted upon an airdrop.
+
+| Params:       |                                                          |
+| ------------- | -------------------------------------------------------- |
+| `to`          | The recipients of the airdrop.                           |
+| `quantity`    | The number of tokens airdropped to each address in `to`. |
+| `fromTokenId` | The first token ID minted to the first address in `to`.  |
 
 ## Errors
 
