@@ -321,6 +321,111 @@ Sets whether the `mintRandomness` is enabled.
 | ------------------------ | ------------------ |
 | `mintRandomnessEnabled_` | The boolean value. |
 
+### setOperatorFilteringEnabled
+
+```solidity
+function setOperatorFilteringEnabled(bool operatorFilteringEnabled_) external
+```
+
+Sets whether OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry) is enabled.
+
+**Calling conditions:**
+
+- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+
+| Params:                     |                    |
+| --------------------------- | ------------------ |
+| `operatorFilteringEnabled_` | The boolean value. |
+
+### setApprovalForAll
+
+```solidity
+function setApprovalForAll(address operator, bool approved) external
+```
+
+Approves or removes `operator` as an operator for the caller.
+Operators can call `transferFrom` or ` safeTransferFrom` for any token owned by the caller. If the `OPERATOR_FILTERING_ENABLED_FLAG` is set,
+this function will revert if the operator is not approved by the [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry).
+
+**Calling conditions:**
+
+- The `operator` cannot be the caller.
+
+| Params:    |                                          |
+| ---------- | ---------------------------------------- |
+| `operator` | The operator address.                    |
+| `approved` | Whether or not the operator is approved. |
+
+### approve
+
+```solidity
+function approve(address operator, bool approved) external
+```
+
+Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. If the `OPERATOR_FILTERING_ENABLED_FLAG` is set,
+this function will revert if the operator is not approved by the [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry).
+
+**Calling conditions:**
+
+- The `operator` cannot be the caller.
+
+| Params:   |                            |
+| --------- | -------------------------- |
+| `to`      | The permissioned operator. |
+| `tokenId` | The permissioned token.    |
+
+### transferFrom
+
+```solidity
+ function transferFrom(address from, address to, uint256 tokenId) external payable
+```
+
+Transfers `tokenId` token from `from` to `to`.
+
+> **WARNING:
+> Usage of this method is discouraged, use `safeTransferFrom` whenever possible.**
+
+**Calling conditions:**
+
+- `from` cannot be the zero address.
+- `from` can only be approved operators (if `OPERATOR_FILTERING_ENABLED_FLAG` is set)
+- `to` cannot be the zero address.
+- `tokenId` token must be owned by `from`.
+- If the caller is not `from`, it must be approved to move this token
+  by either `approve` or `setApprovalForAll`.
+
+| Params:   |                         |
+| --------- | ----------------------- |
+| `from`    | The sender.             |
+| `to`      | The receiver.           |
+| `tokenId` | The permissioned token. |
+
+### safeTransferFrom
+
+```solidity
+ function safeTransferFrom(address from, address to, bytes calldata data) external payable
+```
+
+Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients are aware of the ERC721 protocol to prevent tokens from being forever locked.
+
+**Calling conditions:**
+
+- `from` cannot be the zero address.
+- `from` can only be approved operators (if `OPERATOR_FILTERING_ENABLED_FLAG` is set)
+  `to` cannot be the zero address.
+  `tokenId` token must exist and be owned by `from`.
+  If the caller is not `from`, it must be have been allowed to move
+  this token by either `approve` or `setApprovalForAll`.
+  If `to` refers to a smart contract, it must implement
+  `IERC721Receiver-onERC721Received`, which is called upon a safe transfer.
+
+| Params:   |                                                                       |
+| --------- | --------------------------------------------------------------------- |
+| `from`    | The sender.                                                           |
+| `to`      | The receiver.                                                         |
+| `tokenId` | The permissioned token.                                               |
+| `data`    | Optional data to be used by receiver if receiver is a smart contract. |
+
 ## Read-only Functions
 
 ### editionInfo
@@ -473,7 +578,7 @@ function mintRandomness() external view returns (uint256)
 
 Returns a pseudorandom number based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
 
-> :warning:
+> **WARNING**
 > This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain pseudorandom mechanism.
 
 ### mintRandomnessEnabled
