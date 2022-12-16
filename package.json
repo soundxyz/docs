@@ -28,7 +28,7 @@
     "@geist-ui/react-icons": "^1.0.1",
     "@types/node": "18.11.15",
     "autoprefixer": "^10.4.12",
-    "husky": "^7.0.4",
+    "husky": "^8.0.2",
     "next": "^12.3.0",
     "nextra": "2.0.1",
     "nextra-theme-docs": "2.0.0-beta.41",
