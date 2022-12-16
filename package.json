@@ -23,7 +23,7 @@
   "engines": {
     "pnpm": ">=7.9.1"
   },
-  "packageManager": "pnpm@7.0.0",
+  "packageManager": "pnpm@7.18.2",
   "devDependencies": {
     "@geist-ui/react-icons": "^1.0.1",
     "@types/node": "18.7.18",
