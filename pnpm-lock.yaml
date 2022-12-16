@@ -7,7 +7,7 @@ specifiers:
   '@graphiql/react': ^0.13.2
   '@graphiql/toolkit': ^0.8.0
   '@stitches/react': ^1.2.8
-  '@types/node': 18.7.18
+  '@types/node': 18.11.15
   '@types/react': ^17
   autoprefixer: ^10.4.12
   clsx: ^1.2.1
@@ -33,13 +33,13 @@ specifiers:
 
 dependencies:
   '@codemirror/language': 6.2.1
-  '@graphiql/plugin-explorer': 0.1.5_77gwisnlecgrypq4tcqay7ljpq
-  '@graphiql/react': 0.13.2_77gwisnlecgrypq4tcqay7ljpq
-  '@graphiql/toolkit': 0.8.0_rubnna63kdbwkxsvplidputa7u
+  '@graphiql/plugin-explorer': 0.1.5_g4wnwbta3soarye5en56hoj6au
+  '@graphiql/react': 0.13.2_g4wnwbta3soarye5en56hoj6au
+  '@graphiql/toolkit': 0.8.0_jr3a5jw54ufrqnetkwjo47fwau
   '@stitches/react': 1.2.8_react@17.0.2
   '@types/react': 17.0.52
   clsx: 1.2.1
-  graphiql: 2.0.8_77gwisnlecgrypq4tcqay7ljpq
+  graphiql: 2.0.8_g4wnwbta3soarye5en56hoj6au
   graphql: 16.6.0
   graphql-ws: 5.11.2_graphql@16.6.0
   isomorphic-fetch: 3.0.0
@@ -49,7 +49,7 @@ dependencies:
 
 devDependencies:
   '@geist-ui/react-icons': 1.0.1_react@17.0.2
-  '@types/node': 18.7.18
+  '@types/node': 18.11.15
   autoprefixer: 10.4.12_postcss@8.4.17
   husky: 7.0.4
   next: 12.3.1_sfoxds7t5ydpegc3knd667wn6m
@@ -104,14 +104,14 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@graphiql/plugin-explorer/0.1.5_77gwisnlecgrypq4tcqay7ljpq:
+  /@graphiql/plugin-explorer/0.1.5_g4wnwbta3soarye5en56hoj6au:
     resolution: {integrity: sha512-j98uA2NMLkQIno9OkN3lDM5wcMWzBQQOh0eXvssZZ8Pc7/7hOkPOUr2/VUgFBZvnwd+cyOMVxQVG9rx26l2B8g==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/react': 0.13.2_77gwisnlecgrypq4tcqay7ljpq
+      '@graphiql/react': 0.13.2_g4wnwbta3soarye5en56hoj6au
       graphiql-explorer: 0.9.0_4acpsgwrblrf7yma4ztoevvkgq
       graphql: 16.6.0
       react: 17.0.2
@@ -124,14 +124,14 @@ packages:
       - react-is
     dev: false
 
-  /@graphiql/react/0.13.2_77gwisnlecgrypq4tcqay7ljpq:
+  /@graphiql/react/0.13.2_g4wnwbta3soarye5en56hoj6au:
     resolution: {integrity: sha512-q0hVJMlVCVjlPOWnu06nHm6fAgcfuxbbWIhUjAS1DBtKwrDI/pmtAT7qwAAsLlsAzTS5RJ85egLon8qwCszViQ==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/toolkit': 0.8.0_rubnna63kdbwkxsvplidputa7u
+      '@graphiql/toolkit': 0.8.0_jr3a5jw54ufrqnetkwjo47fwau
       '@reach/combobox': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
       '@reach/dialog': 0.17.0_gzv7pa6nrbev3fs6gyzn7sadkq
       '@reach/listbox': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
@@ -155,7 +155,7 @@ packages:
       - react-is
     dev: false
 
-  /@graphiql/toolkit/0.8.0_rubnna63kdbwkxsvplidputa7u:
+  /@graphiql/toolkit/0.8.0_jr3a5jw54ufrqnetkwjo47fwau:
     resolution: {integrity: sha512-DbMFhEKejpPzB6k8W3Mj+Rl8geXiw49USDF9Wdi06EEk1XLVh1iebDqveYY+4lViITsV4+BeGikxlqi8umfP4g==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
@@ -167,7 +167,7 @@ packages:
       '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
       graphql: 16.6.0
       graphql-ws: 5.11.2_graphql@16.6.0
-      meros: 1.2.1_@types+node@18.7.18
+      meros: 1.2.1_@types+node@18.11.15
     transitivePeerDependencies:
       - '@types/node'
     dev: false
@@ -761,8 +761,8 @@ packages:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
     dev: true
 
-  /@types/node/18.7.18:
-    resolution: {integrity: sha512-m+6nTEOadJZuTPkKR/SYK3A2d7FZrgElol9UP1Kae90VVU4a6mxnPuLiIW1m4Cq4gZ/nWb9GrdVXJCoCazDAbg==}
+  /@types/node/18.11.15:
+    resolution: {integrity: sha512-VkhBbVo2+2oozlkdHXLrb3zjsRkpdnaU2bXmX8Wgle3PUi569eLRaHGlgETQHR7lLL1w7GiG3h9SnePhxNDecw==}
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
@@ -1262,15 +1262,15 @@ packages:
       react-dom: 17.0.2_react@17.0.2
     dev: false
 
-  /graphiql/2.0.8_77gwisnlecgrypq4tcqay7ljpq:
+  /graphiql/2.0.8_g4wnwbta3soarye5en56hoj6au:
     resolution: {integrity: sha512-TQDU74+FQfh3fMX82b9z9t/CJkMwdY4/m4WJLbS7TcniXZnCL9Kbb904BCaS66VKGuFNMyAYBt3ekfAewJiCqg==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/react': 0.13.2_77gwisnlecgrypq4tcqay7ljpq
-      '@graphiql/toolkit': 0.8.0_rubnna63kdbwkxsvplidputa7u
+      '@graphiql/react': 0.13.2_g4wnwbta3soarye5en56hoj6au
+      '@graphiql/toolkit': 0.8.0_jr3a5jw54ufrqnetkwjo47fwau
       entities: 2.1.0
       graphql: 16.6.0
       graphql-language-service: 5.1.0_graphql@16.6.0
@@ -1741,7 +1741,7 @@ packages:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
     dev: true
 
-  /meros/1.2.1_@types+node@18.7.18:
+  /meros/1.2.1_@types+node@18.11.15:
     resolution: {integrity: sha512-R2f/jxYqCAGI19KhAvaxSOxALBMkaXWH2a7rOyqQw+ZmizX5bKkEYWLzdhC+U82ZVVPVp6MCXe3EkVligh+12g==}
     engines: {node: '>=13'}
     peerDependencies:
@@ -1750,7 +1750,7 @@ packages:
       '@types/node':
         optional: true
     dependencies:
-      '@types/node': 18.7.18
+      '@types/node': 18.11.15
     dev: false
 
   /micromark-core-commonmark/1.0.6:
