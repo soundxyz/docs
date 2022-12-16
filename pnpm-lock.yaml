@@ -17,7 +17,7 @@ specifiers:
   husky: ^7.0.4
   isomorphic-fetch: ^3.0.0
   next: ^12.3.0
-  nextra: 2.0.0
+  nextra: 2.0.1
   nextra-theme-docs: 2.0.0-beta.41
   postcss: ^8.4.17
   prettier: ^2.7.1
@@ -53,7 +53,7 @@ devDependencies:
   autoprefixer: 10.4.12_postcss@8.4.17
   husky: 7.0.4
   next: 12.3.1_sfoxds7t5ydpegc3knd667wn6m
-  nextra: 2.0.0_dty4et2pnba4zo7o4cegg6bk2e
+  nextra: 2.0.1_dty4et2pnba4zo7o4cegg6bk2e
   nextra-theme-docs: 2.0.0-beta.41_dty4et2pnba4zo7o4cegg6bk2e
   postcss: 8.4.17
   prettier: 2.7.1
@@ -2217,8 +2217,8 @@ packages:
       scroll-into-view-if-needed: 2.2.29
     dev: true
 
-  /nextra/2.0.0_dty4et2pnba4zo7o4cegg6bk2e:
-    resolution: {integrity: sha512-3mf5aX+ZJVz7HRtxwtWIo1kw51xrF5MsqoUl0cQDTbFiktCn/Af5AX1gBuiX8/Z4mSEedalvTZUfR6+LxumLFg==}
+  /nextra/2.0.1_dty4et2pnba4zo7o4cegg6bk2e:
+    resolution: {integrity: sha512-IOBwqMREnadxGryNHvwr3sZuD90uyaTxCWi9yxDB56UndsLBTulKwXNIOdW1FV+vKTbSGpz89wNe665Moli7Kw==}
     peerDependencies:
       next: '>=9.5.3'
       react: '>=16.13.1'
@@ -2825,7 +2825,7 @@ packages:
     dev: true
 
   /titleize/1.0.0:
-    resolution: {integrity: sha1-fTUHIgYYMLpmF2MeDP0+oIOY2Vo=}
+    resolution: {integrity: sha512-TARUb7z1pGvlLxgPk++7wJ6aycXF3GJ0sNSBTAsTuJrQG5QuZlkUQP+zl+nbjAh4gMX9yDw9ZYklMd7vAfJKEw==}
     engines: {node: '>=0.10.0'}
     dev: true
 
