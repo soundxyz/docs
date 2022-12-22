@@ -365,7 +365,9 @@ const editionAddress = '0x...'
 
 const minterAddress = '0x...'
 
-const fromBlockOrBlockHash = 16093064 // Optional string or number
+// Optional string or number
+// NOTE: Only IDs created by minters registered on or after this block will be returned
+const fromBlockOrBlockHash = 16093064
 
 const mintIds: number[] = await client.editionMinterMintIds({
   editionAddress,
@@ -383,7 +385,9 @@ Returns an array of objects, each containing a minter address and array of mint 
 ```ts
 const editionAddress = '0x...'
 
-const fromBlockOrBlockHash = 16093064 // Optional string or number
+// Optional string or number
+// NOTE: Only IDs created by minters registered on or after this block will be returned
+const fromBlockOrBlockHash = 16093064
 
 const scheduleIds: Array<{ minterAddress: string; mintIds: number[] }> = await client.editionScheduleIds({
   editionAddress,
