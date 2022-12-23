@@ -29,7 +29,7 @@ specifiers:
   react-is: ^18.2.0
   react-string-replace: ^1.1.0
   typescript: 4.9.4
-  zod: 3.19.1
+  zod: 3.20.2
 
 dependencies:
   '@codemirror/language': 6.2.1
@@ -45,7 +45,7 @@ dependencies:
   isomorphic-fetch: 3.0.0
   react-is: 18.2.0
   react-string-replace: 1.1.0
-  zod: 3.19.1
+  zod: 3.20.2
 
 devDependencies:
   '@geist-ui/react-icons': 1.0.1_react@17.0.2
@@ -3096,8 +3096,8 @@ packages:
     resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
     dev: true
 
-  /zod/3.19.1:
-    resolution: {integrity: sha512-LYjZsEDhCdYET9ikFu6dVPGp2YH9DegXjdJToSzD9rO6fy4qiRYFoyEYwps88OseJlPyl2NOe2iJuhEhL7IpEA==}
+  /zod/3.20.2:
+    resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
     dev: false
 
   /zwitch/2.0.2:
