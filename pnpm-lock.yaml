@@ -9,7 +9,7 @@ specifiers:
   '@stitches/react': ^1.2.8
   '@types/node': 18.11.15
   '@types/react': ^17
-  autoprefixer: ^10.4.12
+  autoprefixer: ^10.4.13
   clsx: ^1.2.1
   graphiql: ^2.0.8
   graphql: ^16.6.0
@@ -50,7 +50,7 @@ dependencies:
 devDependencies:
   '@geist-ui/react-icons': 1.0.1_react@17.0.2
   '@types/node': 18.11.15
-  autoprefixer: 10.4.12_postcss@8.4.20
+  autoprefixer: 10.4.13_postcss@8.4.20
   husky: 8.0.2
   next: 12.3.1_sfoxds7t5ydpegc3knd667wn6m
   nextra: 2.0.1_dty4et2pnba4zo7o4cegg6bk2e
@@ -891,15 +891,15 @@ packages:
     hasBin: true
     dev: true
 
-  /autoprefixer/10.4.12_postcss@8.4.20:
-    resolution: {integrity: sha512-WrCGV9/b97Pa+jtwf5UGaRjgQIg7OK3D06GnoYoZNcG1Xb8Gt3EfuKjlhh9i/VtT16g6PYjZ69jdJ2g8FxSC4Q==}
+  /autoprefixer/10.4.13_postcss@8.4.20:
+    resolution: {integrity: sha512-49vKpMqcZYsJjwotvt4+h/BCjJVnhGwcLpDt5xkcaOG3eLrG/HUYLagrihYsQ+qrIBgIzX1Rw7a6L8I/ZA1Atg==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
     peerDependencies:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.21.4
-      caniuse-lite: 1.0.30001412
+      caniuse-lite: 1.0.30001441
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -927,7 +927,7 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001412
+      caniuse-lite: 1.0.30001441
       electron-to-chromium: 1.4.270
       node-releases: 2.0.6
       update-browserslist-db: 1.0.9_browserslist@4.21.4
@@ -935,6 +935,10 @@ packages:
 
   /caniuse-lite/1.0.30001412:
     resolution: {integrity: sha512-+TeEIee1gS5bYOiuf+PS/kp2mrXic37Hl66VY6EAfxasIk5fELTktK2oOezYed12H8w7jt3s512PpulQidPjwA==}
+    dev: true
+
+  /caniuse-lite/1.0.30001441:
+    resolution: {integrity: sha512-OyxRR4Vof59I3yGWXws6i908EtGbMzVUi3ganaZQHmydk1iwDhRnvaPG2WaR0KcqrDFKrxVZHULT396LEPhXfg==}
     dev: true
 
   /ccount/2.0.1:
