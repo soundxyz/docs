@@ -141,7 +141,6 @@ const TextContainer = styled('div', {
 })
 
 const Heading = styled('h2', {
-  fontFamily: 'DrukWideMedium',
   fontSize: 22,
   lineHeight: '26px',
 })

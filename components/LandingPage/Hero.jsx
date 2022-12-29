@@ -87,7 +87,6 @@ export const Hero = () => {
 const BigH1 = styled('h1', {
   textAlign: 'center',
   fontSize: 36,
-  fontFamily: 'DrukWideMedium',
   fontWeight: 500,
   lineHeight: '110%',
   color: 'white',

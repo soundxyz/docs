@@ -43,8 +43,25 @@ export default {
       <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
 
       {'/* FONTS */'}
+
+      <link rel="preload" href="/fonts/AcidGrotesk/AcidGrotesk-Medium.otf" as="font" crossOrigin="" type="font/otf" />
+      <link rel="preload" href="/fonts/AcidGrotesk/AcidGrotesk-Regular.otf" as="font" crossOrigin="" type="font/otf" />
       <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700&display=swap"
+        rel="preload"
+        href="/fonts/NBArchitektNeue/NBArchitektNeueRegular.otf"
+        as="font"
+        crossOrigin=""
+        type="font/otf"
+      />
+      <link
+        rel="preload"
+        href="/fonts/NBArchitektNeue/NBArchitektNeueBold.otf"
+        as="font"
+        crossOrigin=""
+        type="font/otf"
+      />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet"
       />
     </>
