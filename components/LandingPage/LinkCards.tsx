@@ -119,9 +119,7 @@ const InnerContainer = styled('div', {
 })
 
 const Heading = styled('h2', {
-  fontFamily: 'DrukWideMedium',
   fontSize: 22,
-  fontWeight: 500,
   marginTop: 16,
   color: '$neutral900',
 

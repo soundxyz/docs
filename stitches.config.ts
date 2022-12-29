@@ -79,6 +79,14 @@ export const { styled, css, globalCss, keyframes, getCssText, theme, createTheme
       green100: '#34D399',
       green200: '#A7F3D0',
     },
+    fonts: {
+      title: 'Acid Grotesk',
+      base: 'Inter',
+      kicker: 'Inter',
+      numerals: 'NB Architekt Neue',
+      body: 'Inter',
+      mono: 'NB Architekt Neue, sans-serif',
+    },
   },
   media: mediaQueries,
 })
@@ -88,5 +96,12 @@ export const globalStyles = globalCss({
   '*::selection': {
     background: theme.colors.brandPink500.value,
     color: '#fff',
+  },
+  'h2, h3, h4, h5, h6': {
+    fontWeight: '500 !important',
+  },
+  'h1, h2, h3, h4, h5, h6': {
+    fontFamily: theme.fonts.title.value,
+    fontFeatureSettings: 'normal',
   },
 })

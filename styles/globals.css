@@ -1,10 +1,19 @@
 @font-face {
-  font-family: DrukWideMedium;
-  src: url(./fonts/DrukWideMedium.otf);
+  src: url('/fonts/NBArchitektNeue/NBArchitektNeueRegular.otf') format('opentype');
+  font-family: 'NB Architekt Neue';
+  font-weight: normal;
 }
 
-html {
-  font-family: Inter;
+@font-face {
+  src: url('/fonts/AcidGrotesk/AcidGrotesk-Regular.otf') format('opentype');
+  font-family: 'Acid Grotesk';
+  font-weight: 400;
+}
+
+@font-face {
+  src: url('/fonts/AcidGrotesk/AcidGrotesk-Medium.otf') format('opentype');
+  font-family: 'Acid Grotesk';
+  font-weight: 500;
 }
 
 .graphiql-container * {
