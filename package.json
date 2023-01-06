@@ -29,7 +29,7 @@
     "@types/node": "18.11.18",
     "autoprefixer": "^10.4.13",
     "husky": "^8.0.2",
-    "next": "^12.3.4",
+    "next": "^13.1.1",
     "nextra": "2.0.3",
     "nextra-theme-docs": "2.0.3",
     "postcss": "^8.4.20",
