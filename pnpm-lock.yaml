@@ -4,7 +4,7 @@ specifiers:
   '@codemirror/language': ^6.3.2
   '@geist-ui/react-icons': ^1.0.1
   '@graphiql/plugin-explorer': ^0.1.12
-  '@graphiql/react': ^0.13.2
+  '@graphiql/react': ^0.15.0
   '@graphiql/toolkit': ^0.8.0
   '@stitches/react': ^1.2.8
   '@types/node': 18.11.18
@@ -34,7 +34,7 @@ specifiers:
 dependencies:
   '@codemirror/language': 6.3.2
   '@graphiql/plugin-explorer': 0.1.12_pjwwd7eufmbltglgogsdkyriay
-  '@graphiql/react': 0.13.2_pjwwd7eufmbltglgogsdkyriay
+  '@graphiql/react': 0.15.0_pjwwd7eufmbltglgogsdkyriay
   '@graphiql/toolkit': 0.8.0_ncq6ysnrm2depoms6sshaymepy
   '@stitches/react': 1.2.8_react@17.0.2
   '@types/react': 17.0.52
