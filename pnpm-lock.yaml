@@ -17,8 +17,8 @@ specifiers:
   husky: ^8.0.2
   isomorphic-fetch: ^3.0.0
   next: ^12.3.4
-  nextra: 2.0.3
-  nextra-theme-docs: 2.0.3
+  nextra: 2.1.0
+  nextra-theme-docs: 2.1.0
   postcss: ^8.4.20
   prettier: ^2.8.1
   pretty-quick: ^3.1.3
@@ -53,8 +53,8 @@ devDependencies:
   autoprefixer: 10.4.13_postcss@8.4.20
   husky: 8.0.2
   next: 12.3.4_sfoxds7t5ydpegc3knd667wn6m
-  nextra: 2.0.3_dwjfwrt6uv2f53xn6wotzcxyoa
-  nextra-theme-docs: 2.0.3_dwjfwrt6uv2f53xn6wotzcxyoa
+  nextra: 2.1.0_dwjfwrt6uv2f53xn6wotzcxyoa
+  nextra-theme-docs: 2.1.0_dwjfwrt6uv2f53xn6wotzcxyoa
   postcss: 8.4.20
   prettier: 2.8.1
   pretty-quick: 3.1.3_prettier@2.8.1
@@ -203,13 +203,14 @@ packages:
       - '@types/node'
     dev: false
 
-  /@headlessui/react/1.7.2_sfoxds7t5ydpegc3knd667wn6m:
-    resolution: {integrity: sha512-snLv2lxwsf2HNTOBNgHYdvoYZ3ChJE8QszPi1d/hl9js8KrFrUulTaQBfSyPbJP5BybVreWh9DxCgz9S0Z6hKQ==}
+  /@headlessui/react/1.7.7_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-BqDOd/tB9u2tA0T3Z0fn18ktw+KbVwMnkxxsGPIH2hzssrQhKB5n/6StZOyvLYP/FsYtvuXfi9I0YowKPv2c1w==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16 || ^17 || ^18
       react-dom: ^16 || ^17 || ^18
     dependencies:
+      client-only: 0.0.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: true
@@ -973,6 +974,10 @@ packages:
 
   /character-reference-invalid/2.0.1:
     resolution: {integrity: sha512-iBZ4F4wRbyORVsu0jPV7gXkOsGYjGHPmAyv+HiHG8gi5PtC9KI2j1+v8/tlibRvjoWX027ypmG/n0HtO5t7unw==}
+    dev: true
+
+  /client-only/0.0.1:
+    resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: true
 
   /clipboardy/1.2.2:
@@ -2356,14 +2361,14 @@ packages:
       - babel-plugin-macros
     dev: true
 
-  /nextra-theme-docs/2.0.3_dwjfwrt6uv2f53xn6wotzcxyoa:
-    resolution: {integrity: sha512-BN0NOzYNMQNLU8PMRKVtgOitLC2jFubMA9O8b3gNhr+5/Uny6MTDwuSAVO7G7z830b6dNaRqrMA84iVRS+2LaQ==}
+  /nextra-theme-docs/2.1.0_dwjfwrt6uv2f53xn6wotzcxyoa:
+    resolution: {integrity: sha512-0Fn0EsGaKa9We2+CkN9LPtT6F21w4wbihuv0/Vg2YowpAdu5nslsDIhtg66CRET5U5007xE5GG8NLwWaCHQhhg==}
     peerDependencies:
       next: '>=9.5.3'
       react: '>=16.13.1'
       react-dom: '>=16.13.1'
     dependencies:
-      '@headlessui/react': 1.7.2_sfoxds7t5ydpegc3knd667wn6m
+      '@headlessui/react': 1.7.7_sfoxds7t5ydpegc3knd667wn6m
       '@mdx-js/react': 2.2.1_react@17.0.2
       '@popperjs/core': 2.11.6
       clsx: 1.2.1
@@ -2379,10 +2384,11 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       scroll-into-view-if-needed: 3.0.3
+      zod: 3.20.2
     dev: true
 
-  /nextra/2.0.3_dwjfwrt6uv2f53xn6wotzcxyoa:
-    resolution: {integrity: sha512-GttZMwfHiVcrnVMnN2PKq2mS6YoQ0zrbzRYS838WYfzUpjIPCR6L8rJbAEd00kcrJNM1MvSCxONOTqGDDjW7YA==}
+  /nextra/2.1.0_dwjfwrt6uv2f53xn6wotzcxyoa:
+    resolution: {integrity: sha512-8bq/TW8wv8H8D6UAokb9WKhnYeoxKG7c8ikWF1n6k3kOO9m0PLG+guTwqkWre28jJyziljc3i/Fnr3k4HiB9Ow==}
     peerDependencies:
       next: '>=9.5.3'
       react: '>=16.13.1'
@@ -3322,7 +3328,6 @@ packages:
 
   /zod/3.20.2:
     resolution: {integrity: sha512-1MzNQdAvO+54H+EaK5YpyEy0T+Ejo/7YLHS93G3RnYWh5gaotGHwGeN/ZO687qEDU2y4CdStQYXVHIgrUl5UVQ==}
-    dev: false
 
   /zwitch/2.0.2:
     resolution: {integrity: sha512-JZxotl7SxAJH0j7dN4pxsTV6ZLXoLdGME+PsjkL/DaBrVryK9kTGq06GfKrwcSOqypP+fdXGoCHE36b99fWVoA==}
