@@ -14,7 +14,7 @@ specifiers:
   graphiql: ^2.0.8
   graphql: ^16.6.0
   graphql-ws: ^5.11.2
-  husky: ^8.0.2
+  husky: ^8.0.3
   isomorphic-fetch: ^3.0.0
   next: ^12.3.4
   nextra: 2.2.1
@@ -51,7 +51,7 @@ devDependencies:
   '@geist-ui/react-icons': 1.0.1_react@17.0.2
   '@types/node': 18.11.18
   autoprefixer: 10.4.13_postcss@8.4.20
-  husky: 8.0.2
+  husky: 8.0.3
   next: 12.3.4_sfoxds7t5ydpegc3knd667wn6m
   nextra: 2.2.1_dwjfwrt6uv2f53xn6wotzcxyoa
   nextra-theme-docs: 2.2.1_dwjfwrt6uv2f53xn6wotzcxyoa
@@ -1480,8 +1480,8 @@ packages:
     engines: {node: '>=8.12.0'}
     dev: true
 
-  /husky/8.0.2:
-    resolution: {integrity: sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg==}
+  /husky/8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
