@@ -19,7 +19,7 @@ specifiers:
   next: ^12.3.4
   nextra: 2.2.1
   nextra-theme-docs: 2.2.1
-  postcss: ^8.4.20
+  postcss: ^8.4.21
   prettier: ^2.8.1
   pretty-quick: ^3.1.3
   prism-react-renderer: ^1.3.5
@@ -50,12 +50,12 @@ dependencies:
 devDependencies:
   '@geist-ui/react-icons': 1.0.1_react@17.0.2
   '@types/node': 18.11.18
-  autoprefixer: 10.4.13_postcss@8.4.20
+  autoprefixer: 10.4.13_postcss@8.4.21
   husky: 8.0.2
   next: 12.3.4_sfoxds7t5ydpegc3knd667wn6m
   nextra: 2.2.1_dwjfwrt6uv2f53xn6wotzcxyoa
   nextra-theme-docs: 2.2.1_dwjfwrt6uv2f53xn6wotzcxyoa
-  postcss: 8.4.20
+  postcss: 8.4.21
   prettier: 2.8.1
   pretty-quick: 3.1.3_prettier@2.8.1
   prism-react-renderer: 1.3.5_react@17.0.2
@@ -892,7 +892,7 @@ packages:
     hasBin: true
     dev: true
 
-  /autoprefixer/10.4.13_postcss@8.4.20:
+  /autoprefixer/10.4.13_postcss@8.4.21:
     resolution: {integrity: sha512-49vKpMqcZYsJjwotvt4+h/BCjJVnhGwcLpDt5xkcaOG3eLrG/HUYLagrihYsQ+qrIBgIzX1Rw7a6L8I/ZA1Atg==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
@@ -904,7 +904,7 @@ packages:
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
-      postcss: 8.4.20
+      postcss: 8.4.21
       postcss-value-parser: 4.2.0
     dev: true
 
@@ -2598,8 +2598,8 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /postcss/8.4.20:
-    resolution: {integrity: sha512-6Q04AXR1212bXr5fh03u8aAwbLxAQNGQ/Q1LNa0VfOI06ZAlhPHtQvE4OIdpj4kLThXilalPnmDSOD65DcHt+g==}
+  /postcss/8.4.21:
+    resolution: {integrity: sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.4
