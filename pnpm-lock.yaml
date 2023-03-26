@@ -11,7 +11,7 @@ specifiers:
   '@types/react': ^17
   autoprefixer: ^10.4.13
   clsx: ^1.2.1
-  graphiql: ^2.0.8
+  graphiql: ^2.4.1
   graphql: ^16.6.0
   graphql-ws: ^5.11.2
   husky: ^8.0.2
@@ -39,7 +39,7 @@ dependencies:
   '@stitches/react': 1.2.8_react@17.0.2
   '@types/react': 17.0.52
   clsx: 1.2.1
-  graphiql: 2.0.8_gq57l2h5nrtfpwdj7u5oiipfqy
+  graphiql: 2.4.1_gq57l2h5nrtfpwdj7u5oiipfqy
   graphql: 16.6.0
   graphql-ws: 5.11.2_graphql@16.6.0
   isomorphic-fetch: 3.0.0
@@ -162,7 +162,7 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/toolkit': 0.8.0_ncq6ysnrm2depoms6sshaymepy
+      '@graphiql/toolkit': 0.8.3_ncq6ysnrm2depoms6sshaymepy
       '@reach/combobox': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
       '@reach/dialog': 0.17.0_gzv7pa6nrbev3fs6gyzn7sadkq
       '@reach/listbox': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
@@ -173,7 +173,39 @@ packages:
       codemirror-graphql: 2.0.2_x7dfjjqemexg7ar7dxei5tbzii
       copy-to-clipboard: 3.3.2
       graphql: 16.6.0
-      graphql-language-service: 5.1.0_graphql@16.6.0
+      graphql-language-service: 5.1.3_graphql@16.6.0
+      markdown-it: 12.3.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      set-value: 4.1.0
+    transitivePeerDependencies:
+      - '@codemirror/language'
+      - '@types/node'
+      - '@types/react'
+      - graphql-ws
+      - react-is
+    dev: false
+
+  /@graphiql/react/0.17.1_gq57l2h5nrtfpwdj7u5oiipfqy:
+    resolution: {integrity: sha512-p99Vnl3aoQsh/T651pkGiS0wqvn7y65Bv4Q32l990T2IIgEDqeqJxgwRp3F48Ol9dWzk6KzxNkZYqe5IVHEmoA==}
+    peerDependencies:
+      graphql: ^15.5.0 || ^16.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@graphiql/toolkit': 0.8.3_ncq6ysnrm2depoms6sshaymepy
+      '@reach/combobox': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
+      '@reach/dialog': 0.17.0_gzv7pa6nrbev3fs6gyzn7sadkq
+      '@reach/listbox': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
+      '@reach/menu-button': 0.17.0_v5ja746gkdtknuc6tj46sve3be
+      '@reach/tooltip': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
+      '@reach/visually-hidden': 0.17.0_sfoxds7t5ydpegc3knd667wn6m
+      clsx: 1.2.1
+      codemirror: 5.65.9
+      codemirror-graphql: 2.0.5_x7dfjjqemexg7ar7dxei5tbzii
+      copy-to-clipboard: 3.3.2
+      graphql: 16.6.0
+      graphql-language-service: 5.1.3_graphql@16.6.0
       markdown-it: 12.3.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -188,6 +220,23 @@ packages:
 
   /@graphiql/toolkit/0.8.0_ncq6ysnrm2depoms6sshaymepy:
     resolution: {integrity: sha512-DbMFhEKejpPzB6k8W3Mj+Rl8geXiw49USDF9Wdi06EEk1XLVh1iebDqveYY+4lViITsV4+BeGikxlqi8umfP4g==}
+    peerDependencies:
+      graphql: ^15.5.0 || ^16.0.0
+      graphql-ws: '>= 4.5.0'
+    peerDependenciesMeta:
+      graphql-ws:
+        optional: true
+    dependencies:
+      '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
+      graphql: 16.6.0
+      graphql-ws: 5.11.2_graphql@16.6.0
+      meros: 1.2.1_@types+node@18.11.18
+    transitivePeerDependencies:
+      - '@types/node'
+    dev: false
+
+  /@graphiql/toolkit/0.8.3_ncq6ysnrm2depoms6sshaymepy:
+    resolution: {integrity: sha512-B5WfZlBes/tMmM7TeTTD/F2E1kbtQD6PYmyX76qWrIt1Sx3+lQoCe8NzHbBvNII77F5sr737RASmkhQ1fcdFWQ==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       graphql-ws: '>= 4.5.0'
@@ -1005,7 +1054,7 @@ packages:
       '@codemirror/language': 6.4.0
       codemirror: 5.65.9
       graphql: 16.6.0
-      graphql-language-service: 5.1.0_graphql@16.6.0
+      graphql-language-service: 5.1.3_graphql@16.6.0
     dev: false
 
   /codemirror-graphql/2.0.2_x7dfjjqemexg7ar7dxei5tbzii:
@@ -1019,6 +1068,19 @@ packages:
       codemirror: 5.65.9
       graphql: 16.6.0
       graphql-language-service: 5.0.6_graphql@16.6.0
+    dev: false
+
+  /codemirror-graphql/2.0.5_x7dfjjqemexg7ar7dxei5tbzii:
+    resolution: {integrity: sha512-erpJV/hOQe4ScOBNhV+rJAAcsCGyC913VkTp3fbGHh/aZQBshpwxgew4+43+EDl855Gw+df36/+maun+Nj8tKw==}
+    peerDependencies:
+      '@codemirror/language': 6.0.0
+      codemirror: ^5.65.3
+      graphql: ^15.5.0 || ^16.0.0
+    dependencies:
+      '@codemirror/language': 6.4.0
+      codemirror: 5.65.9
+      graphql: 16.6.0
+      graphql-language-service: 5.1.3_graphql@16.6.0
     dev: false
 
   /codemirror/5.65.9:
@@ -1316,18 +1378,17 @@ packages:
       react-dom: 17.0.2_react@17.0.2
     dev: false
 
-  /graphiql/2.0.8_gq57l2h5nrtfpwdj7u5oiipfqy:
-    resolution: {integrity: sha512-TQDU74+FQfh3fMX82b9z9t/CJkMwdY4/m4WJLbS7TcniXZnCL9Kbb904BCaS66VKGuFNMyAYBt3ekfAewJiCqg==}
+  /graphiql/2.4.1_gq57l2h5nrtfpwdj7u5oiipfqy:
+    resolution: {integrity: sha512-PLTY2KI+FwU6548Bsrip2ptne/t2QzNdARHZwXl/KGJ+KVfSpXjjfryJQBHXiEq4plQnG4orw7dJpm8KfM5iig==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/react': 0.13.2_gq57l2h5nrtfpwdj7u5oiipfqy
-      '@graphiql/toolkit': 0.8.0_ncq6ysnrm2depoms6sshaymepy
-      entities: 2.1.0
+      '@graphiql/react': 0.17.1_gq57l2h5nrtfpwdj7u5oiipfqy
+      '@graphiql/toolkit': 0.8.3_ncq6ysnrm2depoms6sshaymepy
       graphql: 16.6.0
-      graphql-language-service: 5.1.0_graphql@16.6.0
+      graphql-language-service: 5.1.3_graphql@16.6.0
       markdown-it: 12.3.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
@@ -1352,6 +1413,17 @@ packages:
 
   /graphql-language-service/5.1.0_graphql@16.6.0:
     resolution: {integrity: sha512-APffigZ/l2me6soek+Yq5Us3HBwmfw4vns4QoqsTePXkK3knVO8rn0uAC6PmTyglb1pmFFPbYaRIzW4wmcnnGQ==}
+    hasBin: true
+    peerDependencies:
+      graphql: ^15.5.0 || ^16.0.0
+    dependencies:
+      graphql: 16.6.0
+      nullthrows: 1.1.1
+      vscode-languageserver-types: 3.17.2
+    dev: false
+
+  /graphql-language-service/5.1.3_graphql@16.6.0:
+    resolution: {integrity: sha512-01KZLExoF53i8a2Jhgt+nVGsm9O2+jmDdwms4THSxCY+gU9FukF6X4pPLO2Gk7qZ6CVcInM8+IQx/ph4AOTOLA==}
     hasBin: true
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
