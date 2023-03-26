@@ -44,7 +44,7 @@
   "dependencies": {
     "@codemirror/language": "^6.4.0",
     "@graphiql/plugin-explorer": "^0.1.12",
-    "@graphiql/react": "^0.13.2",
+    "@graphiql/react": "^0.17.1",
     "@graphiql/toolkit": "^0.8.0",
     "@stitches/react": "^1.2.8",
     "@types/react": "^17",
