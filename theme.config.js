@@ -79,10 +79,6 @@ const config = {
   chat: {
     icon: '',
   },
-  banner: {
-    text: '',
-  },
-  // titleSuffix: ' - Sound.xyz',
 }
 
 export default config
