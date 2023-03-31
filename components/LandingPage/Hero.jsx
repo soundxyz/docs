@@ -34,9 +34,7 @@ export const Hero = () => {
               Tools for empowering <br />
               artists & collectors
             </BigH1>
-            <Button href="/intro" css={{ alignSelf: 'center', '@laptop': { alignSelf: 'flex-start' } }}>
-              View Docs
-            </Button>
+            <Button href="/intro">View Docs</Button>
           </TextAndButtonContainer>
         </HeroFlexContainer>
         <WrappedImage
@@ -115,8 +113,12 @@ const TextAndButtonContainer = styled('div', {
   maxWidth: 'calc(90rem - 48px)',
   width: '100%',
 
+  alignItems: 'center',
+
   '@laptop': {
     margin: '165px auto 125px auto',
+
+    alignItems: 'unset',
   },
 })
 
