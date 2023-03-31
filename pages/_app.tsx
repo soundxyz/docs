@@ -2,6 +2,9 @@ import React from 'react'
 import { globalStyles } from '../stitches.config'
 import { useRouter } from 'next/router'
 import { Prism } from 'prism-react-renderer'
+import { AppProps } from 'next/app'
+
+// @ts-expect-error Prism doesn't have proper types
 ;(typeof global !== 'undefined' ? global : window).Prism = Prism
 
 require('prismjs/components/prism-graphql')
@@ -9,7 +12,7 @@ require('nextra-theme-docs/style.css')
 require('../styles/globals.css')
 globalStyles()
 
-export default function Nextra({ Component, pageProps }) {
+export default function Nextra({ Component, pageProps }: AppProps) {
   const router = useRouter()
   let htmlElement: HTMLHtmlElement | null = null
   let headerContainer: HTMLDivElement | null = null

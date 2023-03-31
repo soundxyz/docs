@@ -7,7 +7,7 @@ export function useIsDarkMode(override?: boolean) {
   const router = useRouter()
   const [isDarkMode, setIsDarkMode] = React.useState(colorMode === 'dark' && router.pathname !== '/')
 
-  const darkModeSetter = (event) => {
+  const darkModeSetter = (event: MediaQueryListEvent) => {
     setIsDarkMode(event.matches)
   }
 

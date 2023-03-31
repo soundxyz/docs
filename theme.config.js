@@ -1,17 +1,15 @@
-/* eslint sort-keys: error */
-/**
- * @type {import('nextra-theme-docs').DocsThemeConfig}
- */
-
 import GitHub from '@geist-ui/react-icons/github'
 import { HeaderLogo } from './components/HeaderLogo'
 import { Footer } from './components/Footer'
 
 const SOCIAL_CARD_IMAGE = '/images/social-card-legacy-logo.png'
 
-export default {
+/**
+ * @type {import('nextra-theme-docs').DocsThemeConfig}
+ */
+const config = {
   logo: <HeaderLogo />,
-  getNextSeoProps: () => ({ titleTemplate: '%s – Sound' }),
+  useNextSeoProps: () => ({ titleTemplate: '%s – Sound.xyz' }),
   docsRepositoryBase: 'https://github.com/soundxyz/docs/blob/main',
   editLink: {
     text: 'Edit this page on GitHub',
@@ -81,4 +79,10 @@ export default {
   chat: {
     icon: '',
   },
+  banner: {
+    text: '',
+  },
+  // titleSuffix: ' - Sound.xyz',
 }
+
+export default config
