@@ -162,8 +162,3 @@ const IconContainer = styled('div', {
     },
   },
 })
-
-const InnerIconContainer = styled('div', {
-  width: 50,
-  height: 50,
-})

@@ -1,6 +1,5 @@
 import React from 'react'
 import { styled, theme } from '../stitches.config'
-import { useRouter } from 'next/router'
 import { SectionContainer } from '../components/Containers'
 import { SoundLogo } from '../components/SoundLogo'
 import Link from 'next/link'
@@ -8,7 +7,6 @@ import { ExternalLink } from '../components/ExternalLink'
 import { useIsDarkMode } from '../hooks/useIsDarkMode'
 
 export const Footer = () => {
-  const router = useRouter()
   const isDarkMode = useIsDarkMode()
 
   const LINKS = {
