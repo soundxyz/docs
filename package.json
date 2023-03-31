@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/soundxyz/docs#readme",
   "engines": {
-    "pnpm": ">=7.9.1"
+    "pnpm": ">=7.30.5"
   },
-  "packageManager": "pnpm@7.18.2",
+  "packageManager": "pnpm@7.30.5",
   "devDependencies": {
     "@geist-ui/react-icons": "^1.0.1",
     "@types/node": "18.15.11",
