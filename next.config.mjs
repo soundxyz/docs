@@ -19,6 +19,16 @@ export default withNextra({
         destination: '/protocol/overview',
         permanent: false,
       },
+      {
+        source: '/sdk/read',
+        destination: '/sdk',
+        permanent: false,
+      },
+      {
+        source: '/sdk/write',
+        destination: '/sdk',
+        permanent: false,
+      },
     ]
   },
 })

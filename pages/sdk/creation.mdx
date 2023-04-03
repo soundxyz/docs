@@ -1,4 +1,4 @@
-# Write functions
+# Sound Edition Creation
 
 ## createEdition
 
@@ -21,6 +21,19 @@ export type EditionConfig = {
   shouldFreezeMetadata: boolean
   shouldEnableMintRandomness: boolean
   enableOperatorFiltering: boolean // Opensea OperatorFilter for royalties https://github.com/ProjectOpenSea/operator-filter-registry
+
+  setSAM: SamConfig | null
+}
+
+export interface SamConfig {
+  contractAddress: string
+  basePrice: BigNumberish
+  linearPriceSlope: BigNumberish
+  inflectionPrice: BigNumberish
+  inflectionPoint: BigNumberish
+  artistFeeBPS: BigNumberish
+  goldenEggFeeBPS: BigNumberish
+  affiliateFeeBPS: BigNumberish
 }
 ```
 
@@ -57,11 +70,11 @@ import { contractAddresses } from '@soundxyz/sound-protocol'
 
 // ...
 
-const client = SoundClient({
+const editionCreation = SoundClient({
   signer,
-
-  // Specify the address of the contract to be used for the sound creation
-  soundCreatorAddress: contractAddresses.mainnet.soundCreatorV1,
+}).creation({
+  // Mint creator address
+  creatorAddress: contractAddresses.mainnet.soundCreatorAddress,
 })
 
 const salt = '...'
@@ -122,63 +135,35 @@ interface Transaction {
 }
 ```
 
-## mint
+## expectedEditionAddress
 
-> Requires `signer` to be specified
+> Requires either `signer` or `provider`
 
-Mint a edition given the specified schedule and using given signer
+Get the expected edition address to be set for a to-be-created edition contract based on the deployer address and given `salt`.
 
 ```ts
-const client = SoundClient({
-  // ...
-  signer,
-
-  // Minting a MerkleDrop schedule currently requires a connection with the Sound.xyz API
-  apiKey: process.env.SOUNDXYZ_API_KEY,
-})
+import { EditionConfig, MintConfig, SoundClient } from '@soundxyz/sdk'
+import { contractAddresses } from '@soundxyz/sound-protocol'
 
 // ...
 
-const editionAddress = '0x...'
-
-const mintSchedule = (await client.activeMintSchedules({ editionAddress })).shift()
-
-if (!mintSchedule) throw Error(`No active mint schedule available!`)
-
-// Transaction
-const mintTransaction = await client.mint({
-  mintSchedule,
-  quantity: 1,
-
-  // affiliate: ...
-
-  // gasLimit: ...
-  // maxFeePerGas: ...
-  // maxPriorityFeePerGas: ...
-
-  // Customize merkle proof getter, by default it goes to Sound.xyz API
-  // merkleProof: ({ merkleRootHash, userAddress }) => ...
+const client = SoundClient({
+  signer,
+}).creation({
+  creatorAddress: contractAddresses.mainnet.soundCreatorAddress,
 })
-```
 
-```ts
-interface Transaction {
-  hash: string
+// ..
 
-  // Only if a transaction has been mined
-  blockNumber?: number
-  blockHash?: string
-  timestamp?: number
+const salt = crypto.randomUUID()
 
-  confirmations: number
-
-  // Not optional (as it is in Transaction)
-  from: string
-
-  // The raw transaction
-  raw?: string
-
-  // This function waits until the transaction has been mined
-  wait: (confirmations?: number) => Promise<TransactionReceipt>
-}
+const {
+  // Expected edition contract address
+  editionAddress,
+  // Does the edition contract already exists
+  exists,
+} = await client.expectedEditionAddress({
+  deployer: '0x...',
+  salt,
+})
 ```

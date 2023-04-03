@@ -1,5 +1,6 @@
 {
   "index": "Getting Started",
-  "read": "Read functions",
-  "write": "Write functions"
+  "edition": "Functions for interacting with editions",
+  "creation": "Functions for creating editions",
+  "helpers": "Helper functions when interacting with SDK"
 }
