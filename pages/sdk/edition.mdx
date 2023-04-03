@@ -409,7 +409,7 @@ const samEdition = client.edition.sam({
 
 Contract address of SAM module associated with edition if exists
 
-Please use this address nullability as a cheap check before calling any write function into SAM, otherwise failing transactions could be sent.
+Please use this address nullability as a cheap check before calling any write function into SAM, otherwise functions will fail loudly.
 
 ```ts
 // string | null
