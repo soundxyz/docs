@@ -2,8 +2,6 @@
 
 Official Sound development tools for the JavaScript ecosystem, with first-class support of [TypeScript](https://www.typescriptlang.org) and [ESM](https://nodejs.org/api/esm.html)
 
-**NOTE:** Until `@soundxyz/sdk` is released as `>=1.0.0`, it's considered beta, and any new release until then might contain a breaking change.
-
 [Sound SDK Github repo](https://github.com/soundxyz/sdk)
 
 ## Install
@@ -34,7 +32,7 @@ On server-side it's required to use an [ethers supported provider](https://docs.
 
 ### SoundClient
 
-Most of the library is contained within [`SoundClient`](/sdk/sound-client), which based on the given `signer` or `provider` certain functions are available.
+Most of the library is contained within `SoundClient`.
 
 ```ts
 import { useAccount } from 'wagmi'
@@ -45,12 +43,15 @@ function Component() {
   const account = useAccount()
   // ...
 
-  const signer = await account.connector?.getSigner()
-
-  // ...
-
   const client = SoundClient({
-    signer,
+    async signer() {
+      const signer = await account.connector.getSigner()
+
+      // You need to validate that this situation doesn't really happen on a normal flow
+      if (!signer) throw Error('Missing signer')
+
+      return signer
+    },
   })
 }
 ```
@@ -71,7 +72,7 @@ const client = SoundClient({
 
 #### Sound.xyz API
 
-The SDK provides direct connection with [www.sound.xyz](https://www.sound.xyz) API, which needs an `API Key`. The usage is optional, but certain functions like getting associated audio or images will require it.
+The SDK provides direct connection with [www.sound.xyz](https://www.sound.xyz) API, which needs an `API Key`. The usage is optional, but certain functions like extra information or processed indexed data will require it.
 
 To get an `API Key` contact us on our discord server [`discord.gg/soundxyz`](https://discord.gg/soundxyz)
 

@@ -1,5 +1,6 @@
 {
   "index": "Getting Started",
-  "read": "Read functions",
-  "write": "Write functions"
+  "edition": "Interacting with editions",
+  "creation": "Creating editions",
+  "helpers": "Helpers"
 }
