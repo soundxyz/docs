@@ -466,7 +466,8 @@ Estimated price for buying tokens from SAM
     null
  */
 const buyPrice = await samEdition.contract.totalBuyPrice({
-  // Offset used as buffer for handling concurrent purchases and reducing the possibility of failed transactions
+  // Offset used as buffer for handling concurrent purchases
+  // and reducing the possibility of failed transactions
   offset: 0,
 
   // How many tokens to be estimated for purchase
@@ -483,7 +484,8 @@ Estimated price for selling tokens for SAM
 ```ts
 // BigNumber | null
 const sellPrice = await samEdition.contract.totalSellPrice({
-  // Offset used as buffer for handling concurrent sales and reducing the possibility of failed transactions
+  // Offset used as buffer for handling concurrent sales
+  // and reducing the possibility of failed transactions
   offset: 0,
 
   // How many tokens to be estimated for sell
