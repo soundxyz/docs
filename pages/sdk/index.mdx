@@ -44,7 +44,7 @@ function Component() {
   // ...
 
   const client = SoundClient({
-    signer() {
+    async signer() {
       const signer = await account.connector.getSigner()
 
       // You need to validate that this situation doesn't really happen on a normal flow
