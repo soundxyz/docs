@@ -1,6 +1,6 @@
 {
   "index": "Getting Started",
-  "edition": "Functions for interacting with editions",
-  "creation": "Functions for creating editions",
-  "helpers": "Helper functions when interacting with SDK"
+  "edition": "Interacting with editions",
+  "creation": "Creating editions",
+  "helpers": "Helpers"
 }
