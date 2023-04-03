@@ -43,12 +43,15 @@ function Component() {
   const account = useAccount()
   // ...
 
-  const signer = await account.connector?.getSigner()
-
-  // ...
-
   const client = SoundClient({
-    signer,
+    signer() {
+      const signer = await account.connector.getSigner()
+
+      // You need to validate that this situation doesn't really happen on a normal flow
+      if (!signer) throw Error('Missing signer')
+
+      return signer
+    },
   })
 }
 ```
