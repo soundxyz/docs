@@ -20,7 +20,7 @@ specifiers:
   nextra: 2.3.0
   nextra-theme-docs: 2.3.0
   postcss: ^8.4.21
-  prettier: ^2.8.7
+  prettier: ^2.8.8
   pretty-quick: ^3.1.3
   prism-react-renderer: ^1.3.5
   prismjs: ^1.29.0
@@ -56,8 +56,8 @@ devDependencies:
   nextra: 2.3.0_ld2jel3hspngo3u5lti2kgl2sq
   nextra-theme-docs: 2.3.0_2sg6ajj32xrbwuked4upeu4dxe
   postcss: 8.4.21
-  prettier: 2.8.7
-  pretty-quick: 3.1.3_prettier@2.8.7
+  prettier: 2.8.8
+  pretty-quick: 3.1.3_prettier@2.8.8
   prism-react-renderer: 1.3.5_react@18.2.0
   prismjs: 1.29.0
   react: 18.2.0
@@ -2560,13 +2560,13 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /prettier/2.8.7:
-    resolution: {integrity: sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==}
+  /prettier/2.8.8:
+    resolution: {integrity: sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
 
-  /pretty-quick/3.1.3_prettier@2.8.7:
+  /pretty-quick/3.1.3_prettier@2.8.8:
     resolution: {integrity: sha512-kOCi2FJabvuh1as9enxYmrnBC6tVMoVOenMaBqRfsvBHB0cbpYHjdQEpSglpASDFEXVwplpcGR4CLEaisYAFcA==}
     engines: {node: '>=10.13'}
     hasBin: true
@@ -2579,7 +2579,7 @@ packages:
       ignore: 5.2.4
       mri: 1.2.0
       multimatch: 4.0.0
-      prettier: 2.8.7
+      prettier: 2.8.8
     dev: true
 
   /prism-react-renderer/1.3.5_react@18.2.0:
