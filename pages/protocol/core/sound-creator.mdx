@@ -1,18 +1,12 @@
-# SoundCreatorV1
+# SoundCreatorV2
 
-**[`contracts/core/SoundCreatorV1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundCreatorV1.sol)**
+**[`contracts/core/SoundCreatorV2.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundCreatorV2.sol)**
 
 A factory that allows for a single transaction setup that:
+  1. Clones and initializes a `SoundEdition`.
+  2. Forwards calldata to an array of target contracts. These calldata can be used to set up the required authorizations and mint schedules.
 
-1. Deploys a minimal proxy of [SoundEdition](/protocol/core/sound-edition) to a deterministic address with a `salt`, and calls its [`initialize`](/protocol/core/sound-edition#initialize) function with the provided `initData` calldata.
-2. Authorize one or more minter contracts on SoundEdition.
-3. Configure one or more minter contracts to mint on SoundEdition.
-
-These three steps are perfomed in the [`createSoundAndMints`](sound-creator-v1#createsoundandmints) function.
-
-Inherits:
-
-- [OwnableRoles](/protocol/libraries/ownable-roles)
+These three steps are perfomed in the [`createSoundAndMints`](sound-creator#createsoundandmints) function.
 
 ## Write Functions
 
