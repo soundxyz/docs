@@ -3,68 +3,181 @@
 **[`contracts/core/SoundCreatorV2.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundCreatorV2.sol)**
 
 A factory that allows for a single transaction setup that:
-  1. Clones and initializes a `SoundEdition`.
+  1. Clones and initializes a SoundEdition.
   2. Forwards calldata to an array of target contracts. These calldata can be used to set up the required authorizations and mint schedules.
 
-These three steps are perfomed in the [`createSoundAndMints`](sound-creator#createsoundandmints) function.
+This factory does not store the implementation address. Instead, it is provided as an argument to the function calls.
+
+This factory allows for collectors to execute an artist-signed SoundCreation struct payload and mint in a single transaction.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Structs
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SoundCreation 
+
+```solidity
+struct SoundCreation {
+    // The address of the SoundEdition implementation.
+    address implementation;
+    // The initial owner of the deployed SoundEdition.
+    address owner;
+    // The salt used for deploying the SoundEdition via the SoundCreator factory.
+    bytes32 salt;
+    // The calldata passed to the SoundEdition to initialize it.
+    bytes initData;
+    // Array of contracts to call after initializing the SoundEdition.
+    address[] contracts;
+    // Array of abi encoded calldata to pass to each entry in `contracts`.
+    bytes[] data;
+    // The current nonce used to sign the SoundCreation struct, if required.
+    // Just generate some really random number on the client side for this.
+    uint256 nonce;
+}
+```
+
+A struct containing all the data required for creating a SoundEdition and setting up all other relevant contracts.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Write Functions
 
-### createSoundAndMints
+{/* ------------------------------------------------------------------------------------------- */}
+
+### create
 
 ```solidity
-function createSoundAndMints(
-    bytes32 salt,
-    bytes calldata initData,
-    address[] calldata contracts,
-    bytes[] calldata data
-) external returns (address soundEdition, bytes[] memory results)
+function create(SoundCreation calldata creation)
+    external
+    returns (address soundEdition, bytes[] memory results)
 ```
 
-Creates a Sound Edition proxy, initializes it, and creates mint configurations on a given set of minter addresses.
+Creates a SoundEdition and sets up all other relevant contracts.
 
 **Calling conditions:**
 
-- The lengths of `contracts` and `data` must be the same.
-- All of the `contracts` must exist, and all of `data` must be properly encoded to be valid calldata for each of the the contracts.
+- The caller must be `creation.owner`.
 
-| Params:     |                                                                                                                      |
-| ----------- | -------------------------------------------------------------------------------------------------------------------- |
-| `salt`      | The salt used for the CREATE2 to deploy the clone to a deterministic address.                                        |
-| `initData`  | The calldata to initialize SoundEdition via `abi.encodeWithSelector`.                                                |
-| `contracts` | A list of contracts to call.                                                                                         |
-| `data`      | A list of calldata created via `abi.encodeWithSelector` This must contain the same number of entries as `contracts`. |
+|Params:||
+|---|---|
+|`creation`|The SoundCreation struct. 
 
-| Returns:       |                                                                        |
-| -------------- | ---------------------------------------------------------------------- |
-| `soundEdition` | Returns the address of the created contract.                           |
-| `results`      | The results of calling the contracts. Use `abi.decode` to decode them. |
+Returns the address of the clone, and the results of calling each of the contracts.
 
-### setEditionImplementation
+{/* ------------------------------------------------------------------------------------------- */}
+
+### createWithSignature
 
 ```solidity
-function setEditionImplementation(address newImplementation) external
+function createWithSignature(SoundCreation calldata creation, bytes calldata signature)
+    external
+    returns (address soundEdition, bytes[] memory results)
 ```
 
-Changes the SoundEdition implementation contract address.
+Creates a SoundEdition on behalf of `creation.owner`.
 
-**Calling conditions:**
+|Params:||
+|---|---|
+|`creation`|The SoundCreation struct.                                        
+|`signature`|The signature for the SoundCreation struct, by `creation.owner`. 
 
-- The caller must be the owner of the contract.
+Returns the address of the clone, and the results of calling each of the contracts.
 
-| Params:             |                                           |
-| ------------------- | ----------------------------------------- |
-| `newImplementation` | The new implementation address to be set. |
+{/* ------------------------------------------------------------------------------------------- */}
+
+### mint
+
+```solidity
+function mint(
+    address minter,
+    bytes calldata mintData,
+    address refundTo
+) external payable
+```
+
+Calls `minter` with `mintData`.
+
+After which, refunds any remaining ETH balance in the contract.
+
+If `minter` is the zero address, the function is a no-op.
+
+|Params:||
+|---|---|
+|`minter`|The minter contract to call.                                     
+|`mintData`|The abi encoded calldata to the minter contract.                 
+|`refundTo`|The address to transfer any remaining ETH in the contract after the calls.<br/>If `address(0)`,remaining ETH will NOT be refunded.<br/>If `address(1)`, remaining ETH will be refunded to `msg.sender`.<br/>If anything else, remaining ETH will be refunded to `refundTo`. |
+
+Returns the address of the clone, and the results of calling each of the contracts.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### createWithSignatureAndMint
+
+```solidity
+function createWithSignatureAndMint(
+    SoundCreation calldata creation,
+    bytes calldata signature,
+    address minter,
+    bytes calldata mintData,
+    address refundTo
+) external payable returns (address soundEdition, bytes[] memory results)
+```
+
+Equivalent to calling [`createWithSignature`](#createWithSignature), followed by [`mint`](#mint).
+
+|Params:||
+|---|---|
+|`creation`|The SoundCreation struct.                                        
+|`signature`|The signature for the SoundCreation struct, by `creation.owner`. 
+|`minter`|The minter contract to call.                                     
+|`mintData`|The abi encoded calldata to the minter contract.                 
+|`refundTo`|The address to transfer any remaining ETH in the contract after the calls.<br/>If `address(0)`,remaining ETH will NOT be refunded.<br/>If `address(1)`, remaining ETH will be refunded to `msg.sender`.<br/>If anything else, remaining ETH will be refunded to `refundTo`. |
+
+Returns the address of the clone, and the results of calling each of the contracts.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### invalidateNonces
+
+```solidity
+function invalidateNonces(uint256[] calldata nonces) external
+```
+
+Invalidates the nonces for the `msg.sender`.
+
+|Params:||
+|---|---|
+|`nonces`|An array of nonces. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Read-only Functions
 
-### soundEditionImplementation
+{/* ------------------------------------------------------------------------------------------- */}
+
+### noncesInvalidated
 
 ```solidity
-function soundEditionImplementation() external returns (address)
+function noncesInvalidated(address signer, uint256[] calldata nonces) 
+    external 
+    view 
+    returns (bool[] memory results)
 ```
 
-The address of the sound edition implementation.
+Returns whether each of the `nonces` of `signer` has been invalidated.
+
+|Params:||
+|---|---|
+|`signer`|The signer of the signature. 
+|`nonces`|An array of nonces.          
+
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### soundEditionAddress
 
@@ -77,24 +190,110 @@ function soundEditionAddress(
 
 Returns the deterministic address for the sound edition clone.
 
-| Params: |                                                   |
-| :------ | :-----------------------------------------------: |
-| `by`    | The caller of the `createSoundAndMints` function. |
-| `salt`  |      The salt, generated on the client side.      |
+|Params:||
+|---|---|
+|`by`|The caller of the `createSoundAndMints` function. 
+|`salt`|The salt, generated on the client side.           
 
-| Returns: |                              |
-| :------- | :--------------------------: |
-| `addr`   |    The computed address.     |
-| `exists` | Whether the contract exists. |
+{/* ------------------------------------------------------------------------------------------- */}
+
+### isValidSignature
+
+```solidity
+function isValidSignature(
+    SoundCreation calldata creation,
+    bytes calldata signature
+) external view returns (bool isValid)
+```
+
+Returns if the signature for the creation struct is correctly signed, as well as the creation's nonce is still valid.
+
+|Params:||
+|---|---|
+|`creation`|The SoundCreation struct.                         
+|`signature`|The signature for the SoundCreation struct.       
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### computeDigest
+
+```solidity
+function computeDigest(SoundCreation calldata creation)
+    external
+    view 
+    returns (bytes32 digest)
+```
+
+Computes the EIP-712 hash of the SoundCreation struct.
+
+|Params:||
+|---|---|
+|`creation`|The SoundCreation struct.                         
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SOUND_CREATION_TYPEHASH
+
+```solidity
+function SOUND_CREATION_TYPEHASH() external view returns (bytes32)
+```
+
+Returns the SoundCreation struct's EIP-712 typehash.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### DOMAIN_TYPEHASH
+
+```solidity
+function DOMAIN_TYPEHASH() external view returns (bytes32)
+```
+
+Returns the EIP-712 domain typehash.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### name 
+
+```solidity
+function name() external pure returns (string)
+```
+
+Returns the EIP-712 domain name.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### version 
+
+```solidity
+function version() external pure returns (string)
+```
+
+Returns the EIP-712 domain version.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### domainSeparator 
+
+```solidity
+function domainSeparator() external pure returns (string)
+```
+
+Returns the EIP-712 domain separator.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Events
 
-### SoundEditionCreated
+{/* ------------------------------------------------------------------------------------------- */}
+
+### Created
 
 ```solidity
-event SoundEditionCreated(
-    address indexed soundEdition,
-    address indexed deployer,
+event Created(
+    address indexed implementation,
+    address indexed edition,
+    address indexed owner,
     bytes initData,
     address[] contracts,
     bytes[] data,
@@ -104,28 +303,37 @@ event SoundEditionCreated(
 
 Emitted when an edition is created.
 
-| Params:        |                                                                        |
-| -------------- | ---------------------------------------------------------------------- |
-| `soundEdition` | The address of the edition.                                            |
-| `deployer`     | The address of the deployer.                                           |
-| `initData`     | The calldata to initialize SoundEdition via `abi.encodeWithSelector`.  |
-| `contracts`    | The list of contracts called.                                          |
-| `data`         | The list of calldata created via `abi.encodeWithSelector`              |
-| `results`      | The results of calling the contracts. Use `abi.decode` to decode them. |
+|Params:||
+|---|---|
+|`implementation`|The address of the SoundEdition implementation.                        
+|`edition`|The address of the deployed SoundEdition.                              
+|`owner`|The address of the owner.                                              
+|`initData`|The calldata to initialize SoundEdition via `abi.encodeWithSelector`.  
+|`contracts`|The list of contracts called.                                          
+|`data`|The list of calldata created via `abi.encodeWithSelector`.              
+|`results`|The results of calling the contracts. Use `abi.decode` to decode them. 
 
-### SoundEditionImplementationSet
+{/* ------------------------------------------------------------------------------------------- */}
+
+### NoncesInvalidated
 
 ```solidity
-event SoundEditionImplementationSet(address newImplementation)
+event NoncesInvalidated(address indexed signer, uint256[] nonces)
 ```
 
-Emitted when the edition implementation address is set.
+Emitted when the `nonces` of `signer` are invalidated.
 
-| Params:             |                                           |
-| ------------------- | ----------------------------------------- |
-| `newImplementation` | The new implementation address to be set. |
+|Params:||
+|---|---|
+|`signer`|The signer of the nonce.         
+|`nonces`|The array of invalidated nonces. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Errors
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### ImplementationAddressCantBeZero
 
@@ -135,6 +343,8 @@ error ImplementationAddressCantBeZero()
 
 Thrown if the implementation address is zero.
 
+{/* ------------------------------------------------------------------------------------------- */}
+
 ### ArrayLengthsMismatch
 
 ```solidity
@@ -142,3 +352,24 @@ error ArrayLengthsMismatch()
 ```
 
 Thrown if the lengths of the input arrays are not equal.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### Unauthorized
+
+```solidity
+error Unauthorized()
+```
+
+Not authorized to perform the action.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidSignature
+
+```solidity
+error InvalidSignature()
+```
+
+The signature for the SoundCreation struct is invalid.
+This could be caused be an invalid parameter, signer, or invalidated nonce.

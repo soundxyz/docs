@@ -1,0 +1,6 @@
+{
+  "erc721a-upgradeable": "ERC721AUpgradeable",
+  "erc721a-queryable-upgradeable": "ERC721AQueryableUpgradeable",
+  "erc721a-burnable-upgradeable": "ERC721ABurnableUpgradeable",
+  "ownable-roles": "OwnableRoles"
+}

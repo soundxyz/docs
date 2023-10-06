@@ -1,18 +1,34 @@
-# SoundEdition
+# SoundEditionV2
 
-**[`contracts/core/SoundEditionV1_1.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV1_1.sol)**
+[`contracts/core/SoundEditionV2.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/core/SoundEditionV2.sol)
 
 The Sound Protocol NFT contract.
 
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
 Overview:
 
-- An implementation of [ERC721A](https://github.com/chiru-labs/ERC721A).
-- Enables the owner, authorized minter contracts or administrators to batch mint NFTs. Authorization is granted by the owner via the [`grantRoles`](#grantRoles) function inherited from [`OwnableRoles`](/protocol/libraries/ownable-roles).
+- Inherits [ERC721A](https://github.com/chiru-labs/ERC721A).
+- Enables the owner, authorized minter contracts or administrators to batch mint NFTs. Authorization is granted by the owner via the [`grantRoles`](/protocol/libraries/ownable-roles#grantroles) function inherited from [`OwnableRoles`](/protocol/libraries/ownable-roles).
 - Token IDs are minted sequentially (e.g. 1, 2, 3...) starting from 1.
 - Can optionally implement a `metadataModule` that effectively overrides the default `tokenURI` function.
 - Can natively support [range editions](https://sound.mirror.xyz/hmz2pueqBV37MD-mULjvch0vQoc-VKJdsfqXf8jTB30) via a dynamic maximum mintable supply (based on a `editionCutoffTime`),
 - Has a pseudorandom `mintRandomness` number optionally set on each [`mint`](#mint) call, which can be used for game mechanics.
 - Implements [EIP-2981 Royalty Standard](https://eips.ethereum.org/EIPS/eip-2981).
+- Supports per-token tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+Tiers:
+
+- The zeroth tier is called the `GA_TIER` (short for General Admission). This is a special tier that uses default settings on the SoundEdition, as well as platform default settings on minters. 
+- Tiers can range from 0 to 255 inclusive.
+- Each tier contains its own max mintable range, cutoff time, and mint randomness.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 Inherits:
 
@@ -21,13 +37,76 @@ Inherits:
 - [ERC721AQueryableUpgradeable](/protocol/libraries/erc721a-queryable-upgradeable)
 - [OwnableRoles](/protocol/libraries/ownable-roles) from Solady
 
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
 ## Structs
 
-### EditionInfo
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierInfo 
+
+```solidity
+struct TierInfo {
+    // The tier.
+    uint8 tier;
+    // The current max mintable amount.
+    uint32 maxMintable;
+    // The lower bound of the maximum number of tokens that can be minted for the tier.
+    uint32 maxMintableLower;
+    // The upper bound of the maximum number of tokens that can be minted for the tier.
+    uint32 maxMintableUpper;
+    // The timestamp (in seconds since unix epoch) after which the
+    // max amount of tokens mintable for the tier will drop from
+    // `maxMintableUpper` to `maxMintableLower`.
+    uint32 cutoffTime;
+    // The total number of tokens minted for the tier.
+    uint32 minted;
+    // The mint randomness for the tier.
+    uint256 mintRandomness;
+    // Whether the tier mints have concluded.
+    bool mintConcluded;
+    // Whether the tier has mint randomness enabled.
+    bool mintRandomnessEnabled;
+    // Whether the tier is frozen.
+    bool isFrozen;
+}
+```
+
+The information pertaining to a tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierCreation 
+
+```solidity 
+struct TierCreation {
+    // The tier.
+    uint8 tier;
+    // The lower bound of the maximum number of tokens that can be minted for the tier.
+    uint32 maxMintableLower;
+    // The upper bound of the maximum number of tokens that can be minted for the tier.
+    uint32 maxMintableUpper;
+    // The timestamp (in seconds since unix epoch) after which the
+    // max amount of tokens mintable for the tier will drop from
+    // `maxMintableUpper` to `maxMintableLower`.
+    uint32 cutoffTime;
+    // Whether the tier has mint randomness enabled.
+    bool mintRandomnessEnabled;
+    // Whether the tier is frozen.
+    bool isFrozen;
+}
+```
+
+A struct containing the arguments for creating a tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### EditionInfo 
 
 ```solidity
 struct EditionInfo {
-    // Base URI for the tokenId.
+    // Base URI for the metadata.
     string baseURI;
     // Contract URI for OpenSea storefront.
     string contractURI;
@@ -37,28 +116,14 @@ struct EditionInfo {
     string symbol;
     // Address that receives primary and secondary royalties.
     address fundingRecipient;
-    // The current max mintable amount;
-    uint32 editionMaxMintable;
-    // The lower limit of the maximum number of tokens that can be minted.
-    uint32 editionMaxMintableUpper;
-    // The upper limit of the maximum number of tokens that can be minted.
-    uint32 editionMaxMintableLower;
-    // The timestamp (in seconds since unix epoch) after which the
-    // max amount of tokens mintable will drop from
-    // `maxMintableUpper` to `maxMintableLower`.
-    uint32 editionCutoffTime;
-    // Address of metadata module, address(0x00) if not used.
+    // Address of the metadata module. Optional.
     address metadataModule;
-    // The current mint randomness value.
-    uint256 mintRandomness;
+    // Whether the metadata is frozen.
+    bool isMetadataFrozen;
+    // Whether the ability to create tiers is frozen.
+    bool isCreateTierFrozen;
     // The royalty BPS (basis points).
     uint16 royaltyBPS;
-    // Whether the mint randomness is enabled.
-    bool mintRandomnessEnabled;
-    // Whether the mint has concluded.
-    bool mintConcluded;
-    // Whether the metadata has been frozen.
-    bool isMetadataFrozen;
     // Next token ID to be minted.
     uint256 nextTokenId;
     // Total number of tokens burned.
@@ -67,79 +132,106 @@ struct EditionInfo {
     uint256 totalMinted;
     // Total number of tokens currently in existence.
     uint256 totalSupply;
+    // An array of tier info. From lowest (0-indexed) to highest.
+    TierInfo[] tierInfo;
 }
 ```
 
-Holds information pertaining to the SoundEdition.
+The information pertaining to this edition.
 
-This struct is intended for off-chain queries, and can be retrieved via the `editionInfo` function.
+{/* ------------------------------------------------------------------------------------------- */}
+
+### EditionInitialization 
+
+```solidity 
+struct EditionInitialization {
+    // Name of the collection.
+    string name;
+    // Symbol of the collection.
+    string symbol;
+    // Address of the metadata module. Optional.
+    address metadataModule;
+    // Base URI for the metadata.
+    string baseURI;
+    // Contract URI for OpenSea storefront.
+    string contractURI;
+    // Address that receives primary and secondary royalties.
+    address fundingRecipient;
+    // The royalty BPS (basis points).
+    uint16 royaltyBPS;
+    // Whether the metadata is frozen.
+    bool isMetadataFrozen;
+    // Whether the ability to create tiers is frozen.
+    bool isCreateTierFrozen;
+    // An array of tier creation structs. From lowest (0-indexed) to highest.
+    TierCreation[] tierCreations;
+}
+```
+
+A struct containing the arguments for initialization.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Write Functions
 
-### initialize
+{/* ------------------------------------------------------------------------------------------- */}
+
+### initialize 
 
 ```solidity
-function initialize(
-    string memory name_,
-    string memory symbol_,
-    address metadataModule_,
-    string memory baseURI_,
-    string memory contractURI_,
-    address fundingRecipient_,
-    uint16 royaltyBPS_,
-    uint32 editionMaxMintableLower_,
-    uint32 editionMaxMintableUpper_,
-    uint32 editionCutoffTime_,
-    uint8 flags_
-) external
+function initialize(EditionInitialization calldata init) external
 ```
 
 Initializes the contract.
 
-This function is called in the [`createSoundAndMints`](sound-creator-v1#createsoundandmints) function of SoundCreatorV1, right after the creation of the SoundEdtion, within the same transaction.
+This function is called in the [`create`](/protocol/core/sound-creator#create) function of SoundCreatorV2, right after the creation of the SoundEdtion, within the same transaction. 
 
-| Params:                    |                                                                                                                                                                                          |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name_`                    | Name of the collection.                                                                                                                                                                  |
-| `symbol_`                  | Symbol of the collection.                                                                                                                                                                |
-| `metadataModule_`          | Address of metadata module, address(0x00) if not used.                                                                                                                                   |
-| `baseURI_`                 | Base URI.                                                                                                                                                                                |
-| `contractURI_`             | Contract URI for OpenSea storefront.                                                                                                                                                     |
-| `fundingRecipient_`        | Address that receives primary and secondary royalties.                                                                                                                                   |
-| `royaltyBPS_`              | Royalty amount in bps (basis points).                                                                                                                                                    |
-| `editionMaxMintableLower_` | The lower bound of the max mintable quantity for the edition.                                                                                                                            |
-| `editionMaxMintableUpper_` | The upper bound of the max mintable quantity for the edition.                                                                                                                            |
-| `editionCutoffTime_`       | The timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `max(_totalMinted(), editionMaxMintableLower)`.                                                   |
-| `flags_`                   | The bitwise OR result of the initialization flags. <br/>See: [METADATA_IS_FROZEN_FLAG](#metadata_is_frozen_flag) <br/>See: [MINT_RANDOMNESS_ENABLED_FLAG](#mint_randomness_enabled_flag) |
+|Params:||
+|---|---|
+|`init`|The initialization struct. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### mint
 
 ```solidity
-function mint(address to, uint256 quantity) external payable returns (uint256)
+function mint(
+    uint8 tier,
+    address to,
+    uint256 quantity
+) external payable returns (uint256 fromTokenId)
 ```
 
-Mints `quantity` tokens to addrress `to`
+Mints `quantity` tokens to addrress `to`  
 
 Each token will be assigned a token ID that is consecutively increasing.
 
 **Calling conditions:**
 
 - The caller must be the owner of the contract, or have either the
-  [`ADMIN_ROLE`](sound-edition#admin_role), [`MINTER_ROLE`](sound-edition#minter_role), which can be granted via `grantRoles`.
+  [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role), [`MINTER_ROLE`](/protocol/core/sound-edition#minter_role), which can be granted via [`grantRoles`](/protocol/libraries/ownable-roles#grantroles).
   Multiple minters, such as different minter contracts,
   can be authorized simultaneously.
 
-| Params:    |                           |
-| ---------- | ------------------------- |
-| `to`       | Address to mint to.       |
-| `quantity` | Number of tokens to mint. |
+|Params:||
+|---|---|
+|`tier`| The tier.
+|`to`| Address to mint to.
+|`quantity`| Number of tokens to mint.
 
 Returns the first token ID minted.
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### airdrop
 
 ```solidity
-function airdrop(address[] calldata to, uint256 quantity) external returns (uint256)
+function airdrop(
+    uint8 tier,
+    address[] calldata to, 
+    uint256 quantity
+) external returns (uint256 fromTokenId)
 ```
 
 Mints `quantity` tokens to each of the addresses in `to`.
@@ -147,14 +239,17 @@ Mints `quantity` tokens to each of the addresses in `to`.
 **Calling conditions:**
 
 - The caller must be the owner of the contract, or have the
-  [`ADMIN_ROLE`](sound-edition#admin_role), which can be granted via `grantRoles`.
+  [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role), which can be granted via [`grantRoles`](/protocol/libraries/ownable-roles#grantroles).
 
-| Params:    |                           |
-| ---------- | ------------------------- |
-| `to`       | Address to mint to.       |
-| `quantity` | Number of tokens to mint. |
-
+|Params:||
+|---|---|
+|`tier`| The tier.
+|`to`| Addresses to mint to.
+|`quantity`| Number of tokens to mint.
+     
 Returns the first token ID minted.
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### withdrawETH
 
@@ -162,7 +257,9 @@ Returns the first token ID minted.
 function withdrawETH() external
 ```
 
-Withdraws collected ETH royalties to the fundingRecipient.
+Withdraws collected ETH royalties to the fundingRecipient. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### withdrawERC20
 
@@ -170,11 +267,13 @@ Withdraws collected ETH royalties to the fundingRecipient.
 function withdrawERC20(address[] calldata tokens) external
 ```
 
-Withdraws collected ERC20 royalties to the fundingRecipient.
+Withdraws collected ERC20 royalties to the fundingRecipient. 
 
-| Params:  |                                   |
-| -------- | --------------------------------- |
-| `tokens` | array of ERC20 tokens to withdraw |
+|Params:||
+|---|---|
+| `tokens` | array of ERC20 tokens to withdraw 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### setMetadataModule
 
@@ -184,13 +283,14 @@ function setMetadataModule(address metadataModule) external
 
 Sets metadata module.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `metadataModule` | Address of metadata module. 
 
-| Params:          |                             |
-| ---------------- | --------------------------- |
-| `metadataModule` | Address of metadata module. |
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### setBaseURI
 
@@ -200,13 +300,14 @@ function setBaseURI(string memory baseURI) external
 
 Sets global base URI.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `baseURI` | The base URI to be set. 
 
-| Params:   |                         |
-| --------- | ----------------------- |
-| `baseURI` | The base URI to be set. |
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### setContractURI
 
@@ -216,13 +317,14 @@ function setContractURI(string memory contractURI) external
 
 Sets contract URI.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `contractURI` | The contract URI to be set. 
 
-| Params:       |                             |
-| ------------- | --------------------------- |
-| `contractURI` | The contract URI to be set. |
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### freezeMetadata
 
@@ -232,9 +334,23 @@ function freezeMetadata() external
 
 Freezes metadata by preventing any more changes to base URI.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role).
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+{/* ------------------------------------------------------------------------------------------- */}
+
+### freezeCreateTier
+
+```solidity
+function freezeCreateTier() external
+```
+
+Freezes any more new tiers from being added.
+
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role).
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### setFundingRecipient
 
@@ -244,13 +360,36 @@ function setFundingRecipient(address fundingRecipient) external
 
 Sets funding recipient address.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `fundingRecipient` | Address to be set as the new funding recipient. 
 
-| Params:            |                                                 |
-| ------------------ | ----------------------------------------------- |
-| `fundingRecipient` | Address to be set as the new funding recipient. |
+{/* ------------------------------------------------------------------------------------------- */}
+
+### createSplit
+
+```solidity
+function createSplit(address splitMain, bytes calldata splitData)
+    external
+    returns (address split)
+```
+
+Creates a new split wallet via the SplitMain contract, then sets it as the `fundingRecipient`.
+
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
+
+|Params:||
+|---|---|
+| `splitMain` | The address of the SplitMain contract.
+| `splitData` | The calldata to forward to the SplitMain contract to create a split.
+
+Returns the address of the new split contract.
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### setRoyalty
 
@@ -260,172 +399,122 @@ function setRoyalty(uint16 bps) external
 
 Sets royalty amount in bps (basis points).
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `bps` | The new royalty basis points to be set. 
 
-| Params: |                                         |
-| ------- | --------------------------------------- |
-| `bps`   | The new royalty basis points to be set. |
+{/* ------------------------------------------------------------------------------------------- */}
 
-### setEditionMaxMintableRange
+### freezeTier 
 
 ```solidity
-function setEditionMaxMintableRange(
-    uint32 editionMaxMintableLower_,
-    uint32 editionMaxMintableUpper_
+function freezeTier(uint8 tier) external
+```
+
+Freezes the tier.
+
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
+
+|Params:||
+|---|---|
+| `tier` | The tier.  
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setMaxMintableRange
+
+```solidity
+function setMaxMintableRange(
+    uint8 tier,
+    uint32 lower, 
+    uint32 upper
 ) external
 ```
 
 Sets the edition max mintable range.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `tier` | The tier.
+| `lower` | The lower limit of the maximum number of tokens that can be minted. 
+| `upper` | The upper limit of the maximum number of tokens that can be minted. 
 
-| Params:                    |                                                                     |
-| -------------------------- | ------------------------------------------------------------------- |
-| `editionMaxMintableLower_` | The lower limit of the maximum number of tokens that can be minted. |
-| `editionMaxMintableUpper_` | The upper limit of the maximum number of tokens that can be minted. |
+{/* ------------------------------------------------------------------------------------------- */}
 
-### setEditionCutoffTime
+### setCutoffTime
 
 ```solidity
-function setEditionCutoffTime(uint32 editionCutoffTime_) external
+function setCutoffTime(uint8 tier, uint32 cutoffTime) external
 ```
 
-Sets the timestamp after which, the `editionMaxMintable` drops from `editionMaxMintableUpper` to `editionMaxMintableLower`.
+Sets the timestamp after which, the max mintable amount for the `tier` drops from the upper limit to the lower limit.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `tier` | The tier.
+| `cutoffTime` | The timestamp. 
 
-| Params:              |                |
-| -------------------- | -------------- |
-| `editionCutoffTime_` | The timestamp. |
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### setMintRandomnessEnabled
 
 ```solidity
-function setMintRandomnessEnabled(bool mintRandomnessEnabled_) external
+function setMintRandomnessEnabled(bool enabled) external
 ```
 
 Sets whether the `mintRandomness` is enabled.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
+|Params:||
+|---|---|
+| `tier` | The tier.
+| `enabled` | The boolean value. 
 
-| Params:                  |                    |
-| ------------------------ | ------------------ |
-| `mintRandomnessEnabled_` | The boolean value. |
+{/* ------------------------------------------------------------------------------------------- */}
 
-### setOperatorFilteringEnabled
-
-```solidity
-function setOperatorFilteringEnabled(bool operatorFilteringEnabled_) external
-```
-
-Sets whether OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry) is enabled.
-
-**Calling conditions:**
-
-- The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](sound-edition#admin_role).
-
-| Params:                     |                    |
-| --------------------------- | ------------------ |
-| `operatorFilteringEnabled_` | The boolean value. |
-
-### setApprovalForAll
+### createTier 
 
 ```solidity
-function setApprovalForAll(address operator, bool approved) external
+function createTier(TierCreation calldata creation) external
 ```
 
-Approves or removes `operator` as an operator for the caller.
-Operators can call `transferFrom` or ` safeTransferFrom` for any token owned by the caller. If the `OPERATOR_FILTERING_ENABLED_FLAG` is set,
-this function will revert if the operator is not approved by the [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry).
+Adds a new tier.
 
-**Calling conditions:**
+**Calling conditions:**  
+ - The caller must be the owner of the contract, or have the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role). 
 
-- The `operator` cannot be the caller.
+|Params:||
+|---|---|
+| `creation` | The tier creation data.
 
-| Params:    |                                          |
-| ---------- | ---------------------------------------- |
-| `operator` | The operator address.                    |
-| `approved` | Whether or not the operator is approved. |
+{/* ------------------------------------------------------------------------------------------- */}
 
-### approve
+### emitAllMetadataUpdate
 
 ```solidity
-function approve(address operator, bool approved) external
+function emitAllMetadataUpdate() external
 ```
 
-Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. Gives permission to `to` to transfer `tokenId` token to another account. The approval is cleared when the token is transferred. If the `OPERATOR_FILTERING_ENABLED_FLAG` is set,
-this function will revert if the operator is not approved by the [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry).
+Emits an event to signal to marketplaces to refresh all the metadata.
 
-**Calling conditions:**
-
-- The `operator` cannot be the caller.
-
-| Params:   |                            |
-| --------- | -------------------------- |
-| `to`      | The permissioned operator. |
-| `tokenId` | The permissioned token.    |
-
-### transferFrom
-
-```solidity
- function transferFrom(address from, address to, uint256 tokenId) external payable
-```
-
-Transfers `tokenId` token from `from` to `to`.
-
-> **WARNING:
-> Usage of this method is discouraged, use `safeTransferFrom` whenever possible.**
-
-**Calling conditions:**
-
-- `from` cannot be the zero address.
-- `from` can only be approved operators (if `OPERATOR_FILTERING_ENABLED_FLAG` is set)
-- `to` cannot be the zero address.
-- `tokenId` token must be owned by `from`.
-- If the caller is not `from`, it must be approved to move this token
-  by either `approve` or `setApprovalForAll`.
-
-| Params:   |                         |
-| --------- | ----------------------- |
-| `from`    | The sender.             |
-| `to`      | The receiver.           |
-| `tokenId` | The permissioned token. |
-
-### safeTransferFrom
-
-```solidity
- function safeTransferFrom(address from, address to, bytes calldata data) external payable
-```
-
-Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients are aware of the ERC721 protocol to prevent tokens from being forever locked.
-
-**Calling conditions:**
-
-- `from` cannot be the zero address.
-- `from` can only be approved operators (if `OPERATOR_FILTERING_ENABLED_FLAG` is set)
-  `to` cannot be the zero address.
-  `tokenId` token must exist and be owned by `from`.
-  If the caller is not `from`, it must be have been allowed to move
-  this token by either `approve` or `setApprovalForAll`.
-  If `to` refers to a smart contract, it must implement
-  `IERC721Receiver-onERC721Received`, which is called upon a safe transfer.
-
-| Params:   |                                                                       |
-| --------- | --------------------------------------------------------------------- |
-| `from`    | The sender.                                                           |
-| `to`      | The receiver.                                                         |
-| `tokenId` | The permissioned token.                                               |
-| `data`    | Optional data to be used by receiver if receiver is a smart contract. |
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Read-only Functions
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### editionInfo
 
@@ -433,31 +522,43 @@ Safely transfers `tokenId` token from `from` to `to`, checking first that contra
 function editionInfo() external view returns (EditionInfo memory)
 ```
 
-Returns the edition info.
+Returns the edition info. 
 
-### supportsInterface
+{/* ------------------------------------------------------------------------------------------- */}
 
-`IERC165-supportsInterface`
+### tierInfo 
 
-```solidity
-function supportsInterface(bytes4 interfaceId) public view virtual returns (bool)
+```solidity 
+function tierInfo(uint8 tier) external view returns (TierInfo memory info)
 ```
 
-Returns `true` if this contract implements the interface defined by `interfaceId`.
+|Params:||
+|---|---|
+| `tier` | The tier.
 
-See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified) to learn more about how these ids are created.
+Returns the tier info.
 
-| Params:       |                          |
-| ------------- | ------------------------ |
-| `interfaceId` | The 4 byte interface ID. |
+{/* ------------------------------------------------------------------------------------------- */}
 
-| Supported Interface IDs: |              |
-| ------------------------ | ------------ |
-| `IERC165`                | `0x01ffc9a7` |
-| `ERC721`                 | `0x80ac58cd` |
-| `ERC721Metadata`         | `0x5b5e139f` |
-| `ISoundEditionV1`        | `0x50899e54` |
-| `ISoundEditionV1_1`      | `0x425aac3d` |
+### GA_TIER
+
+```solidity 
+function GA_TIER() external pure returns (uint8)
+```
+
+Returns the GA tier, which is 0.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### BPS_DENOMINATOR
+
+```solidity 
+function BPS_DENOMINATOR() external pure returns (uint8)
+```
+
+Returns the basis points denominator used in fee calculations, which is 10000.
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MINTER_ROLE
 
@@ -465,7 +566,9 @@ See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-i
 function MINTER_ROLE() external view returns (uint256)
 ```
 
-Returns the minter role flag.
+Returns the minter role flag. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### ADMIN_ROLE
 
@@ -473,35 +576,188 @@ Returns the minter role flag.
 function ADMIN_ROLE() external view returns (uint256)
 ```
 
-Returns the admin role flag.
+Returns the admin role flag. 
 
-### ADDRESS_BATCH_MINT_LIMIT
+{/* ------------------------------------------------------------------------------------------- */}
 
-```solidity
-function ADDRESS_BATCH_MINT_LIMIT() external pure returns (uint256)
+### tokenTier 
+
+```solidity 
+function tokenTier(uint256 tokenId) external view returns (uint8)
 ```
 
-Returns the maximum limit for the mint or airdrop `quantity`.
+|Params:||
+|---|---|
+| `tokenId` | The token ID.
 
-Prevents the first-time transfer costs for tokens near the end of large mint batches via ERC721A from becoming too expensive due to the need to scan many storage slots.
+Returns the tier of the `tokenId`. 
 
-See: https://chiru-labs.github.io/ERC721A/#/tips?id=batch-size
+{/* ------------------------------------------------------------------------------------------- */}
 
-### Initialization flags
+### explicitTokenTier 
 
-Each flag is a bit in the `uint256 _flags` passed to the `initialze` function.
+```solidity 
+function explicitTokenTier(uint256 tokenId) external view returns (uint8)
+```
 
-- `METADATA_IS_FROZEN_FLAG` - If set, the metadata is frozen and cannot be changed.
-- `MINT_RANDOMNESS_ENABLED_FLAG` - If set, the `mintRandomness` function is enabled.
-- `OPERATOR_FILTERING_ENABLED_FLAG` - If set, the edition will be compatible with OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry) for creator fees.
+|Params:||
+|---|---|
+| `tokenId` | The token ID.
 
-Each flag's base-10 value can be retrieved by calling its name as a function.
+Returns the tier of the `tokenId`. 
+
+> Note: Will NOT revert if any `tokenId` does not exist.
+>
+> If the token has not been minted, the tier will be zero.
+>
+> If the token is burned, the tier will be the tier before it was burned.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### tierTokenIds 
+
+```solidity 
+function tierTokenIds(uint8 tier) external view returns (uint256[] memory tokenIds) 
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+
+Returns an array of all the token IDs in the tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### tierTokenIdsIn
+
+```solidity 
+function tierTokenIdsIn(
+    uint8 tier,
+    uint256 start,
+    uint256 stop
+) external view returns (uint256[] memory tokenIds)
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+| `start` | The start of the range. Inclusive.
+| `stop` | The stop of the range. Exclusive.
+
+Returns an array of all the token IDs in the tier, within the range [start, stop).
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### tierTokenIdIndex 
+
+```solidity 
+function tierTokenIdIndex(uint256 tokenId) external view returns (uint256)
+```
+
+|Params:||
+|---|---|
+| `tokenId` | The token ID to find.
+
+Returns the index of `tokenId` in it's tier token ID array.
+
+If not found, returns `type(uint256).max`.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### maxMintable 
+
+```solidity 
+function maxMintable(uint8 tier) external view returns (uint32)
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+
+Returns the maximum amount of tokens mintable for the tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### maxMintableUpper
+
+```solidity 
+function maxMintableUpper(uint8 tier) external view returns (uint32)
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+
+Returns the upper bound for the maximum tokens that can be minted for the tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### maxMintableLower
+
+```solidity 
+function maxMintableLower(uint8 tier) external view returns (uint32)
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+
+Returns the lower bound for the maximum tokens that can be minted for the tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### cutoffTime 
+
+```solidity 
+function cutoffTime(uint8 tier) external view returns (uint32)
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+
+Returns the timestamp after which `maxMintable` drops from `maxMintableUpper` to `maxMintableLower`.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### tierMinted
+
+```solidity 
+function tierMinted(uint8 tier) external view returns (uint32)
+```
+
+|Params:||
+|---|---|
+| `tier` | The tier.
+
+Returns the number of tokens minted for the tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### supportsInterface 
+
+`IERC165-supportsInterface`
 
 ```solidity
-function METADATA_IS_FROZEN_FLAG() external pure returns (uint8);
-function MINT_RANDOMNESS_ENABLED_FLAG() external pure returns (uint8);
-function OPERATOR_FILTERING_ENABLED_FLAG() external pure returns (uint8);
+function supportsInterface(bytes4 interfaceId) public view virtual returns (bool)
 ```
+
+Returns `true` if this contract implements the interface defined by `interfaceId`. 
+
+See the corresponding [EIP section](https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified) to learn more about how these ids are created.
+
+|Params:||
+|---|---|
+| `interfaceId` | The 4 byte interface ID. 
+
+|Supported Interface IDs:||
+|---|---|
+| `IERC165` | `0x01ffc9a7`
+| `ERC721` | `0x80ac58cd`
+| `ERC721Metadata` | `0x5b5e139f`
+| `ISoundEditionV2` | `0x7888cfe1`
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### baseURI
 
@@ -509,7 +765,9 @@ function OPERATOR_FILTERING_ENABLED_FLAG() external pure returns (uint8);
 function baseURI() external view returns (string memory)
 ```
 
-Returns the base token URI for the collection.
+Returns the base token URI for the collection. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### contractURI
 
@@ -517,9 +775,11 @@ Returns the base token URI for the collection.
 function contractURI() external view returns (string memory)
 ```
 
-Returns the contract URI to be used by Opensea.
+Returns the contract URI to be used by Opensea.  
 
-See: https://docs.opensea.io/docs/contract-level-metadata
+See: https://docs.opensea.io/docs/contract-level-metadata 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### fundingRecipient
 
@@ -527,7 +787,9 @@ See: https://docs.opensea.io/docs/contract-level-metadata
 function fundingRecipient() external view returns (address)
 ```
 
-Returns the address of the funding recipient.
+Returns the address of the funding recipient. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### editionMaxMintable
 
@@ -535,7 +797,9 @@ Returns the address of the funding recipient.
 function editionMaxMintable() external view returns (uint32)
 ```
 
-Returns the maximum amount of tokens mintable for this edition.
+Returns the maximum amount of tokens mintable for this edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### editionMaxMintableUpper
 
@@ -543,7 +807,9 @@ Returns the maximum amount of tokens mintable for this edition.
 function editionMaxMintableUpper() external view returns (uint32)
 ```
 
-Returns the upper bound for the maximum tokens that can be minted for this edition.
+Returns the upper bound for the maximum tokens that can be minted for this edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### editionMaxMintableLower
 
@@ -551,7 +817,9 @@ Returns the upper bound for the maximum tokens that can be minted for this editi
 function editionMaxMintableLower() external view returns (uint32)
 ```
 
-Returns the lower bound for the maximum tokens that can be minted for this edition.
+Returns the lower bound for the maximum tokens that can be minted for this edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### editionCutoffTime
 
@@ -559,7 +827,9 @@ Returns the lower bound for the maximum tokens that can be minted for this editi
 function editionCutoffTime() external view returns (uint32)
 ```
 
-Returns the timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `editionMaxMintableLower`.
+Returns the timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `editionMaxMintableLower`. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### metadataModule
 
@@ -567,7 +837,9 @@ Returns the timestamp after which `editionMaxMintable` drops from `editionMaxMin
 function metadataModule() external view returns (address)
 ```
 
-Returns the address of the metadata module.
+Returns the address of the metadata module. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### mintRandomness
 
@@ -575,10 +847,14 @@ Returns the address of the metadata module.
 function mintRandomness() external view returns (uint256)
 ```
 
-Returns a pseudorandom number based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed.
+Returns the randomness based on latest block hash, which is stored upon each mint unless [mintConcluded](#mintconcluded) is true. 
 
-> **WARNING**
-> This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain pseudorandom mechanism.
+Used for game mechanics like the Sound Golden Egg. Returns 0 before revealed. 
+
+> :warning: 
+> This value should NOT be used for any reward of significant monetary value, due to it being computed via a purely on-chain psuedorandom mechanism. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### mintRandomnessEnabled
 
@@ -586,15 +862,9 @@ Returns a pseudorandom number based on latest block hash, which is stored upon e
 function mintRandomnessEnabled() external view returns (bool)
 ```
 
-Returns whether the `mintRandomness` has been enabled.
+Returns whether the `mintRandomness` has been enabled. 
 
-### operatorFilteringEnabled
-
-```solidity
-function operatorFilteringEnabled() external view returns (bool)
-```
-
-Returns whether the edition implements OpenSea's [OperatorFilter registry](https://github.com/ProjectOpenSea/operator-filter-registry)
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### mintConcluded
 
@@ -602,7 +872,9 @@ Returns whether the edition implements OpenSea's [OperatorFilter registry](https
 function mintConcluded() external view returns (bool)
 ```
 
-Returns whether the mint has been concluded.
+Returns whether the mint has been concluded. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### royaltyBPS
 
@@ -610,7 +882,9 @@ Returns whether the mint has been concluded.
 function royaltyBPS() external view returns (uint16)
 ```
 
-Returns the royalty basis points.
+Returns the royalty basis points. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### isMetadataFrozen
 
@@ -618,7 +892,9 @@ Returns the royalty basis points.
 function isMetadataFrozen() external view returns (bool)
 ```
 
-Returns whether the metadata module is frozen.
+Returns whether the metadata module is frozen. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### nextTokenId
 
@@ -626,7 +902,9 @@ Returns whether the metadata module is frozen.
 function nextTokenId() external view returns (uint256)
 ```
 
-Returns the next token ID to be minted.
+Returns the next token ID to be minted. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### numberMinted
 
@@ -634,11 +912,13 @@ Returns the next token ID to be minted.
 function numberMinted(address owner) external view returns (uint256)
 ```
 
-Returns the number of tokens minted by `owner`.
+Returns the number of tokens minted by `owner`. 
 
-| Params: |                                     |
-| ------- | ----------------------------------- |
-| `owner` | Address to query for number minted. |
+|Params:||
+|---|---|
+| `owner` | Address to query for number minted. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### numberBurned
 
@@ -646,11 +926,13 @@ Returns the number of tokens minted by `owner`.
 function numberBurned(address owner) external view returns (uint256)
 ```
 
-Returns the number of tokens burned by `owner`.
+Returns the number of tokens burned by `owner`. 
 
-| Params: |                                     |
-| ------- | ----------------------------------- |
-| `owner` | Address to query for number burned. |
+|Params:||
+|---|---|
+| `owner` | Address to query for number burned. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### totalMinted
 
@@ -658,7 +940,9 @@ Returns the number of tokens burned by `owner`.
 function totalMinted() external view returns (uint256)
 ```
 
-Returns the total amount of tokens minted.
+Returns the total amount of tokens minted. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### totalBurned
 
@@ -666,45 +950,56 @@ Returns the total amount of tokens minted.
 function totalBurned() external view returns (uint256);
 ```
 
-Returns the total amount of tokens burned.
+Returns the total amount of tokens burned. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
 
 ## Events
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MetadataModuleSet
 
 ```solidity
-event MetadataModuleSet(address metadataModule);
+event MetadataModuleSet(address metadataModule)
 ```
 
-Emitted when the metadata module is set.
+Emitted when the metadata module is set. 
 
-| Params:          |                                     |
-| ---------------- | ----------------------------------- |
-| `metadataModule` | the address of the metadata module. |
+|Params:||
+|---|---|
+| `metadataModule` | the address of the metadata module. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### BaseURISet
 
 ```solidity
-event BaseURISet(string baseURI);
+event BaseURISet(string baseURI)
 ```
 
-Emitted when the `baseURI` is set.
+Emitted when the `baseURI` is set. 
 
-| Params:   |                              |
-| --------- | ---------------------------- |
-| `baseURI` | The base URI of the edition. |
+|Params:||
+|---|---|
+| `baseURI` | the base URI of the edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### ContractURISet
 
 ```solidity
-event ContractURISet(string contractURI);
+event ContractURISet(string contractURI)
 ```
 
-Emitted when the `contractURI` is set.
+Emitted when the `contractURI` is set. 
 
-| Params:       |                                  |
-| ------------- | -------------------------------- |
-| `contractURI` | The contract URI of the edition. |
+|Params:||
+|---|---|
+| `contractURI` | The contract URI of the edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MetadataFrozen
 
@@ -712,25 +1007,38 @@ Emitted when the `contractURI` is set.
 event MetadataFrozen(address metadataModule, string baseURI, string contractURI)
 ```
 
-Emitted when the metadata is frozen (e.g.: `baseURI` can no longer be changed).
+Emitted when the metadata is frozen (e.g.: `baseURI` can no longer be changed). 
 
-| Params:          |                                     |
-| ---------------- | ----------------------------------- |
-| `metadataModule` | The address of the metadata module. |
-| `baseURI`        | The base URI of the edition.        |
-| `contractURI`    | The contract URI of the edition.    |
+|Params:||
+|---|---|
+| `metadataModule` | The address of the metadata module. 
+| `baseURI` | The base URI of the edition. 
+| `contractURI` | The contract URI of the edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### CreateTierFrozen
+
+```solidity
+event CreateTierFrozen()
+```
+
+Emitted when the ability to create tier is removed. event CreateTierFrozen();
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### FundingRecipientSet
 
 ```solidity
-event FundingRecipientSet(address fundingRecipient)
+event FundingRecipientSet(address recipient)
 ```
 
-Emitted when the `fundingRecipient` is set.
+Emitted when the `fundingRecipient` is set. 
 
-| Params:            |                                       |
-| ------------------ | ------------------------------------- |
-| `fundingRecipient` | The address of the funding recipient. |
+|Params:||
+|---|---|
+| `recipient` | The address of the funding recipient. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### RoyaltySet
 
@@ -738,87 +1046,101 @@ Emitted when the `fundingRecipient` is set.
 event RoyaltySet(uint16 bps)
 ```
 
-Emitted when the `royaltyBPS` is set.
+Emitted when the `royaltyBPS` is set. 
 
-| Params: |                                            |
-| ------- | ------------------------------------------ |
-| `bps`   | The new royalty, measured in basis points. |
+|Params:||
+|---|---|
+| `bps` | The new royalty, measured in basis points. 
 
-### EditionMaxMintableRangeSet
+{/* ------------------------------------------------------------------------------------------- */}
 
-```solidity
-event EditionMaxMintableRangeSet(
-    uint32 editionMaxMintableLower_,
-    uint32 editionMaxMintableUpper_
-)
-```
-
-Emitted when the edition's maximum mintable token quantity range is set.
-
-| Params:                    |                                                                     |
-| -------------------------- | ------------------------------------------------------------------- |
-| `editionMaxMintableLower_` | The lower limit of the maximum number of tokens that can be minted. |
-| `editionMaxMintableUpper_` | The upper limit of the maximum number of tokens that can be minted. |
-
-### EditionCutoffTimeSet
+### MaxMintableRangeSet
 
 ```solidity
-event EditionCutoffTimeSet(uint32 editionCutoffTime_)
+event MaxMintableRangeSet(uint8 tier, uint32 lower, uint32 upper)
 ```
 
-Emitted when the edition's cutoff time set.
+Emitted when the tier's maximum mintable token quantity range is set. 
 
-| Params:              |                |
-| -------------------- | -------------- |
-| `editionCutoffTime_` | The timestamp. |
+|Params:||
+|---|---|
+| `tier` | The tier. 
+| `lower` | The lower limit of the maximum number of tokens that can be minted. 
+| `upper` | The upper limit of the maximum number of tokens that can be minted. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### CutoffTimeSet
+
+```solidity
+event CutoffTimeSet(uint8 tier, uint32 cutoff)
+```
+
+Emitted when the tier's cutoff time set. 
+
+|Params:||
+|---|---|
+| `tier` | The tier. 
+| `cutoff` | The timestamp. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MintRandomnessEnabledSet
 
 ```solidity
-event MintRandomnessEnabledSet(bool mintRandomnessEnabled_)
+event MintRandomnessEnabledSet(uint8 tier, bool enabled)
 ```
 
-Emitted when the `mintRandomnessEnabled` is set.
+Emitted when the `mintRandomnessEnabled` for the tier is set. 
 
-| Params:                  |                    |
-| ------------------------ | ------------------ |
-| `mintRandomnessEnabled_` | The boolean value. |
+|Params:||
+|---|---|
+| `tier` | The tier. 
+| `enabled` | The boolean value. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### SoundEditionInitialized
 
 ```solidity
-event SoundEditionInitialized(
-    address indexed edition_,
-    string name_,
-    string symbol_,
-    address metadataModule_,
-    string baseURI_,
-    string contractURI_,
-    address fundingRecipient_,
-    uint16 royaltyBPS_,
-    uint32 editionMaxMintableLower_,
-    uint32 editionMaxMintableUpper_,
-    uint32 editionCutoffTime_,
-    uint8 flags_
-    )
+event SoundEditionInitialized(EditionInitialization init)
 ```
 
-Emitted upon initialization.
+Emitted upon initialization. 
 
-| Params:                    |                                                                                                                                                                                          |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `edition_`                 | The address of the edition.                                                                                                                                                              |
-| `name_`                    | Name of the collection.                                                                                                                                                                  |
-| `symbol_`                  | Symbol of the collection.                                                                                                                                                                |
-| `metadataModule_`          | Address of metadata module, `address(0)` if not used.                                                                                                                                    |
-| `baseURI_`                 | Base URI.                                                                                                                                                                                |
-| `contractURI_`             | Contract URI for OpenSea storefront.                                                                                                                                                     |
-| `fundingRecipient_`        | Address that receives primary and secondary royalties.                                                                                                                                   |
-| `royaltyBPS_`              | Royalty amount in bps (basis points).                                                                                                                                                    |
-| `editionMaxMintableLower_` | The lower bound of the max mintable quantity for the edition.                                                                                                                            |
-| `editionMaxMintableUpper_` | The upper bound of the max mintable quantity for the edition.                                                                                                                            |
-| `editionCutoffTime_`       | The timestamp after which `editionMaxMintable` drops from `editionMaxMintableUpper` to `max(_totalMinted(), editionMaxMintableLower)`.                                                   |
-| `flags_`                   | The bitwise OR result of the initialization flags. <br/>See: [METADATA_IS_FROZEN_FLAG](#metadata_is_frozen_flag) <br/>See: [MINT_RANDOMNESS_ENABLED_FLAG](#mint_randomness_enabled_flag) |
+|Params:||
+|---|---|
+| `init` | The initialization data. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierCreated
+
+```solidity
+event TierCreated(TierCreation creation)
+```
+
+Emitted when a tier is created. 
+
+|Params:||
+|---|---|
+| `creation` | The tier creation data. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierFrozen
+
+```solidity
+event TierFrozen(uint8 tier)
+```
+
+Emitted when a tier is frozen. 
+
+|Params:||
+|---|---|
+| `tier` | The tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### ETHWithdrawn
 
@@ -826,58 +1148,81 @@ Emitted upon initialization.
 event ETHWithdrawn(address recipient, uint256 amount, address caller)
 ```
 
-Emitted upon ETH withdrawal.
+Emitted upon ETH withdrawal. 
 
-| Params:     |                                            |
-| ----------- | ------------------------------------------ |
-| `recipient` | The recipient of the withdrawal..          |
-| `amount`    | The amount withdrawn.                      |
-| `caller`    | The account that initiated the withdrawal. |
+|Params:||
+|---|---|
+| `recipient` | The recipient of the withdrawal. 
+| `amount` | The amount withdrawn. 
+| `caller` | The account that initiated the withdrawal. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### ERC20Withdrawn
 
 ```solidity
-event ERC20Withdrawn(address recipient, uint256 amount, address caller)
+event ERC20Withdrawn(address recipient, address[] tokens, uint256[] amounts, address caller)
 ```
 
-Emitted upon ERC20 withdrawal.
+Emitted upon ERC20 withdrawal. 
 
-| Params:     |                                            |
-| ----------- | ------------------------------------------ |
-| `recipient` | The recipient of the withdrawal..          |
-| `tokens`    | The addresses of the ERC20 tokens.         |
-| `amount`    | The amount of each token withdrawn.        |
-| `caller`    | The account that initiated the withdrawal. |
+|Params:||
+|---|---|
+| `recipient` | The recipient of the withdrawal. 
+| `tokens` | The addresses of the ERC20 tokens. 
+| `amounts` | The amount of each token withdrawn. 
+| `caller` | The account that initiated the withdrawal. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### Minted
 
 ```solidity
-event Minted(address to, uint256 quantity, uint256 fromTokenId);
+event Minted(uint8 tier, address to, uint256 quantity, uint256 fromTokenId)
 ```
 
-Emitted upon a mint.
+Emitted upon a mint. 
 
-| Params:       |                            |
-| ------------- | -------------------------- |
-| `to`          | The address to mint to.    |
-| `quantity`    | The number of minted.      |
-| `fromTokenId` | The first token ID minted. |
+|Params:||
+|---|---|
+| `tier` | The tier. 
+| `to` | The address to mint to. 
+| `quantity` | The number of minted. 
+| `fromTokenId` | The first token ID minted. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### Airdropped
 
 ```solidity
-event Minted(address to, uint256 quantity, uint256 fromTokenId);
+event Airdropped(uint8 tier, address[] to, uint256 quantity, uint256 fromTokenId)
 ```
 
-Emitted upon an airdrop.
+Emitted upon an airdrop. 
 
-| Params:       |                                                          |
-| ------------- | -------------------------------------------------------- |
-| `to`          | The recipients of the airdrop.                           |
-| `quantity`    | The number of tokens airdropped to each address in `to`. |
-| `fromTokenId` | The first token ID minted to the first address in `to`.  |
+|Params:||
+|---|---|
+| `tier` | The tier. 
+| `to` | The recipients of the airdrop. 
+| `quantity` | The number of tokens airdropped to each address in `to`. 
+| `fromTokenId` | The first token ID minted to the first address in `to`. 
 
-## Errors
+{/* ------------------------------------------------------------------------------------------- */}
+
+### to
+
+```solidity
+event BatchMetadataUpdate(uint256 fromTokenId, uint256 toTokenId)
+```
+
+EIP-4906 event to signal marketplaces to refresh the metadata. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Errors 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MetadataIsFrozen
 
@@ -885,7 +1230,19 @@ Emitted upon an airdrop.
 error MetadataIsFrozen()
 ```
 
-The edition's metadata is frozen.
+The edition's metadata is frozen (e.g.: `baseURI` can no longer be changed). 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### CreateTierIsFrozen
+
+```solidity
+error CreateTierIsFrozen()
+```
+
+The ability to create tiers is frozen. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### InvalidRoyaltyBPS
 
@@ -893,35 +1250,29 @@ The edition's metadata is frozen.
 error InvalidRoyaltyBPS()
 ```
 
-The given `royaltyBPS` is invalid.
+The given `royaltyBPS` is invalid. 
 
-### InvalidRandomnessLock
+{/* ------------------------------------------------------------------------------------------- */}
 
-```solidity
-error InvalidRandomnessLock()
-```
-
-The given `randomnessLockedAfterMinted` value is invalid.
-
-### ExceedsEditionAvailableSupply
+### ZeroTiersProvided
 
 ```solidity
-error ExceedsEditionAvailableSupply(uint32 available)
+error ZeroTiersProvided()
 ```
 
-The requested quantity exceeds the edition's remaining mintable token quantity.
+A minimum of one tier must be provided to initialize a Sound Edition. 
 
-| Params:     |                                                    |
-| ----------- | -------------------------------------------------- |
-| `available` | The number of tokens remaining available for mint. |
+{/* ------------------------------------------------------------------------------------------- */}
 
-### InvalidAmount
+### ExceedsAvailableSupply
 
 ```solidity
-error InvalidAmount()
+error ExceedsAvailableSupply()
 ```
 
-The given amount is invalid.
+The requested quantity exceeds the edition's remaining mintable token quantity. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### InvalidFundingRecipient
 
@@ -929,47 +1280,19 @@ The given amount is invalid.
 error InvalidFundingRecipient()
 ```
 
-The given `fundingRecipient` address is invalid.
+The given `fundingRecipient` address is invalid. 
 
-### InvalidEditionMaxMintableRange
+{/* ------------------------------------------------------------------------------------------- */}
 
-```solidity
-error InvalidEditionMaxMintableRange()
-```
-
-The `editionMaxMintableLower` must not be greater than `editionMaxMintableUpper`.
-
-### MaximumHasAlreadyBeenReached
+### InvalidMaxMintableRange
 
 ```solidity
-error MaximumHasAlreadyBeenReached()
+error InvalidMaxMintableRange()
 ```
 
-The `editionMaxMintable` has already been reached.
+The `maxMintableLower` must not be greater than `maxMintableUpper`. 
 
-### ExceedsAddressBatchMintLimit
-
-```solidity
-error ExceedsAddressBatchMintLimit()
-```
-
-The mint `quantity` cannot exceed `ADDRESS_BATCH_MINT_LIMIT` tokens.
-
-### MintRandomnessAlreadyRevealed
-
-```solidity
-error MintRandomnessAlreadyRevealed()
-```
-
-The mint randomness has already been revealed.
-
-### NoAddressesToAirdrop
-
-```solidity
-error NoAddressesToAirdrop()
-```
-
-No addresses to airdrop.
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MintHasConcluded
 
@@ -977,7 +1300,19 @@ No addresses to airdrop.
 error MintHasConcluded()
 ```
 
-The mint has already concluded.
+The mint has already concluded. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintNotConcluded
+
+```solidity
+error MintNotConcluded()
+```
+
+The mint has not concluded. 
+
+{/* ------------------------------------------------------------------------------------------- */}
 
 ### MintsAlreadyExist
 
@@ -985,4 +1320,84 @@ The mint has already concluded.
 error MintsAlreadyExist()
 ```
 
-Cannot perform the operation after a token has been minted.
+Cannot perform the operation after a token has been minted. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierMintsAlreadyExist
+
+```solidity
+error TierMintsAlreadyExist()
+```
+
+Cannot perform the operation after a token has been minted in the tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TokenIdsNotStrictlyAscending
+
+```solidity
+error TokenIdsNotStrictlyAscending()
+```
+
+The token IDs must be in strictly ascending order. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierDoesNotExist
+
+```solidity
+error TierDoesNotExist()
+```
+
+The tier does not exist. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierAlreadyExists
+
+```solidity
+error TierAlreadyExists()
+```
+
+The tier already exists. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierIsFrozen
+
+```solidity
+error TierIsFrozen()
+```
+
+The tier is frozen. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidTokenTier
+
+```solidity
+error InvalidTokenTier()
+```
+
+One of more of the tokens do not have the correct token tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### CannotBurnImmediately
+
+```solidity
+error CannotBurnImmediately()
+```
+
+Please wait for a while before you burn. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TierQueryForNonexistentToken
+
+```solidity
+error TierQueryForNonexistentToken()
+```
+
+The token for the tier query doesn't exist. 

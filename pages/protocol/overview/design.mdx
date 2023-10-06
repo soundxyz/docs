@@ -1,10 +1,6 @@
-import Image from 'next/image'
 import { IndentedDiv } from '../../../components/IndentedDiv'
 
 ## Design
-
-<br />
-<Image src="/images/sound-protocol-diagram.png" alt="Sound Protocol diagram" width="700" height="700" />
 
 ### Core contracts
 
@@ -19,17 +15,21 @@ These contracts form the core of the system.
 
 ### Module contracts
 
-<IndentedDiv>
-
 #### Metadata modules
+
+<IndentedDiv>
 
 - [SoundMetadata](/protocol/modules/sound-metadata) - Metadata module for SoundEditionV2.
 - [SoundOnChainMetadata](/protocol/modules/sound-on-chain-metadata) - Metadata module for SoundEditionV2 (on chain JSON variant).
+
+</IndentedDiv>
 
 #### Minter modules
 
 Contracts authorized with the `MINTER_ROLE` on a SoundEditionV2 can mint NFTs. 
 
-- [SuperMinter](/protocol/modules/minters/superminter) - Generalized singleton minter that supports a variety of minting mechanisms.
+<IndentedDiv>
+
+- [SuperMinter](/protocol/modules/super-minter) - Generalized singleton minter that supports a variety of minting mechanisms.
 
 </IndentedDiv>

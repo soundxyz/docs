@@ -1,0 +1,220 @@
+# SoundMetadata
+
+[`contracts/modules/SoundMetadata.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/SoundMetadata.sol)
+
+Sound Metadata module with per-tier overrides.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+Inherits:
+
+- [IMetadataModule](i-metadata-module.md)
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Write Functions 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setNumberedUpTo
+
+```solidity
+function setNumberedUpTo(address edition, uint32 tokenId) external
+```
+
+Sets the maximum `tokenId` for `edition` that has a numbered JSON. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the SoundEdition. 
+| `tokenId` | The maximum `tokenId` for `edition` that has a numbered JSON. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setBaseURI
+
+```solidity
+function setBaseURI(
+    address edition,
+    uint8 tier,
+    string calldata uri
+    ) external
+```
+
+Sets the base URI for (`edition`, `tier`). 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `uri` | The base URI. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setUseTierTokenIdIndex
+
+```solidity
+function setUseTierTokenIdIndex(address edition, bool value) external
+```
+
+Sets whether to use the tier token ID index Defaults to true. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the SoundEdition. 
+| `value` | Whether to use the tier token ID index for `edition`. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Read-only Functions
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### DEFAULT_NUMBER_UP_TO
+
+```solidity
+function DEFAULT_NUMBER_UP_TO() external pure returns (uint32)
+```
+
+Returns the default maximum `tokenId` for `edition` that has a numbered json. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### numberedUpTo
+
+```solidity
+function numberedUpTo(address edition) external view returns (uint32)
+```
+
+Returns the maximum `tokenId` for `edition` that has a numbered json. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the SoundEdition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### useTierTokenIdIndex
+
+```solidity
+function useTierTokenIdIndex(address edition) external view returns (bool)
+```
+
+Returns whether to use the tier token ID index. Defaults to true. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the SoundEdition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### baseURI
+
+```solidity
+function baseURI(address edition, uint8 tier) external view returns (string memory)
+```
+
+Returns the base URI override for the (`edition`, `tier`). 
+
+|Params:||
+|---|---|
+| `edition` | The address of the SoundEdition. 
+| `tier` | The tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### tokenURI
+
+```solidity
+function tokenURI(uint256 tokenId) external view returns (string memory)
+```
+
+When registered on a SoundEdition proxy, its `tokenURI` redirects execution to this `tokenURI`. 
+
+|Params:||
+|---|---|
+| `tokenId` | The token ID to retrieve the token URI for. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### goldenEggTokenId
+
+```solidity
+function goldenEggTokenId(address edition, uint8 tier) external view returns (uint256 tokenId)
+```
+
+Returns token ID for the golden egg after the `mintRandomness` is locked, else returns 0. 
+
+|Params:||
+|---|---|
+| `edition` | The edition address. 
+| `tier` | The tier of the token.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Events 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### NumberUpToSet
+
+```solidity
+event NumberUpToSet(address indexed edition, uint32 tokenId)
+```
+
+Emitted when the `tokenId` for `edition` with a json is set. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tokenId` | The maximum `tokenId` for `edition` that has a numberd json. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### BaseURISet
+
+```solidity
+event BaseURISet(address indexed edition, uint8 tier, string uri)
+```
+
+Emitted when the base URI for (`edition`, `tier`) is set. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `uri` | The base URI. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### UseTierTokenIdIndexSet
+
+```solidity
+event UseTierTokenIdIndexSet(address indexed edition, bool value)
+```
+
+Emitted when the option use the tier token ID is set. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `value` | Whether to use the tier token ID for `edition`. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Errors 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### Unauthorized 
+
+```solidity
+error Unauthorized()
+```
+
+The caller is not authorized to perform the operation.
