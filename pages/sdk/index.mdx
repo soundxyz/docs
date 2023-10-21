@@ -56,7 +56,7 @@ On server-side it's required to use an ethereum network provider, we use and rec
 
 ### Example
 
-You can also visit our [github.com/soundxyz example](https://github.com/soundxyz/sdk/tree/main/example/src) which contains more comprehensive examples on how you can interact with the Sound SDK
+You can also visit our [github.com/soundxyz Next.js example](https://github.com/soundxyz/sdk/tree/main/examples/nextjs) which contains more comprehensive examples on how you can interact with the Sound SDK
 
 ### Editions
 
@@ -93,10 +93,11 @@ Currently the SDK provides integrations with [**Lanyard**](https://lanyard.org) 
 ```ts
 import { withMerkleProvider } from '@soundxyz/sdk'
 import { LanyardMerkleProvider } from '@soundxyz/sdk/api/lanyard'
-import { createPublicClient, http, type Chain } from 'viem'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 export const publicClient = createPublicClient({
-  chain,
+  chain: mainnet,
   transport: http('...'),
 }).extend(withMerkleProvider(LanyardMerkleProvider))
 // ...
@@ -108,7 +109,8 @@ export const publicClient = createPublicClient({
 import { withMerkleProvider } from '@soundxyz/sdk'
 import { SoundAPI } from '@soundxyz/sdk/api/sound'
 
-import { createPublicClient, http, type Chain } from 'viem'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 // ...
 
@@ -121,7 +123,7 @@ export const soundAPI = SoundAPI({
 })
 
 export const publicClient = createPublicClient({
-  chain,
+  chain: mainnet,
   transport: http('...'),
 }).extend(withMerkleProvider(soundAPI))
 // ...
