@@ -1,573 +1,109 @@
-# Sound Edition
+# Sound Edition Version Checks
 
-Most of the SDK is defined within the `.edition` subcategory that defines read functions and operations relevant for Sound Edition contracts.
+Due to breaking changes between editions, it is important to check the edition version before using them if you are not sure pre-emptively what version your contract was deployed.
 
-## Basic Information
-
-### `.contract.info`
-
-> Requires either `signer` or `provider`
+As a rule of thumb, if your contract was deployed **October 10th 2023 or later**, you should use the V2 edition version of the SDK and you can skip all the `v1` functions, and also lower your bundle size (with automatic tree shaking if available or manually importing only used functions).
 
 ```ts
-/**
- * { symbol: string
-    editionMaxMintableLower: number
-    editionMaxMintableUpper: number
-    baseURI: string
-    contractURI: string
-    editionCutoffTime: number
-    editionMaxMintable: number
-    fundingRecipient: string
-    isMetadataFrozen: boolean
-    metadataModule: string
-    mintConcluded: boolean
-    mintRandomness: BigNumber
-    mintRandomnessEnabled: boolean
-    name: string
-    nextTokenId: BigNumber
-    royaltyBPS: number
-    totalBurned: BigNumber
-    totalMinted: BigNumber
-    totalSupply: BigNumber
-  }
- */
-const editionInfo = await client.edition.info({
-  contractAddress: '0x...',
-}).contract.info
-```
+import { soundEditionVersionPublicActions } from '@soundxyz/sdk'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
-### `.contract.isVersionAtLeastV1_2`
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http('...'),
+}).extend(soundEditionVersionPublicActions)
 
-> Requires either `signer` or `provider`
+// ...
 
-Check if the sound edition contract is at least v1.2, which has [`SAM`](#sam) available
-
-```ts
-const {
-  // Promise<boolean>
-  isVersionAtLeastV1_2,
-} = await client.edition.info({
-  contractAddress: '0x...',
-}).contract
-```
-
-### `.api.info`
-
-> Requires `SoundAPI`
-
-Get Sound.xyz API information relative to the specified Sound Edition
-
-```ts
-/**
- * {
-    mintStartDate: Date
-    id: string
-    contractAddress: string
-    editionId: string | null
-    type: ReleaseType
-    mintStartTime: number
-    mintStartTimestamp: number
-    webappUri: string
-    externalUrl: string | null
-    marketPlaceUrl: string | null
-    title: string
-    behindTheMusic: string
-    season: string | null
-    genre: {
-        id: string
-        name: string
-    }
-    track: {
-        id: string
-        duration: number
-        audio: {
-        audio128k: {
-            id: string
-            url: string
-        } | null
-        audio192k: {
-            id: string
-            url: string
-        } | null
-        audio256k: {
-            id: string
-            url: string
-        } | null
-        audioOriginal: {
-            id: string
-            url: string
-        }
-        }
-    }
-    artist: {
-        id: string
-        webappUri: string
-        season: string | null
-        soundHandle: string | null
-        bannerImage: {
-        id: string
-        url: string
-        } | null
-        user: {
-        id: string
-        publicAddress: string
-        description: string | null
-        displayName: string | null
-        twitterHandle: string | null
-        avatar: {
-            id: string
-            url: string
-        } | null
-        }
-    }
-    rewards: {
-        id: string
-        description: string
-        title: string
-    }[]
-    coverImage: {
-        id: string
-        url: string
-    }
-    goldenEggImage: {
-        id: string
-        url: string
-    }
-    eggGame: {
-        id: string
-        winningSerialNum: number
-    } | null
-    }
- */
-const apiInfo = await client.edition.info({
-  contractAddress: '0x...',
-}).api.info
-```
-
-### `.apiShare`
-
-> Requires `SoundAPI`
-
-Get Sound.xyz API share information, being able to customize embeds and adding referral addresses
-
-```ts
-/**
- * {
-    mintStartDate: Date
-    id: string
-    contractAddress: string
-    editionId: string | null
-    type: ReleaseType
-    mintStartTime: number
-    mintStartTimestamp: number
-    webappUri: string
-    webEmbed: string
-    coverImage: {
-        id: string
-        url: string
-    }
-    track: {
-        id: string
-        duration: number
-        audio: {
-        audio128k: {
-            id: string
-            url: string
-        } | null
-        audio192k: {
-            id: string
-            url: string
-        } | null
-        audio256k: {
-            id: string
-            url: string
-        } | null
-        audioOriginal: {
-            id: string
-            url: string
-        }
-        }
-    }
-    }
- */
-const apiShareInfo = await client.edition
-  .info({
-    contractAddress: '0x...',
-  })
-  .api.apiShare({
-    // * Optionally customize webapp uri with referral address
-    // releaseWebappUriInput: {
-    //   referralAddress: '0x...',
-    // },
-    // releaseEmbedUriInput: {
-    // * Optionally customize the html properties of the iframe embed
-    //  html: {
-    //      height: '...',
-    //      style: '...',
-    //      width: '...',
-    //  },
-    // * Add an optional referral address to the uri within the embed
-    // referralAddress: '0x...',
-    // },
-  })
-```
-
-## Mint Schedules
-
-> Requires either `signer` or `provider`
-
-Get mint schedules of specified edition, you can optionally specifiy `scheduleIds` to optimize on-chain calls and improve performance considerably
-
-### `.mintSchedules`
-
-```ts
-interface MintScheduleBase {
-  editionAddress: string
-  minterAddress: string
-  mintId: number
-  startTime: number
-  endTime: number
-  mintPaused: boolean
-  price: BigNumber
-  maxMintablePerAccount: number
-  totalMinted: number
-  affiliateFeeBPS: number
-}
-
-interface RangeEditionSchedule extends MintScheduleBase {
-  mintType: 'RangeEdition'
-  maxMintableLower: number
-  maxMintableUpper: number
-  cutoffTime: number
-  maxMintable: (unixTimestamp?: number) => number
-}
-interface MerkleDropSchedule extends MintScheduleBase {
-  mintType: 'MerkleDrop'
-  maxMintable: number
-  merkleRoot: string
-}
-
-const {
-  // MintSchedule[]
-  schedules,
-
-  // Get only active schedules relative to given timestamp or when this function is called
-  // MintSchedule[]
-  activeSchedules,
-} = await client.edition.mintSchedules({
-  editionAddress: '0x...',
-
-  // Specify schedule identifiers to optimize on-chain calls
-  // scheduleIds: [...]
-
-  // Customize the timestamp to be used for "activeSchedules" filtering.
-  // Optional, by default it uses Math.floor(Date.now() / 1000). It has to be in UNIX timestamp format
-  // timestamp: ...
+const { isSoundEditionV1, isSoundEditionV2 } = await publicClient.soundEditionVersion({
+  contractAddress,
 })
 ```
 
-#### `.scheduleIds`
+# Sound Edition V2 (Tiered Editions)
 
-Schedule identifiers that are used to get schedule the information for the specified edition.
-
-It is highly encouraged to pre-compute and persist these values to be given into the `.mintSchedules` call in order
-to optimize performance.
+After extending the viem instance, you will have full type-safety and autocomplete on the sub-path `publicClient.editionV2` and `walletClient.editionV2`.
 
 ```ts
-/**
- * {
-    minterAddress: string;
-    mintIds: number[];
-    }[]
- */
-const scheduleIds = await client.edition.scheduleIds({
-  editionAddress: '0x...',
+import {
+  editionV2PublicActionsCreate,
+  editionV2PublicActionsInfo,
+  editionV2PublicActionsMint,
+  editionV2WalletActionsCreate,
+  editionV2WalletActionsMint,
+  withMerkleProvider,
+} from '@soundxyz/sdk'
 
-  // Specify the starting block to start looking for logs of the schedule identifiers
-  // fromBlockOrBlockHash: ...
+import { LanyardMerkleProvider } from '@soundxyz/sdk/api/lanyard'
+import { createPublicClient, createWalletClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http('...'),
 })
-```
+  // Mint functions require to set a merkle provider for presale-access checks, if you have access to Sound API, you can use the sound api instance as merkle provider
+  // .extend(withMerkleProvider(soundApi))
+  .extend(withMerkleProvider(LanyardMerkleProvider))
+  // Only import and add if you need to create editions
+  .extend(editionV2PublicActionsCreate)
+  // Information about editions
+  .extend(editionV2PublicActionsInfo)
+  // Minting functions
+  .extend(editionV2PublicActionsMint)
 
-##### `.registeredMinters`
-
-Lookup the minters addresses associated with the edition, this is automatically called by `scheduleIds` and it's very unlikely to be needed to be called explicitly.
-
-```ts
-// string[]
-const minters = await client.edition.registeredMinters({
-  editionAddress: '0x...',
-
-  // Optionally specify the block to start looking for the registed minters
-  // fromBlockOrBlockHash: ...
+const walletClient = createWalletClient({
+  transport: http('...'),
+  account,
+  chain: mainnet,
 })
+  // Only import and add if you need to create editions
+  .extend(editionV2WalletActionsCreate)
+  // Minting functions
+  .extend(editionV2WalletActionsMint)
+
+// ...
+
+// publicClient.editionV2.info
+// publicClient.editionV2.mintSchedules
+// publicClient.editionV2.mintParameters
+
+// walletClient.editionV2.create
+// walletClient.editionV2.mint
 ```
 
-##### `.minterMintIds`
+# Sound Edition V1 (Previous Tiered Editions Breaking Change Upgrade)
 
-Lookup the mint indentifiers associated with the minters, this is automatically called by `scheduleIds` and it's very unlikely to be needed to be called explicitly.
+After extending the viem instance, you will have full type-safety and autocomplete on the sub-path `publicClient.editionV1` and `walletClient.editionV1`.
 
 ```ts
-// number[]
-const mintIds = await client.edition.minterMintIds({
-  editionAddress: '0x...',
-  minterAddress: '0x...',
+import { editionV1PublicActions, withMerkleProvider, editionV1WalletActions } from '@soundxyz/sdk'
+import { createPublicClient, createWalletClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
-  // Optionally specify the block to start looking for the mint identifiers
-  // fromBlockOrBlockHash: ...
+import { LanyardMerkleProvider } from '@soundxyz/sdk/api/lanyard'
+
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http('...'),
 })
-```
-
-## Minting
-
-### `.eligibleQuantity`
-
-> Requires either `signer` or `provider`
-
-Check how many tokens a wallet should be able to collect for a specific mint schedule
-
-```ts
-// number
-const quantity = await client.edition.eligibleQuantity({
-  // mintSchedule: MintSchedule;
-  mintSchedule: activeSchedule,
-
-  // Wallet address to be checked
-  userAddress: '0x...',
-
-  // Customize the timestamp to be used for time-based checks.
-  // Optional, by default it uses Math.floor(Date.now() / 1000). It has to be in UNIX timestamp format
-  // timestamp: ...
-})
-```
-
-### `.numberMinted`
-
-> Requires either `signer` or `provider`
-
-Get the currently amount of minted NFTs of the given user address in specified edition, only considering primary purchases, and always incremental, value doesn't decrease as tokens are sold or burned.
-
-```ts
-// number
-const userNumberMinted = await client.numberMinted({
-  editionAddress: '0x...',
-  userAddress: '0x...',
-})
-```
-
-### `.numberOfTokensOwned`
-
-> Requires either `signer` or `provider`
-
-Returns the number of tokens owned by user for a given edition, considering primary purchases, transfers into the specified address, and decreased by sold and burned tokens.
-
-```ts
-// number
-const tokensOwnedTotal = await client.numberOfTokensOwned({
-  editionAddress: '0x...',
-  userAddress: '0x...',
-})
-```
-
-### `.mint`
-
-> Requires `signer`
-
-Mint a edition given the specified schedule and using given signer. If given schedule is a merkle drop, a [`Merkle Provider`](/#merkle-providers) will be required
-
-```ts
-// Transaction
-const mintTransaction = await client.mint({
-  mintSchedule,
-  quantity: 1,
-
-  // affiliate: ...
-
-  // gasLimit: ...
-  // maxFeePerGas: ...
-  // maxPriorityFeePerGas: ...
-})
-```
-
-## SAM
-
-SAM (Sound Automated Market) is the protocol behind [Sound Swap](https://sound.mirror.xyz/rPnld1tfPFb3OxtfztRSjTFjc9KLUqmcV2DPCO68KMQ)
-
-{/* Feel free to check https://TODO for more technical details on how it works */}
-
-```ts
-// This will contain all the relevant SAM helpers
-const samEdition = client.edition.sam({
-  editionAddress: '0x...',
-})
-```
-
-### Contract
-
-#### `.address`
-
-> Requires either `signer` or `provider`
-
-Contract address of SAM module associated with edition if exists
-
-Please use this address nullability as a cheap check before calling any write function into SAM, otherwise functions will fail loudly.
-
-```ts
-// string | null
-const samAddress = await samEdition.contract.samAddress
-```
-
-#### `.info`
-
-> Requires either `signer` or `provider`
-
-Information relative to edition on SAM
-
-This value will be `null` if edition doesn't have SAM associated
-
-```ts
-/**
- * {
-    affiliateMerkleRoot: string
-    affiliateFeeBPS: number
-    basePrice: BigNumber
-    linearPriceSlope: BigNumber
-    inflectionPrice: BigNumber
-    inflectionPoint: number
-    goldenEggFeesAccrued: BigNumber
-    balance: BigNumber
-    supply: number
-    maxSupply: number
-    buyFreezeTime: number
-    artistFeeBPS: number
-    goldenEggFeeBPS: number
-    }
-    |
-    null
- */
-const samInfo = await samEdition.contract.info
-```
-
-#### `.totalBuyPrice`
-
-> Requires either `signer` or `provider`
-
-Estimated price for buying tokens from SAM
-
-```ts
-/**
- * {
-    total: BigNumber;
-    platformFee: BigNumber;
-    artistFee: BigNumber;
-    goldenEggFee: BigNumber;
-    affiliateFee: BigNumber;
-    }
-    |
-    null
- */
-const buyPrice = await samEdition.contract.totalBuyPrice({
-  // Offset used as buffer for handling concurrent purchases
-  // and reducing the possibility of failed transactions
-  offset: 0,
-
-  // How many tokens to be estimated for purchase
-  quantity: 1,
-})
-```
-
-#### `.totalSellPrice`
-
-> Requires either `signer` or `provider`
-
-Estimated price for selling tokens for SAM
-
-```ts
-// BigNumber | null
-const sellPrice = await samEdition.contract.totalSellPrice({
-  // Offset used as buffer for handling concurrent sales
-  // and reducing the possibility of failed transactions
-  offset: 0,
-
-  // How many tokens to be estimated for sell
-  quantity: 1,
-})
-```
-
-#### `.buy`
-
-> Requires `signer`
-
-Attempt to buy the given amount based on the specified price
-
-```ts
-// ContractTransaction
-const purchaseTransaction = await samEdition.contract.buy({
-  // How many to be purchased
-  quantity: 1,
-
-  // Price to be attempted
-  price: '...',
-
-  // Optional attribution identifier
-  //   attributonId?: BigNumberish
-
-  // Optional affiliate address
-  //   affiliate: string
-  // Optional affiliate proof
-  //   affiliateProof: BytesLike[]
-
-  // Customize contract's call gas-related attributes
-  //   gasLimit: BigNumberish
-  //   maxFeePerGas: BigNumberish
-  //   maxPriorityFeePerGas: BigNumberish
-})
-```
-
-#### `.sell`
-
-> Requires `signer`
-
-Attempt to sell the given tokens based on the specified payout.
-
-It is also required for the tokens to be specified ascendingly, this is required to be able to leverage low-level optimizations.
-
-```ts
-// ContractTransaction
-const purchaseTransaction = await samEdition.contract.buy({
-  // Specify the tokens to be sold
-  tokenIds: [1, 2],
-
-  // How much is the minimum amount expected to be received
-  minimumPayout: '...',
-
-  // Optional attribution identifier
-  //   attributonId: BigNumberish
-
-  // Customize contract's call gas-related attributes
-  //   gasLimit: BigNumberish
-  //   maxFeePerGas: BigNumberish
-  //   maxPriorityFeePerGas: BigNumberish
-})
-```
-
-### API
-
-#### `.availableTokensToSell`
-
-> Requires `SoundAPI`
-
-When selling NFTs through the SAM a normal expectation for an automated logic when choosing which tokens to be sold is that we sell the older tokens first and we should always exclude the golden egg from being sold.
-This requires extra indexing and logic so it is required an interaction with `Sound API`.
-
-This returns a potentially-empty list of token identifiers sorted ascendingly after the specified quantity limit
-
-```ts
-// number[]
-const tokensAvailableToSell = await samEdition.api.availableTokensToSell({
-  // How many tokens are expected to be sold
-  quantity: 1,
-
-  // Wallet address of token holder
-  ownerPublicAddress: '0x...',
-})
+  // Mint functions require to set a merkle provider for presale-access checks, if you have access to Sound API, you can use the sound api instance as merkle provider
+  // .extend(withMerkleProvider(soundApi))
+  .extend(withMerkleProvider(LanyardMerkleProvider))
+  .extend(editionV1PublicActions)
+
+const walletClient = createWalletClient({
+  transport: http('...'),
+  account,
+  chain: mainnet,
+}).extend(editionV1WalletActions)
+
+// ...
+
+// publicClient.editionV1.info
+// publicClient.editionV1.mintSchedules
+// publicClient.editionV1.mintParameters
+
+// walletClient.editionV1.mint
 ```
