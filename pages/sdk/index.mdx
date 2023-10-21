@@ -1,78 +1,66 @@
 # Sound SDK
 
-Official Sound development tools for the JavaScript ecosystem, with first-class support of [TypeScript](https://www.typescriptlang.org) and [ESM](https://nodejs.org/api/esm.html)
+Official Sound on-chain development tools for the JavaScript ecosystem leveraging [Viem](https://viem.sh/), with first-class support of [TypeScript](https://www.typescriptlang.org) and [ESM](https://nodejs.org/api/esm.html)
 
 [Sound SDK Github repo](https://github.com/soundxyz/sdk)
+
+[Sound.xyz SDK Next.js Usage Example](https://github.com/soundxyz/sdk/tree/main/examples/nextjs)
 
 ## Install
 
 `@soundxyz/sdk` [![@soundxyz/sdk](https://badge.fury.io/js/@soundxyz%2Fsdk.svg)](https://badge.fury.io/js/@soundxyz%2Fsdk)
 
-`@soundxyz/sound-protocol` [![@soundxyz/sound-protocol](https://badge.fury.io/js/@soundxyz%2Fsound-protocol.svg)](https://badge.fury.io/js/@soundxyz%2Fsound-protocol)
-
 ```sh
-pnpm add @soundxyz/sdk @soundxyz/sound-protocol
+pnpm add @soundxyz/sdk
 ```
 
 ```sh
-yarn add @soundxyz/sdk @soundxyz/sound-protocol
+bun add @soundxyz/sdk
 ```
 
 ```sh
-npm install @soundxyz/sdk @soundxyz/sound-protocol
+yarn add @soundxyz/sdk
+```
+
+```sh
+npm install @soundxyz/sdk
+```
+
+### Peer Dependencies
+
+Sound.xyz SDK requires the following peer dependencies to be installed:
+
+```sh
+pnpm add viem zod
+```
+
+```sh
+bun add viem zod
+```
+
+```sh
+yarn add viem zod
+```
+
+```sh
+npm install viem zod
 ```
 
 ## Usage
 
-This library is designed to be isomorphic, so that it can be used both on server-side or client-side leveraging the [ethers.js](https://ethers.org) ecosystem.
+This library is designed to be isomorphic, so that it can be used both on server-side or client-side leveraging the [Viem](https://viem.sh/) ecosystem.
 
-On client-side it can be used alongside web3 integrations that follow [ethers](https://www.npmjs.com/package/ethers) like [wagmi](https://wagmi.sh/), which allows connecting the user's wallet and using the contracts directly from the browsers.
+On client-side it can be used alongside web3 integrations that follow Viem like [wagmi](https://wagmi.sh/), which allows connecting the user's wallet and using the contracts directly from the browsers.
 
-On server-side it's required to use an [ethers supported provider](https://docs.ethers.io/v5/api-keys/), we use and recommend [Alchemy](https://www.alchemy.com/).
+On server-side it's required to use an ethereum network provider, we use and recommend [Alchemy](https://www.alchemy.com/).
 
 ### Example
 
-You can also visit our [github.com/soundxyz example](https://github.com/soundxyz/sdk/tree/main/example/src) which contains more comprehensive examples on how you can interact with the Sound SDK
+You can also visit our [github.com/soundxyz Next.js example](https://github.com/soundxyz/sdk/tree/main/examples/nextjs) which contains more comprehensive examples on how you can interact with the Sound SDK
 
-### SoundClient
+### Editions
 
-Most of the library is contained within `SoundClient`.
-
-```ts
-import { useAccount } from 'wagmi'
-
-import { SoundClient } from '@soundxyz/sdk'
-
-function Component() {
-  const account = useAccount()
-  // ...
-
-  const client = SoundClient({
-    async signer() {
-      const signer = await account.connector.getSigner()
-
-      // You need to validate that this situation doesn't really happen on a normal flow
-      if (!signer) throw Error('Missing signer')
-
-      return signer
-    },
-  })
-}
-```
-
-```ts
-import { StaticJsonRpcProvider } from '@ethersproject/providers'
-import { SoundClient } from '@soundxyz/sdk'
-
-const provider = new StaticJsonRpcProvider({
-  url: '[__]',
-  allowGzip: true,
-})
-
-const client = SoundClient({
-  provider,
-})
-```
+Please check [Interacting with editions](https://docs.sound.xyz/sdk/edition) for information on how to use the SDK with the different types of editions contracts of Sound Protocol
 
 #### Sound.xyz API
 
@@ -81,65 +69,62 @@ The SDK provides direct connection with [www.sound.xyz](https://www.sound.xyz) A
 To get an `API Key` contact us on our discord server [`discord.gg/soundxyz`](https://discord.gg/soundxyz)
 
 ```ts
-import { SoundClient } from '@soundxyz/sdk'
-import { SoundAPI } from '@soundxyz/sdk/api'
+import { SoundAPI } from '@soundxyz/sdk/api/sound'
 
 // ...
 
-const soundAPI = SoundAPI({
-  apiKey: process.env.SOUNDXYZ_API_KEY,
-})
+const apiKey = process.env.SOUNDXYZ_API_KEY
 
-const client = SoundClient({
-  // ...
+if (!apiKey) throw Error('Missing sound API key')
 
-  soundAPI,
+export const soundAPI = SoundAPI({
+  apiKey,
 })
 ```
 
 #### Merkle Providers
 
-When interacting with `Merkle Drops` it's required to specify `merkleProvider` while creating the `SoundClient` instance.
+When interacting with `Merkle` aka `Presale` it's required to specify a merkle provider while extending the viem instance.
 
 Currently the SDK provides integrations with [**Lanyard**](https://lanyard.org) and _Sound.xyz API_.
 
 - Lanyard
 
 ```ts
-import { SoundClient } from '@soundxyz/sdk'
-import { LanyardMerkleProofProvider } from '@soundxyz/sdk/merkle/lanyard'
+import { withMerkleProvider } from '@soundxyz/sdk'
+import { LanyardMerkleProvider } from '@soundxyz/sdk/api/lanyard'
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http('...'),
+}).extend(withMerkleProvider(LanyardMerkleProvider))
 // ...
-
-const client = SoundClient({
-  // ...
-
-  merkleProvider: LanyardMerkleProofProvider,
-})
 ```
 
 - Sound.xyz API
 
 ```ts
-import { SoundClient } from '@soundxyz/sdk'
-import { SoundAPI } from '@soundxyz/sdk/api'
+import { withMerkleProvider } from '@soundxyz/sdk'
+import { SoundAPI } from '@soundxyz/sdk/api/sound'
+
+import { createPublicClient, http } from 'viem'
+import { mainnet } from 'viem/chains'
 
 // ...
 
-const soundAPI = SoundAPI({
-  apiKey: process.env.SOUNDXYZ_API_KEY,
+const apiKey = process.env.SOUNDXYZ_API_KEY
+
+if (!apiKey) throw Error('Missing sound API key')
+
+export const soundAPI = SoundAPI({
+  apiKey,
 })
 
+export const publicClient = createPublicClient({
+  chain: mainnet,
+  transport: http('...'),
+}).extend(withMerkleProvider(soundAPI))
 // ...
-
-const client = SoundClient({
-  // ...
-
-  // It can be the same instance used for the API integration
-  soundAPI,
-
-  // ...
-
-  merkleProvider: soundAPI,
-})
 ```
