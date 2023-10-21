@@ -25,6 +25,8 @@ const { isSoundEditionV1, isSoundEditionV2 } = await publicClient.soundEditionVe
 
 After extending the viem instance, you will have full type-safety and autocomplete on the sub-path `publicClient.editionV2` and `walletClient.editionV2`.
 
+You can also check [github.com/soundxyz/sdk/examples/nextjs/src/app/v2/page.tsx](https://github.com/soundxyz/sdk/blob/main/examples/nextjs/src/app/v2/page.tsx) as a real world example
+
 ```ts
 import {
   editionV2PublicActionsCreate,
@@ -76,6 +78,8 @@ const walletClient = createWalletClient({
 # Sound Edition V1 (Previous Tiered Editions Breaking Change Upgrade)
 
 After extending the viem instance, you will have full type-safety and autocomplete on the sub-path `publicClient.editionV1` and `walletClient.editionV1`.
+
+You can also check [github.com/soundxyz/sdk/examples/nextjs/src/app/v1](https://github.com/soundxyz/sdk/blob/main/examples/nextjs/src/app/v1) as a real world example
 
 ```ts
 import { editionV1PublicActions, withMerkleProvider, editionV1WalletActions } from '@soundxyz/sdk'
