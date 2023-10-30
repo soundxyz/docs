@@ -23,6 +23,12 @@ const { isSoundEditionV1, isSoundEditionV2 } = await publicClient.soundEditionVe
 
 # Sound Edition V2 (Tiered Editions)
 
+## Limited Edition vs Forever Edition
+
+Conceptually on https://www.sound.xyz when the tier is `1` we consider it as `Limited Edition` and when tier is `0` we consider it as `Forever Edition`. But the contract allows any non-zero tier to be part of a Sound Contract, but currently our upload tool only handles tier `1` and `0`.
+
+## Usage
+
 After extending the viem instance, you will have full type-safety and autocomplete on the sub-path `publicClient.editionV2` and `walletClient.editionV2`.
 
 You can also check [github.com/soundxyz/sdk/examples/nextjs/src/app/v2/page.tsx](https://github.com/soundxyz/sdk/blob/main/examples/nextjs/src/app/v2/page.tsx) as a real world example
