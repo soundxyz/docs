@@ -1,0 +1,507 @@
+# SoundOnChainMetadata
+
+[`contracts/modules/SoundOnChainMetadata.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/SoundOnChainMetadata.sol)
+
+Sound Metadata module with per-tier overrides (on-chain JSON variant).
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+Inherits:
+
+- [IMetadataModule](i-metadata-module.md)
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## JSON Templating
+
+Suppose we want to generate the following JSON:
+
+```javascript
+{
+    "animation_url": "",
+    "artist": "Daniel Allan",
+    "artwork": {
+        "mimeType": "image/gif",
+        "uri": "ar://J5NZ-e2NUcQj1OuuhpTjAKtdW_nqwnwo5FypF_a6dE4",
+        "nft": null
+    },
+    "attributes": [{
+        "trait_type": "Criteria",
+        "value": "Song Edition"
+    }],
+    "bpm": null,
+    "credits": null,
+    "description": "Criteria is an 8-track project between Daniel Allan and Reo Cragun.\n\nA fusion of electronic music and hip-hop - Criteria brings together the best of both worlds and is meant to bring web3 music to a wider audience.\n\nThe collection consists of 2500 editions with activations across Sound, Bonfire, OnCyber, Spinamp and Arpeggi.",
+    "duration": 105,
+    "external_url": "https://www.sound.xyz/danielallan/criteria",
+    "genre": "Pop",
+    "image": "ar://J5NZ-e2NUcQj1OuuhpTjAKtdW_nqwnwo5FypF_a6dE4",
+    "isrc": null,
+    "key": null,
+    "license": null,
+    "locationCreated": null,
+    "losslessAudio": "",
+    "lyrics": null,
+    "mimeType": "audio/wave",
+    "nftSerialNumber": 11,
+    "name": "Criteria #11",
+    "originalReleaseDate": null,
+    "project": null,
+    "publisher": null,
+    "recordLabel": null,
+    "tags": null,
+    "title": "Criteria",
+    "trackNumber": 1,
+    "version": "sound-edition-20220930",
+    "visualizer": null
+}
+```
+
+We can represent it as a template:
+
+```javascript
+{
+    "animation_url": [["animationURI"]],
+    "artist": [["artist"]],
+    "artwork": {
+        "mimeType": [["artworkMime"]],
+        "uri": [["artworkURI"]],
+        "nft": null
+    },
+    "attributes": [{
+        "trait_type": [["title"]],
+        "value": "Song Edition"
+    }],
+    "bpm": [["bpm"]],
+    "credits": [["credits"]],
+    "description": [["description"]],
+    "duration": [["duration"]],
+    "external_url": [["externalURI"]],
+    "genre": [["genre"]],
+    "image": [["artworkURI"]],
+    "isrc": [["isrc"]],
+    "key": [["key"]],
+    "license": [["license"]],
+    "locationCreated": [["locationCreated"]],
+    "losslessAudio": [["losslessAudio"]],
+    "lyrics": [["lyrics"]],
+    "mimeType": [["mime"]],
+    "nftSerialNumber": [["sn"]],
+    "name": [[["title"], " #", ["sn"]]],
+    "originalReleaseDate": [["originalReleaseDate"]],
+    "project": [["project"]],
+    "publisher": [["publisher"]],
+    "recordLabel": [["recordLabel"]],
+    "tags": [["tags"]],
+    "title": [["title"]],
+    "trackNumber": [["trackNumber"]],
+    "version": [["version"]],
+    "visualizer": [["visualizer"]]
+}
+```
+
+We can represent substitutions with two different formats:
+
+- Literal substitution: `[["visualizer"]]`
+- String concatenation substitution: `[[["title"], " #", ["sn"]]]`
+
+The behavior of these two formats will be described later.
+
+The metadata contract will have a function for users to upload templates:
+
+```solidity
+function createTemplate(string memory template)
+    public
+    returns (string memory templateId)
+```
+
+Anyone can upload a template to the metadata contract, and it will return a template ID, which is a very short base64 string of 12 characters.
+
+We will then need a way to specify per-edition values to be substituted into these templates.
+
+```solidity
+function setValues(
+    address edition,
+    string memory values
+) public onlyOwnerOrAdmin(edition)
+```
+
+In this case, the values is a JSON describing what templates to use, and what values are to be substituted:
+
+```javascript
+{
+    "base": {
+        "template": "g5wQ129ioUEq",
+        "values": {
+            "animationURI": "",
+            "artist": "Daniel Allan",
+            "artworkMime": "image/gif",
+            "artworkURI": "ar://J5NZ-e2NUcQj1OuuhpTjAKtdW_nqwnwo5FypF_a6dE4",
+            "description": "Criteria is an 8-track project between Daniel Allan and Reo Cragun.\n\nA fusion of electronic music and hip-hop - Criteria brings together the best of both worlds and is meant to bring web3 music to a wider audience.\n\nThe collection consists of 2500 editions with activations across Sound, Bonfire, OnCyber, Spinamp and Arpeggi.",
+            "duration": 105,
+            "genre": "Pop",
+            "losslessAudio": "",
+            "mime": "audio/wave",
+            "title": "Criteria",
+            "trackNumber": 1, 
+            "version": "sound-edition-20220930"
+        }
+    },
+    "0": {
+        "values": {
+            "artworkURI": "tier0ArtworkURI"
+        }
+    },
+    "1": {
+        "values": {
+            "artworkURI": "tier1ArtworkURI"
+        },
+                "goldenEgg": {
+              "template": "dEF12ji78WuR",
+              "values": {
+                  "artworkURI": "goldenEggArtworkURI"
+              }
+          }
+    }
+}
+```
+
+Note that there are some special keys not shown above:
+
+- `"sn"` : The serial number, which will be the base 10 decimal string of the token’s tier-index. If the token happens to be the golden egg, this will be “goldenEgg”.
+- `"id"` : The token ID, which will be the base 10 decimal string of the token’s ID. If the token happens to be the golden egg, this will be “goldenEgg”.
+- `"tier"`: The token tier, which will be the base 10 decimal string of the token’s tier.
+
+If the values JSON contains any of these reserved keys, it will override the default values.
+
+### Substitution Rules
+
+#### Literal substitution
+
+`[["visualizer"]]` 
+
+If the value is a string, it will be double-quoted. 
+
+If it is a number, boolean, null, object, array, it will not be double quoted.
+
+If the value is missing, it will be considered as `null`.
+
+#### String concatenation substitution
+
+`[[["title"], " #", ["sn"]]]`
+
+Values will not be double-quoted. Strings will be automatically decoded and re-encoded.
+
+If the value is an object or an array, the function will revert.
+
+If the value is missing, it will be considered as `null`.
+
+### Inheritance
+
+The inheritance precedence is: `"goldenEgg"` > `"tier"` > `"base"` .
+
+#### Illustration by Example
+
+Suppose we have three different templates:
+
+```javascript
+"1": '{"x":[["x"]],"b":[["b"]],"n":[[["tier"],"-",["sn"]]],"i":[["id"]],"s":"ONE"}'
+"2": '{"x":[["x"]],"b":[["b"]],"n":[[["tier"],"-",["sn"]]],"i":[["id"]],"s":"TWO"}'
+"3": '{"x":[["x"]],"b":[["b"]],"n":[[["tier"],"-",["sn"]]],"i":[["id"]],"s":"THREE"}'
+```
+
+And suppose we have an edition with this values JSON:
+
+```javascript
+{
+    "base": {
+        "template": "1",
+        "values": {
+            "x": 11,
+            "b": "B"
+        }
+    },
+    "7": {
+        "template": "2",
+        "values": {
+            "x": 22
+        }
+    },
+    "goldenEgg": {
+        "template": "3",
+        "values": {
+            "x": 33
+        }
+    }
+}
+```
+
+For `id=1000, sn=111, tier=1, goldenEgg=false`, the token JSON will be:
+
+```javascript
+{"x":11,"b":"B","n":"1-111","i":1000,"s":"ONE"} 
+```
+
+For `id=2000, sn=222, tier=7, goldenEgg=false`, the token JSON will be:
+
+```javascript
+{"x":22,"b":"B","n":"7-222","i":2000,"s":"TWO"} 
+```
+
+For `id=3000, sn=333, tier=7, goldenEgg=true`, the token JSON will be:
+
+```javascript
+{"x":33,"b":"B","n":"7-333","i":3000,"s":"THREE"} 
+```
+
+Note that the special fields `"id"`, `"sn"` , `"tier"` are not provided in the values JSON. The metadata contract automatically retrieves and substitutes them in.
+
+#### Shorthands
+
+For JSON compactness, you can use:
+
+- `"g"` instead of `"goldenEgg"`
+- `"b"` instead of `"base"`
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Write Functions 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### createTemplate
+
+```solidity
+function createTemplate(string memory templateJSON) external returns (string memory templateId)
+```
+
+Creates a new template. 
+
+|Params:||
+|---|---|
+| `templateJSON` | The template JSON. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setValues
+
+```solidity
+function setValues(address edition, string memory valuesJSON) external
+```
+
+Sets the values for the (`edition`, `tier`). 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `valuesJSON` | The JSON string of values. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setValuesCompressed
+
+```solidity
+function setValuesCompressed(address edition, bytes memory compressed) external
+```
+
+Sets the values for the (`edition`, `tier`). 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `compressed` | The JSON string of values, in compressed form. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Read-only Functions
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### predictTemplateId
+
+```solidity
+function predictTemplateId(string memory templateJSON) 
+    external 
+    view 
+    returns (string memory templateId)
+```
+
+Returns the deterministic template ID. 
+
+|Params:||
+|---|---|
+| `templateJSON` | The template JSON. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### getTemplate
+
+```solidity
+function getTemplate(string memory templateId) 
+    external 
+    view 
+    returns (string memory templateJSON)
+```
+
+Returns the template JSON for the template ID. 
+
+|Params:||
+|---|---|
+| `templateId` | The template ID. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### getValues
+
+```solidity
+function getValues(address edition) 
+    external 
+    view 
+    returns (string memory valuesJSON)
+```
+
+Returns the template ID and the values JSON for the (`edition`, `tier`). 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### rawTokenJSON
+
+```solidity
+function rawTokenJSON(
+    address edition,
+    uint256 tokenId,
+    uint256 sn,
+    uint8 tier,
+    bool isGoldenEgg
+) external view returns (string memory json)
+```
+
+Returns the JSON string, assuming the following parameters. 
+
+|Params:||
+|---|---|
+| `edition` | The edition address. 
+| `tokenId` | The token ID. 
+| `sn` | The serial number of the token (index of the token in its tier + 1). 
+| `tier` | The token tier. 
+| `isGoldenEgg` | Whether the token is a golden egg. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### tokenURI
+
+```solidity
+function tokenURI(uint256 tokenId) external view returns (string memory uri)
+```
+
+When registered on a SoundEdition proxy, its `tokenURI` redirects execution to this `tokenURI`. 
+
+|Params:||
+|---|---|
+| `tokenId` | The token ID to retrieve the token URI for. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### goldenEggTokenId
+
+```solidity
+function goldenEggTokenId(address edition, uint8 tier) 
+    external 
+    view 
+    returns (uint256 tokenId)
+```
+
+Returns token ID for the golden egg after the `mintRandomness` is locked, else returns 0. 
+
+|Params:||
+|---|---|
+| `edition` | The edition address. 
+| `tier` | The tier of the token.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Events 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TemplateCreated
+
+```solidity
+event TemplateCreated(string templateId)
+```
+
+Emitted when a new template is created. 
+
+|Params:||
+|---|---|
+| `templateId` | The template ID for the template. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### ValuesSet
+
+```solidity
+event ValuesSet(address indexed edition, bool compressed)
+```
+
+Emitted when the values for a (`edition`, `tier`) is set. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `compressed` | Whether the values JSON is compressed with `solady.LibZip.flzCompress`. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Errors 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### Unauthorized
+
+```solidity
+error Unauthorized()
+```
+
+Unauthorized caller. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TemplateIdTaken
+
+```solidity
+error TemplateIdTaken()
+```
+
+The template ID has been taken. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TemplateDoesNotExist
+
+```solidity
+error TemplateDoesNotExist()
+```
+
+The template does not exist. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### ValuesDoNotExist
+
+```solidity
+error ValuesDoNotExist()
+```
+
+The values do not exist. 
+

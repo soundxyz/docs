@@ -1,6 +1,5 @@
 {
-  "sound-creator-v1": "SoundCreatorV1",
-  "sound-edition": "SoundEdition",
-  "i-minter-module": "IMinterModule",
+  "sound-creator": "SoundCreatorV2",
+  "sound-edition": "SoundEditionV2",
   "i-metadata-module": "IMetadataModule"
 }

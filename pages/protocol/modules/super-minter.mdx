@@ -1,0 +1,1709 @@
+# SuperMinter
+
+[`contracts/modules/SuperMinter.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/SuperMinter.sol)
+
+Generalized minter.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+Modes:
+
+- `DEFAULT`. No mint gatekeeping.
+- `VERIFY_MERKLE`. Minters must be included in a Merkle Tree.
+- `VERIFY_SIGNATURE`. Minters must be authorized via a signature by a signer. The price and quantity restrictions can be adjusted via the signature.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+Inherits:
+
+- [IERC165](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/introspection/IERC165.sol)
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Structs 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintCreation 
+
+```solidity
+struct MintCreation {
+    // The edition address.
+    address edition;
+    // The base price per token.
+    // For `VERIFY_SIGNATURE`, this will be the minimum limit of the signed price.
+    // Will be 0 if the `tier` is `GA_TIER`.
+    uint96 price;
+    // The start time of the mint.
+    uint32 startTime;
+    // The end time of the mint.
+    uint32 endTime;
+    // The maximum number of tokens an account can mint in this mint.
+    uint32 maxMintablePerAccount;
+    // The maximum number of tokens mintable.
+    uint32 maxMintable;
+    // The affiliate fee BPS.
+    uint16 affiliateFeeBPS;
+    // The affiliate Merkle root, if any.
+    bytes32 affiliateMerkleRoot;
+    // The tier of the mint.
+    uint8 tier;
+    // The address of the platform.
+    address platform;
+    // The mode of the mint. Options: `DEFAULT`, `VERIFY_MERKLE`, `VERIFY_SIGNATURE`.
+    uint8 mode;
+    // The signer address, required if `mode` is `VERIFY_SIGNATURE`.
+    // If set to `address(1)`, the platform signer will be used instead.
+    address signer;
+    // The Merkle root hash, required if `mode` is `VERIFY_MERKLE`.
+    bytes32 merkleRoot;
+}
+```
+
+A struct containing the arguments to create a mint.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintTo 
+
+```solidity
+struct MintTo {
+    // The mint ID.
+    address edition;
+    // The tier of the mint.
+    uint8 tier;
+    // The edition-tier schedule number.
+    uint8 scheduleNum;
+    // The address to mint to.
+    address to;
+    // The number of tokens to mint.
+    uint32 quantity;
+    // The allowlisted address. Used if `mode` is `VERIFY_MERKLE`.
+    address allowlisted;
+    // The allowlisted quantity. Used if `mode` is `VERIFY_MERKLE`.
+    // A default zero value means no limit.
+    uint32 allowlistedQuantity;
+    // The allowlist Merkle proof.
+    bytes32[] allowlistProof;
+    // The signed price. Used if `mode` is `VERIFY_SIGNATURE`.
+    uint96 signedPrice;
+    // The signed quantity. Used if `mode` is `VERIFY_SIGNATURE`.
+    uint32 signedQuantity;
+    // The signed claimed ticket. Used if `mode` is `VERIFY_SIGNATURE`.
+    uint32 signedClaimTicket;
+    // The expiry timestamp for the signature. Used if `mode` is `VERIFY_SIGNATURE`.
+    uint32 signedDeadline;
+    // The signature by the signer. Used if `mode` is `VERIFY_SIGNATURE`.
+    bytes signature;
+    // The affiliate address. Optional.
+    address affiliate;
+    // The Merkle proof for the affiliate.
+    bytes32[] affiliateProof;
+    // The attribution ID, optional.
+    uint256 attributionId;
+}
+```
+
+A struct containing the arguments for mint-to.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TokenPriceAndFees 
+
+```solidity 
+struct TotalPriceAndFees {
+    // The required Ether value.
+    // `subTotal + platformFlatFee`.
+    uint256 total;
+    // The total price before any additive fees.
+    uint256 subTotal;
+    // The price per token.
+    uint256 unitPrice;
+    // The total platform fees.
+    // `platformFlatFee + platformMintBPSFee`.
+    uint256 platformFee;
+    // The total platform flat fees.
+    // `platformTxFlatFee + platformMintFlatFee`.
+    uint256 platformFlatFee;
+    // The platform per-transaction flat fees.
+    uint256 platformTxFlatFee;
+    // The total platform per-token flat fees.
+    uint256 platformMintFlatFee;
+    // The total platform per-token BPS fees.
+    uint256 platformMintBPSFee;
+    // The total affiliate fees.
+    uint256 affiliateFee;
+}
+```
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintedLogData
+
+```solidity 
+struct MintedLogData {
+    // The number of tokens minted.
+    uint32 quantity;
+    // The starting token ID minted.
+    uint256 fromTokenId;
+    // The allowlisted address.
+    address allowlisted;
+    // The allowlisted quantity.
+    uint32 allowlistedQuantity;
+    // The signed quantity.
+    uint32 signedQuantity;
+    // The signed claim ticket.
+    uint32 signedClaimTicket;
+    // The affiliate address.
+    address affiliate;
+    // Whether the affiliate address is affiliated.
+    bool affiliated;
+    // The total price paid, inclusive of all fees.
+    uint256 requiredEtherValue;
+    // The price per token.
+    uint256 unitPrice;
+    // The total platform fees.
+    uint256 platformFee;
+    // The total platform flat fees.
+    uint256 platformFlatFee;
+    // The total affiliate fees.
+    uint256 affiliateFee;
+}
+```
+
+A struct containing the log data for the `Minted` event.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PlatformFeeConfig
+
+```solidity 
+struct PlatformFeeConfig {
+    // The per-transaction flat fee.
+    uint96 perTxFlat;
+    // The per-token flat fee.
+    uint96 perMintFlat;
+    // The per-token fee BPS.
+    uint16 perMintBPS;
+    // Whether the fees are active.
+    bool active;
+}
+```
+
+A struct to hold the fee configuration for a platform and a tier.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintInfo
+
+```solidity 
+struct MintInfo {
+    // The mint ID.
+    address edition;
+    // The tier of the mint.
+    uint8 tier;
+    // The edition-tier schedule number.
+    uint8 scheduleNum;
+    // The platform address.
+    address platform;
+    // The base price per token.
+    // For `VERIFY_SIGNATURE` this will be the minimum limit of the signed price.
+    // If the `tier` is `GA_TIER`, and the `mode` is NOT `VERIFY_SIGNATURE`,
+    // this value will be the GA price instead.
+    uint96 price;
+    // The start time of the mint.
+    uint32 startTime;
+    // The end time of the mint.
+    uint32 endTime;
+    // The maximum number of tokens an account can mint in this mint.
+    uint32 maxMintablePerAccount;
+    // The maximum number of tokens mintable.
+    uint32 maxMintable;
+    // The total number of tokens minted.
+    uint32 minted;
+    // The affiliate fee BPS.
+    uint16 affiliateFeeBPS;
+    // The mode of the mint.
+    uint8 mode;
+    // Whether the mint is paused.
+    bool paused;
+    // Whether the mint already has mints.
+    bool hasMints;
+    // The affiliate Merkle root, if any.
+    bytes32 affiliateMerkleRoot;
+    // The Merkle root hash, required if `mode` is `VERIFY_MERKLE`.
+    bytes32 merkleRoot;
+    // The signer address, required if `mode` is `VERIFY_SIGNATURE`.
+    // This value will be the platform signer instead if it is configured to be `address(1)`.
+    address signer;
+    // Whether the platform signer is being used instead
+    // (i.e. `signer` configured to be `address(1)`).
+    bool usePlatformSigner;
+}
+```
+
+A struct containing the mint information.
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Write Functions 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### createEditionMint
+
+```solidity
+function createEditionMint(MintCreation calldata c) external returns (uint8 scheduleNum)
+```
+
+Creates a mint. 
+
+|Params:||
+|---|---|
+| `c` | The mint creation struct. 
+
+|Returns:||
+|---|---|
+| `scheduleNum` | The per-edition, per-tier schedule number (auto-incrementing). 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### mintTo
+
+```solidity
+function mintTo(MintTo calldata p) external payable
+```
+
+Performs a mint. 
+
+|Params:||
+|---|---|
+| `p` | The mint-to parameters. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setPrice
+
+```solidity
+function setPrice(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint96 price
+) external
+```
+
+Sets the price of the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `price` | The price per token. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setPaused
+
+```solidity
+function setPaused(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    bool paused
+) external
+```
+
+Pause or unpase the the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `paused` | Whether to pause the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setTimeRange
+
+```solidity
+function setTimeRange(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32 startTime,
+    uint32 endTime
+) external
+```
+
+Sets the time range for the the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `startTime` | The mint start time. 
+| `endTime` | The mint end time. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setStartTime
+
+```solidity
+function setStartTime(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32 startTime
+) external
+```
+
+Sets the start time for the the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `startTime` | The mint start time. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setAffiliateFee
+
+```solidity
+function setAffiliateFee(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint16 bps
+    ) external
+```
+
+Sets the affiliate fee BPS for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `bps` | The fee BPS. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setAffiliateMerkleRoot
+
+```solidity
+function setAffiliateMerkleRoot(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    bytes32 root
+) external
+```
+
+Sets the affiliate Merkle root for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `root` | The affiliate Merkle root. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setMaxMintablePerAccount
+
+```solidity
+function setMaxMintablePerAccount(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32 value
+) external
+```
+
+Sets the max mintable per account. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `value` | The max mintable per account. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setMaxMintable
+
+```solidity
+function setMaxMintable(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32 value
+) external
+```
+
+Sets the max mintable for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `value` | The max mintable for the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setMerkleRoot
+
+```solidity
+function setMerkleRoot(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    bytes32 merkleRoot
+) external
+```
+
+Sets the mode for the mint. The mint mode must be `VERIFY_MERKLE`. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `merkleRoot` | The Merkle root of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setSigner
+
+```solidity
+function setSigner(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    address signer
+) external
+```
+
+Sets the signer for the mint. The mint mode must be `VERIFY_SIGNATURE`. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `signer` | The signer of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### withdrawForAffiliate
+
+```solidity
+function withdrawForAffiliate(address affiliate) external
+```
+
+Withdraws all accrued fees of the affiliate, to the affiliate. 
+
+|Params:||
+|---|---|
+| `affiliate` | The affiliate address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### withdrawForPlatform
+
+```solidity
+function withdrawForPlatform(address platform) external
+```
+
+Withdraws all accrued fees of the platform, to the their fee address. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setPlatformFeeAddress
+
+```solidity
+function setPlatformFeeAddress(address recipient) external
+```
+
+Allows the caller, as a platform, to set their fee address 
+
+|Params:||
+|---|---|
+| `recipient` | The platform fee address of the caller. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setPlatformFeeConfig
+
+```solidity
+function setPlatformFeeConfig(uint8 tier, PlatformFeeConfig memory c) external
+```
+
+Allows the caller, as a platform, to set their per-tier fee configuration. 
+
+|Params:||
+|---|---|
+| `tier` | The tier of the mint. 
+| `c` | The platform fee configuration struct. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setDefaultPlatformFeeConfig
+
+```solidity
+function setDefaultPlatformFeeConfig(PlatformFeeConfig memory c) external
+```
+
+Allows the caller, as a platform, to set their default fee configuration. 
+
+|Params:||
+|---|---|
+| `c` | The platform fee configuration struct. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setGAPrice
+
+```solidity
+function setGAPrice(uint96 price) external
+```
+
+Allows the platform to set the price for the GA tier. 
+
+|Params:||
+|---|---|
+| `price` | The price per token for the GA tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### setPlatformSigner
+
+```solidity
+function setPlatformSigner(address signer) external
+```
+
+Allows the platform to set their signer. 
+
+|Params:||
+|---|---|
+| `signer` | The signer for the platform. 
+
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Read-only Functions
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### GA_TIER
+
+```solidity
+function GA_TIER() external pure returns (uint8)
+```
+
+Returns the GA tier. Which is 0. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MINT_TO_TYPEHASH
+
+```solidity
+function MINT_TO_TYPEHASH() external pure returns (bytes32)
+```
+
+The EIP-712 typehash for signed mints. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### DEFAULT
+
+```solidity
+function DEFAULT() external pure returns (uint8)
+```
+
+The default mint mode. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### VERIFY_MERKLE
+
+```solidity
+function VERIFY_MERKLE() external pure returns (uint8)
+```
+
+The mint mode for Merkle drops.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### VERIFY_SIGNATURE
+
+```solidity
+function VERIFY_SIGNATURE() external pure returns (uint8)
+```
+
+The mint mode for Signature drops.
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### BPS_DENOMINATOR
+
+```solidity
+function BPS_DENOMINATOR() external pure returns (uint16)
+```
+
+The denominator used in BPS fee calculations. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MAX_AFFILIATE_FEE_BPS
+
+```solidity
+function MAX_AFFILIATE_FEE_BPS() external pure returns (uint16)
+```
+
+The maximum affiliate fee BPS. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MAX_PLATFORM_PER_MINT_FEE_BPS
+
+```solidity
+function MAX_PLATFORM_PER_MINT_FEE_BPS() external pure returns (uint16)
+```
+
+The maximum per-mint platform fee BPS. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MAX_PLATFORM_PER_MINT_FLAT_FEE
+
+```solidity
+function MAX_PLATFORM_PER_MINT_FLAT_FEE() external pure returns (uint96)
+```
+
+The maximum platform per-mint flat fee. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MAX_PLATFORM_PER_TX_FLAT_FEE
+
+```solidity
+function MAX_PLATFORM_PER_TX_FLAT_FEE() external pure returns (uint96)
+```
+
+The maximum platform per-transaction flat fee. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### platformFeesAccrued
+
+```solidity
+function platformFeesAccrued(address platform) external view returns (uint256)
+```
+
+Returns the amount of fees accrued by the platform. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### platformFeeAddress
+
+```solidity
+function platformFeeAddress(address platform) external view returns (address)
+```
+
+Returns the fee recipient for the platform. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### affiliateFeesAccrued
+
+```solidity
+function affiliateFeesAccrued(address affiliate) external view returns (uint256)
+```
+
+Returns the amount of fees accrued by the affiliate. 
+
+|Params:||
+|---|---|
+| `affiliate` | The affiliate address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### computeMintToDigest
+
+```solidity
+function computeMintToDigest(MintTo calldata p) external view returns (bytes32)
+```
+
+Returns the EIP-712 digest of the mint-to data for signature mints. 
+
+|Params:||
+|---|---|
+| `p` | The mint-to parameters. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### totalPriceAndFees
+
+```solidity
+function totalPriceAndFees(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32 quantity
+) external view returns (TotalPriceAndFees memory)
+```
+
+Returns the total price and fees for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `quantity` | How many tokens to mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### totalPriceAndFeesWithSignedPrice
+
+```solidity
+function totalPriceAndFeesWithSignedPrice(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32 quantity,
+    uint96 signedPrice
+) external view returns (TotalPriceAndFees memory)
+```
+
+Returns the total price and fees for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `quantity` | How many tokens to mint. 
+| `signedPrice` | The signed price. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### gaPrice
+
+```solidity
+function gaPrice(address platform) external view returns (uint96)
+```
+
+Returns the GA price for the platform. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### platformSigner
+
+```solidity
+function platformSigner(address platform) external view returns (address)
+```
+
+Returns the signer for the platform. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+
+### nextScheduleNum
+
+```solidity
+function nextScheduleNum(address edition, uint8 tier) external view returns (uint8)
+```
+
+Returns the next mint schedule number for the edition-tier. 
+
+|Params:||
+|---|---|
+| `edition` | The Sound Edition address. 
+| `tier` | The tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### numberMinted
+
+```solidity
+function numberMinted(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    address collector
+) external view returns (uint32)
+```
+
+Returns the number of tokens minted by `collector` for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `collector` | The address which tokens are minted to, or in the case of `VERIFY_MERKLE`, is the allowlisted address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### isAffiliatedWithProof
+
+```solidity
+function isAffiliatedWithProof(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    address affiliate,
+    bytes32[] calldata affiliateProof
+    ) external view returns (bool)
+```
+
+Returns whether the affiliate is affiliated for the mint.
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `affiliate` | The affiliate address. 
+| `affiliateProof` | The Merkle proof for the affiliate. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### isAffiliated
+
+```solidity
+function isAffiliated(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    address affiliate
+) external view returns (bool)
+```
+
+Returns whether the affiliate is affiliated for the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `affiliate` | The affiliate address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### checkClaimTickets
+
+```solidity
+function checkClaimTickets(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    uint32[] calldata claimTickets
+) external view returns (bool[] memory)
+```
+
+Returns whether the claim tickets have been used. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `claimTickets` | An array of claim tickets. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### platformFeeConfig
+
+```solidity
+function platformFeeConfig(address platform, uint8 tier)
+    external
+    view 
+    returns (PlatformFeeConfig memory)
+```
+
+Returns the platform fee configuration for the tier. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `tier` | The tier of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### defaultPlatformFeeConfig
+
+```solidity
+function defaultPlatformFeeConfig(address platform)
+	external
+	view 
+	returns (PlatformFeeConfig memory)
+```
+
+Returns the default platform fee configuration. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### effectivePlatformFeeConfig
+
+```solidity
+function effectivePlatformFeeConfig(address platform, uint8 tier)
+	external 
+	view 
+	returns (PlatformFeeConfig memory)
+```
+
+Returns the effective platform fee configuration. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `tier` | The tier of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### mintInfoList
+
+```solidity
+function mintInfoList(address edition) external view returns (MintInfo[] memory)
+```
+
+Returns an array of mint information structs pertaining to the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The Sound Edition address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### mintInfo
+
+```solidity
+function mintInfo(
+    address edition,
+    uint8 tier,
+    uint8 scheduleNum
+) external view returns (MintInfo memory)
+```
+
+Returns information pertaining to the mint. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### name
+
+```solidity
+function name() external pure returns (string memory)
+```
+
+Retuns the EIP-712 name for the contract. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### version
+
+```solidity
+function version() external pure returns (string memory)
+```
+
+Retuns the EIP-712 version for the contract. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Events
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintCreated
+
+```solidity
+event MintCreated(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	MintCreation creation
+)
+```
+
+Emitted when a new mint is created. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `creation` | The mint creation struct. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PausedSet
+
+```solidity
+event PausedSet(address indexed edition, uint8 tier, uint8 scheduleNum, bool paused)
+```
+
+Emitted when a mint is paused or un-paused. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `paused` | Whether the mint is paused. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### TimeRangeSet
+
+```solidity
+event TimeRangeSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	uint32 startTime, 
+	uint32 endTime
+)
+```
+
+Emitted when the time range of a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `startTime` | The start time. 
+| `endTime` | The end time. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+
+### PriceSet
+
+```solidity
+event PriceSet(address indexed edition, uint8 tier, uint8 scheduleNum, uint96 price)
+```
+
+Emitted when the base per-token price of a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `price` | The base per-token price. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MaxMintablePerAccountSet
+
+```solidity
+event MaxMintablePerAccountSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	uint32 value
+)
+```
+
+Emitted when the max mintable per account for a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `value` | The max mintable per account. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MaxMintableSet
+
+```solidity
+event MaxMintableSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	uint32 value
+)
+```
+
+Emitted when the max mintable for a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `value` | The max mintable for the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MerkleRootSet
+
+```solidity
+event MerkleRootSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	bytes32 merkleRoot
+)
+```
+
+Emitted when the Merkle root of a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `merkleRoot` | The Merkle root of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SignerSet
+
+```solidity
+event SignerSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	address signer
+)
+```
+
+Emitted when the signer of a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `signer` | The signer of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### AffiliateFeeSet
+
+```solidity
+event AffiliateFeeSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	uint16 bps
+)
+```
+
+Emitted when the affiliate fee BPS for a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `bps` | The affiliate fee BPS. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### AffiliateMerkleRootSet
+
+```solidity
+event AffiliateMerkleRootSet(
+	address indexed edition, 
+	uint8 tier, 
+	uint8 scheduleNum, 
+	bytes32 root
+)
+```
+
+Emitted when the affiliate Merkle root for a mint is updated. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `root` | The affiliate Merkle root hash. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### Minted
+
+```solidity
+event Minted(
+    address indexed edition,
+    uint8 tier,
+    uint8 scheduleNum,
+    address indexed to,
+    MintedLogData data,
+    uint256 indexed attributionId
+)
+```
+
+Emitted when tokens are minted. 
+
+|Params:||
+|---|---|
+| `edition` | The address of the Sound Edition. 
+| `tier` | The tier. 
+| `scheduleNum` | The edition-tier schedule number. 
+| `to` | The recipient of the tokens minted. 
+| `data` | The mint-to log data. 
+| `attributionId` | The optional attribution ID. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PlatformFeeConfigSet
+
+```solidity
+event PlatformFeeConfigSet(
+	address indexed platform, 
+	uint8 tier, 
+	PlatformFeeConfig config
+)
+```
+
+Emitted when the platform fee configuration for `tier` is updated. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `tier` | The tier of the mint. 
+| `config` | The platform fee configuration. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### DefaultPlatformFeeConfigSet
+
+```solidity
+event DefaultPlatformFeeConfigSet(
+	address indexed platform, 
+	PlatformFeeConfig config
+)
+```
+
+Emitted when the default platform fee configuration is updated. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `config` | The platform fee configuration. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### AffiliateFeesWithdrawn
+
+```solidity
+event AffiliateFeesWithdrawn(address indexed affiliate, uint256 accrued)
+```
+
+Emitted when affiliate fees are withdrawn. 
+
+|Params:||
+|---|---|
+| `affiliate` | The recipient of the fees. 
+| `accrued` | The amount of Ether accrued and withdrawn. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PlatformFeesWithdrawn
+
+```solidity
+event PlatformFeesWithdrawn(address indexed platform, uint256 accrued)
+```
+
+Emitted when platform fees are withdrawn. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `accrued` | The amount of Ether accrued and withdrawn. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PlatformFeeAddressSet
+
+```solidity
+event PlatformFeeAddressSet(address indexed platform, address recipient)
+```
+
+Emitted when the platform fee recipient address is updated. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `recipient` | The platform fee recipient address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### GAPriceSet
+
+```solidity
+event GAPriceSet(address indexed platform, uint96 price)
+```
+
+Emitted when the per-token price for the GA tier is set. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `price` | The price per token for the GA tier. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PlatformSignerSet
+
+```solidity
+event PlatformSignerSet(address indexed platform, address signer)
+```
+
+Emitted when the signer for a platform is set. 
+
+|Params:||
+|---|---|
+| `platform` | The platform address. 
+| `signer` | The signer for the platform. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+{/* ------------------------------------------------------------------------------------------- */}
+
+## Errors 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### WrongPayment
+
+```solidity
+error WrongPayment(uint256 paid, uint256 required)
+```
+
+Exact payment required. 
+
+|Params:||
+|---|---|
+| `paid` | The amount of Ether paid. 
+| `required` | The amount of Ether required. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintNotOpen
+
+```solidity
+error MintNotOpen(uint256 blockTimestamp, uint32 startTime, uint32 endTime)
+```
+
+The mint is not opened. 
+
+|Params:||
+|---|---|
+| `blockTimestamp` | The current block timestamp. 
+| `startTime` | The opening time of the mint. 
+| `endTime` | The closing time of the mint. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintPaused
+
+```solidity
+error MintPaused()
+```
+
+The mint is paused. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintsAlreadyExist
+
+```solidity
+error MintsAlreadyExist()
+```
+
+Cannot perform the operation when any mints exist. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidTimeRange
+
+```solidity
+error InvalidTimeRange()
+```
+
+The time range is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidMaxMintableRange
+
+```solidity
+error InvalidMaxMintableRange()
+```
+
+The max mintable range is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidAffiliateFeeBPS
+
+```solidity
+error InvalidAffiliateFeeBPS()
+```
+
+The affiliate fee BPS cannot exceed the limit. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidPlatformFeeBPS
+
+```solidity
+error InvalidPlatformFeeBPS()
+```
+
+The affiliate fee BPS cannot exceed the limit. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidPlatformFlatFee
+
+```solidity
+error InvalidPlatformFlatFee()
+```
+
+The affiliate fee BPS cannot exceed the limit. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### ExceedsMaxPerAccount
+
+```solidity
+error ExceedsMaxPerAccount()
+```
+
+Cannot mint more than the maximum limit per account. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### ExceedsMintSupply
+
+```solidity
+error ExceedsMintSupply()
+```
+
+Cannot mint more than the maximum supply. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### ExceedsSignedQuantity
+
+```solidity
+error ExceedsSignedQuantity()
+```
+
+Cannot mint more than the signed quantity. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidSignature
+
+```solidity
+error InvalidSignature()
+```
+
+The signature is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SignatureExpired
+
+```solidity
+error SignatureExpired()
+```
+
+The signature has expired. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SignatureAlreadyUsed
+
+```solidity
+error SignatureAlreadyUsed()
+```
+
+The signature claim ticket has already been used. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SignerIsZeroAddress
+
+```solidity
+error SignerIsZeroAddress()
+```
+
+The signer cannot be the zero address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MerkleRootIsEmpty
+
+```solidity
+error MerkleRootIsEmpty()
+```
+
+The Merkle root cannot be empty. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidMerkleProof
+
+```solidity
+error InvalidMerkleProof()
+```
+
+The Merkle proof is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### CallerNotDelegated
+
+```solidity
+error CallerNotDelegated()
+```
+
+The caller has not been delegated via delegate cash. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MaxMintablePerAccountIsZero
+
+```solidity
+error MaxMintablePerAccountIsZero()
+```
+
+The max mintable amount per account cannot be zero. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MaxMintableIsZero
+
+```solidity
+error MaxMintableIsZero()
+```
+
+The max mintable value cannot be zero. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### PlatformFeeAddressIsZero
+
+```solidity
+error PlatformFeeAddressIsZero()
+```
+
+The plaform fee address cannot be the zero address. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### MintDoesNotExist
+
+```solidity
+error MintDoesNotExist()
+```
+
+The mint does not exist. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidAffiliate
+
+```solidity
+error InvalidAffiliate()
+```
+
+The affiliate provided is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidMode
+
+```solidity
+error InvalidMode()
+```
+
+The mint mode provided is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### SignedPriceTooLow
+
+```solidity
+error SignedPriceTooLow()
+```
+
+The signed price is too low. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### InvalidPlatformFeeConfig
+
+```solidity
+error InvalidPlatformFeeConfig()
+```
+
+The platform fee configuration provided is invalid. 
+
+{/* ------------------------------------------------------------------------------------------- */}
+
+### NotConfigurable
+
+```solidity
+error NotConfigurable()
+```
+
+The parameter cannot be configured. 
+

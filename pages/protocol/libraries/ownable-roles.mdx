@@ -162,30 +162,6 @@ function rolesOf(address user) public view virtual returns (uint256)
 
 Returns the roles of `user`.
 
-### rolesFromOrdinals
-
-```solidity
-function rolesFromOrdinals(
-    uint8[] memory ordinals
-) public pure returns (uint256)
-```
-
-Convenience function to return a `roles` bitmap from the `ordinals`.  
-This is meant for frontends like Etherscan, and is therefore not fully optimized.  
-Not recommended to be called on-chain.
-
-### ordinalsFromRoles
-
-```solidity
-function ordinalsFromRoles(
-    uint256 roles
-) public pure returns (uint8[] memory)
-```
-
-Convenience function to return an array of `ordinals` from the `roles` bitmap.  
-This is meant for frontends like Etherscan, and is therefore not fully optimized.  
-Not recommended to be called on-chain.
-
 ## Events
 
 ### OwnershipTransferred
