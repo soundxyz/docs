@@ -1,11 +1,12 @@
+// @ts-check
 import nextra from 'nextra'
 
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
   themeConfig: './theme.config.js',
-  unstable_staticImage: true,
-  unstable_flexsearch: {
-    codeblock: false,
+  staticImage: true,
+  search: {
+    codeblocks: false,
   },
   defaultShowCopyCode: true,
 })
