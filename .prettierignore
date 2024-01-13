@@ -2,3 +2,4 @@
 coverage/
 .pnp.*
 pnpm-lock.yaml
+.next/
