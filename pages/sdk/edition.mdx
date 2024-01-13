@@ -4,7 +4,7 @@ Due to breaking changes between editions, it is important to check the edition v
 
 As a rule of thumb, if your contract was deployed **October 10th 2023 or later**, you should use the V2 edition version of the SDK and you can skip all the `v1` functions, and also lower your bundle size (with automatic tree shaking if available or manually importing only used functions).
 
-```ts
+```ts filename="edition.ts"
 import { soundEditionVersionPublicActions } from '@soundxyz/sdk'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
@@ -33,7 +33,7 @@ After extending the viem instance, you will have full type-safety and autocomple
 
 You can also check [github.com/soundxyz/sdk/examples/nextjs/src/app/v2/page.tsx](https://github.com/soundxyz/sdk/blob/main/examples/nextjs/src/app/v2/page.tsx) as a real world example
 
-```ts
+```ts filename="edition.ts"
 import {
   editionV2PublicActionsCreate,
   editionV2PublicActionsInfo,
@@ -87,7 +87,7 @@ After extending the viem instance, you will have full type-safety and autocomple
 
 You can also check [github.com/soundxyz/sdk/examples/nextjs/src/app/v1](https://github.com/soundxyz/sdk/blob/main/examples/nextjs/src/app/v1) as a real world example
 
-```ts
+```ts filename="edition.ts"
 import { editionV1PublicActions, withMerkleProvider, editionV1WalletActions } from '@soundxyz/sdk'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { mainnet } from 'viem/chains'

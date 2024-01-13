@@ -44,7 +44,7 @@ The SDK provides direct connection with [www.sound.xyz](https://www.sound.xyz) A
 
 To get an `API Key` contact us on our discord server [`discord.gg/soundxyz`](https://discord.gg/soundxyz)
 
-```ts
+```ts filename="api.ts"
 import { SoundAPI } from '@soundxyz/sdk/api/sound'
 
 // ...
@@ -66,7 +66,7 @@ Currently the SDK provides integrations with [**Lanyard**](https://lanyard.org) 
 
 - Lanyard
 
-```ts
+```ts filename="lanyard.ts" {2, 9}
 import { withMerkleProvider } from '@soundxyz/sdk'
 import { LanyardMerkleProvider } from '@soundxyz/sdk/api/lanyard'
 import { createPublicClient, http } from 'viem'
@@ -76,12 +76,11 @@ export const publicClient = createPublicClient({
   chain: mainnet,
   transport: http('...'),
 }).extend(withMerkleProvider(LanyardMerkleProvider))
-// ...
 ```
 
 - Sound.xyz API
 
-```ts
+```ts filename="api.ts"
 import { withMerkleProvider } from '@soundxyz/sdk'
 import { SoundAPI } from '@soundxyz/sdk/api/sound'
 
