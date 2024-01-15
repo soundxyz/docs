@@ -54,7 +54,7 @@
     "graphql-ws": "^5.12.1",
     "isomorphic-fetch": "^3.0.0",
     "react-is": "^18.2.0",
-    "react-string-replace": "^1.1.0",
+    "react-string-replace": "^1.1.1",
     "zod": "3.21.4"
   }
 }
