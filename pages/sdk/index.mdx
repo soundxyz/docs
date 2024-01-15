@@ -10,19 +10,7 @@ Official Sound on-chain development tools for the JavaScript ecosystem leveragin
 
 `@soundxyz/sdk` [![@soundxyz/sdk](https://badge.fury.io/js/@soundxyz%2Fsdk.svg)](https://badge.fury.io/js/@soundxyz%2Fsdk)
 
-```sh
-pnpm add @soundxyz/sdk
-```
-
-```sh
-bun add @soundxyz/sdk
-```
-
-```sh
-yarn add @soundxyz/sdk
-```
-
-```sh
+```sh npm2yarn
 npm install @soundxyz/sdk
 ```
 
@@ -30,19 +18,7 @@ npm install @soundxyz/sdk
 
 Sound.xyz SDK requires the following peer dependencies to be installed:
 
-```sh
-pnpm add viem zod
-```
-
-```sh
-bun add viem zod
-```
-
-```sh
-yarn add viem zod
-```
-
-```sh
+```sh npm2yarn
 npm install viem zod
 ```
 
@@ -68,7 +44,7 @@ The SDK provides direct connection with [www.sound.xyz](https://www.sound.xyz) A
 
 To get an `API Key` contact us on our discord server [`discord.gg/soundxyz`](https://discord.gg/soundxyz)
 
-```ts
+```ts filename="api.ts"
 import { SoundAPI } from '@soundxyz/sdk/api/sound'
 
 // ...
@@ -90,7 +66,7 @@ Currently the SDK provides integrations with [**Lanyard**](https://lanyard.org) 
 
 - Lanyard
 
-```ts
+```ts filename="lanyard.ts" {2, 9}
 import { withMerkleProvider } from '@soundxyz/sdk'
 import { LanyardMerkleProvider } from '@soundxyz/sdk/api/lanyard'
 import { createPublicClient, http } from 'viem'
@@ -100,12 +76,11 @@ export const publicClient = createPublicClient({
   chain: mainnet,
   transport: http('...'),
 }).extend(withMerkleProvider(LanyardMerkleProvider))
-// ...
 ```
 
 - Sound.xyz API
 
-```ts
+```ts filename="api.ts"
 import { withMerkleProvider } from '@soundxyz/sdk'
 import { SoundAPI } from '@soundxyz/sdk/api/sound'
 
