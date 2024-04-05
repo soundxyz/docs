@@ -50,7 +50,7 @@
     "@types/react": "^18.0.32",
     "clsx": "^1.2.1",
     "graphiql": "^2.4.1",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.1",
     "graphql-ws": "^5.12.1",
     "isomorphic-fetch": "^3.0.0",
     "react-is": "^18.2.0",
