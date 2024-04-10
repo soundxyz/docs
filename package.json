@@ -49,7 +49,7 @@
     "@stitches/react": "^1.2.8",
     "@types/react": "^18.0.32",
     "clsx": "^1.2.1",
-    "graphiql": "^2.4.1",
+    "graphiql": "^2.4.7",
     "graphql": "^16.8.1",
     "graphql-ws": "^5.12.1",
     "isomorphic-fetch": "^3.0.0",
