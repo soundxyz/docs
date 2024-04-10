@@ -9,8 +9,8 @@ dependencies:
     specifier: ^6.6.0
     version: 6.6.0
   '@graphiql/plugin-explorer':
-    specifier: ^0.1.15
-    version: 0.1.15(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    specifier: ^0.3.5
+    version: 0.3.5(@graphiql/react@0.17.1)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
   '@graphiql/react':
     specifier: ^0.17.1
     version: 0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
@@ -159,24 +159,19 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@graphiql/plugin-explorer@0.1.15(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-/S82L0zahiUfOKqUtdUcHX0rWzxkr24iH7zdisAypBYK7E/oBCpbAySyQHox4+z6l/xcjhXMXdhLNuqZKUCAiw==}
+  /@graphiql/plugin-explorer@0.3.5(@graphiql/react@0.17.1)(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-oHn4cuH1uPWv70zy64mpG/x99BeFOFzGJ/tZXdx8wvb6c4aBMMCo4ouVnvNReVxE9N0KAwJfPvC6laWSbQ6lkQ==}
     peerDependencies:
+      '@graphiql/react': ^0.19.4
       graphql: ^15.5.0 || ^16.0.0
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17 || ^18
+      react-dom: ^16.8.0 || ^17 || ^18
     dependencies:
       '@graphiql/react': 0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
       graphiql-explorer: 0.9.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
       graphql: 16.8.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    transitivePeerDependencies:
-      - '@codemirror/language'
-      - '@types/node'
-      - '@types/react'
-      - graphql-ws
-      - react-is
     dev: false
 
   /@graphiql/react@0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
