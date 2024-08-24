@@ -15,8 +15,8 @@ dependencies:
     specifier: ^0.17.1
     version: 0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
   '@graphiql/toolkit':
-    specifier: ^0.8.3
-    version: 0.8.3(@types/node@20.11.6)(graphql-ws@5.12.1)(graphql@16.8.1)
+    specifier: ^0.11.0
+    version: 0.11.0(@types/node@20.11.6)(graphql-ws@5.12.1)(graphql@16.8.1)
   '@stitches/react':
     specifier: ^1.2.8
     version: 1.2.8(react@18.2.0)
@@ -209,6 +209,23 @@ packages:
       - '@types/react'
       - graphql-ws
       - react-is
+    dev: false
+
+  /@graphiql/toolkit@0.11.0(@types/node@20.11.6)(graphql-ws@5.12.1)(graphql@16.8.1):
+    resolution: {integrity: sha512-VqqQrvkMwgbGhj7J5907yfuAy5B1OCgOTIPi7gtRneG1jYmnqvSxi8Yrmu0B8G8fZxkxKVsYi8dE8EtsOBrTGQ==}
+    peerDependencies:
+      graphql: ^15.5.0 || ^16.0.0 || ^17.0.0-alpha.2
+      graphql-ws: '>= 4.5.0'
+    peerDependenciesMeta:
+      graphql-ws:
+        optional: true
+    dependencies:
+      '@n1ru4l/push-pull-async-iterable-iterator': 3.2.0
+      graphql: 16.8.1
+      graphql-ws: 5.12.1(graphql@16.8.1)
+      meros: 1.2.1(@types/node@20.11.6)
+    transitivePeerDependencies:
+      - '@types/node'
     dev: false
 
   /@graphiql/toolkit@0.8.3(@types/node@20.11.6)(graphql-ws@5.12.1)(graphql@16.8.1):
@@ -3811,6 +3828,7 @@ packages:
 
   /shikiji@0.6.10:
     resolution: {integrity: sha512-WE+A5Y2ntM5hL3iJQujk97qr5Uj7PSIRXpQfrZ6h+JWPXZ8KBEDhFXc4lqNriaRq1WGOVPUT83XMOzmHiH3W8A==}
+    deprecated: Shikiji is merged back to Shiki v1.0, please migrate over to get the latest updates
     dependencies:
       hast-util-to-html: 9.0.0
     dev: true
