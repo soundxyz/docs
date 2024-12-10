@@ -2,7 +2,7 @@
 
 **[`contracts/modules/RangeEditionMinter.sol`](https://github.com/soundxyz/sound-protocol/blob/master/contracts/modules/RangeEditionMinter.sol)**
 
-A minter that enables multiple schedules of fixed-price mints with a maximum mintable supply that drops from a upper bound to a lower bound after a defined cutoff time.
+A minter that enables multiple schedules of fixed-price mints with a maximum mintable supply that drops from an upper bound to a lower bound after a defined cutoff time.
 
 Inherits:
 
@@ -62,7 +62,7 @@ Initializes a range mint instance
 
 **Calling conditions:**
 
-- The caller must be the owner or an adminstrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
+- The caller must be the owner or an administrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
 
 | Params:                  |                                                                                                                                                    |
 | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -92,7 +92,7 @@ Sets the time range.
 
 **Calling conditions:**
 
-- The caller must be the owner or an adminstrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
+- The caller must be the owner or an administrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
 
 | Params:      |                                                                                                                                                    |
 | ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -116,7 +116,7 @@ Sets the max mintable range.
 
 **Calling conditions:**
 
-- The caller must be the owner or an adminstrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
+- The caller must be the owner or an administrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
 
 | Params:            |                                                                     |
 | ------------------ | ------------------------------------------------------------------- |
@@ -156,7 +156,7 @@ Sets the `price` for (`edition`, `mintId`).
 
 **Calling conditions:**
 
-- The caller must be the owner or an adminstrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
+- The caller must be the owner or an administrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
 
 | Params:   |                                                            |
 | --------- | ---------------------------------------------------------- |
@@ -178,7 +178,7 @@ Sets the `maxMintablePerAccount` for (`edition`, `mintId`).
 
 **Calling conditions:**
 
-- The caller must be the owner or an adminstrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
+- The caller must be the owner or an administrator (via the [`ADMIN_ROLE`](/protocol/core/sound-edition#admin_role)) of the `edition` contract.
 
 | Params:                 |                                                                |
 | ----------------------- | -------------------------------------------------------------- |
