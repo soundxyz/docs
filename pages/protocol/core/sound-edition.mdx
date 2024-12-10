@@ -10,7 +10,7 @@ Overview:
 - Enables the owner, authorized minter contracts or administrators to batch mint NFTs. Authorization is granted by the owner via the [`grantRoles`](#grantRoles) function inherited from [`OwnableRoles`](/protocol/libraries/ownable-roles).
 - Token IDs are minted sequentially (e.g. 1, 2, 3...) starting from 1.
 - Can optionally implement a `metadataModule` that effectively overrides the default `tokenURI` function.
-- Can natively support [range editions](https://sound.mirror.xyz/hmz2pueqBV37MD-mULjvch0vQoc-VKJdsfqXf8jTB30) via a dynamic maximum mintable supply (based on a `editionCutoffTime`),
+- Can natively support [range editions](https://sound.mirror.xyz/hmz2pueqBV37MD-mULjvch0vQoc-VKJdsfqXf8jTB30) via a dynamic maximum mintable supply (based on an `editionCutoffTime`),
 - Has a pseudorandom `mintRandomness` number optionally set on each [`mint`](#mint) call, which can be used for game mechanics.
 - Implements [EIP-2981 Royalty Standard](https://eips.ethereum.org/EIPS/eip-2981).
 
@@ -119,7 +119,7 @@ This function is called in the [`createSoundAndMints`](sound-creator-v1#createso
 function mint(address to, uint256 quantity) external payable returns (uint256)
 ```
 
-Mints `quantity` tokens to addrress `to`
+Mints `quantity` tokens to address `to`
 
 Each token will be assigned a token ID that is consecutively increasing.
 
@@ -490,7 +490,7 @@ See: https://chiru-labs.github.io/ERC721A/#/tips?id=batch-size
 
 ### Initialization flags
 
-Each flag is a bit in the `uint256 _flags` passed to the `initialze` function.
+Each flag is a bit in the `uint256 _flags` passed to the `initialize` function.
 
 - `METADATA_IS_FROZEN_FLAG` - If set, the metadata is frozen and cannot be changed.
 - `MINT_RANDOMNESS_ENABLED_FLAG` - If set, the `mintRandomness` function is enabled.
