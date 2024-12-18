@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@codemirror/language':
-    specifier: ^6.6.0
-    version: 6.6.0
+    specifier: ^6.10.7
+    version: 6.10.7
   '@graphiql/plugin-explorer':
     specifier: ^0.1.15
-    version: 0.1.15(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    version: 0.1.15(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
   '@graphiql/react':
     specifier: ^0.17.1
-    version: 0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    version: 0.17.1(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
   '@graphiql/toolkit':
     specifier: ^0.8.3
     version: 0.8.3(@types/node@20.11.6)(graphql-ws@5.12.1)(graphql@16.8.1)
@@ -28,7 +28,7 @@ dependencies:
     version: 1.2.1
   graphiql:
     specifier: ^2.4.1
-    version: 2.4.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+    version: 2.4.1(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
   graphql:
     specifier: ^16.8.1
     version: 16.8.1
@@ -115,12 +115,12 @@ packages:
     resolution: {integrity: sha512-s3jaWicZd0pkP0jf5ysyHUI/RE7MHos6qlToFcGWXVp+ykHOy77OUMrfbgJ9it2C5bow7OIQwYYaHjk9XlBQ2A==}
     dev: true
 
-  /@codemirror/language@6.6.0:
-    resolution: {integrity: sha512-cwUd6lzt3MfNYOobdjf14ZkLbJcnv4WtndYaoBkbor/vF+rCNguMPK0IRtvZJG4dsWiaWPcK8x1VijhvSxnstg==}
+  /@codemirror/language@6.10.7:
+    resolution: {integrity: sha512-aOswhVOLYhMNeqykt4P7+ukQSpGL0ynZYaEyFDVHE7fl2xgluU3yuE9MdgYNfw6EmaNidoFMIQ2iTh1ADrnT6A==}
     dependencies:
       '@codemirror/state': 6.2.0
-      '@codemirror/view': 6.9.3
-      '@lezer/common': 1.0.2
+      '@codemirror/view': 6.36.0
+      '@lezer/common': 1.2.3
       '@lezer/highlight': 1.1.4
       '@lezer/lr': 1.3.3
       style-mod: 4.0.2
@@ -130,11 +130,17 @@ packages:
     resolution: {integrity: sha512-69QXtcrsc3RYtOtd+GsvczJ319udtBf1PTrr2KbLWM/e2CXUPnh0Nz9AUo8WfhSQ7GeL8dPVNUmhQVgpmuaNGA==}
     dev: false
 
-  /@codemirror/view@6.9.3:
-    resolution: {integrity: sha512-BJ5mvEIhFM+SrNwc5X8pLIvMM9ffjkviVbxpg84Xk2OE8ZyKaEbId8kX+nAYEEso7+qnbwsXe1bkAHsasebMow==}
+  /@codemirror/state@6.5.0:
+    resolution: {integrity: sha512-MwBHVK60IiIHDcoMet78lxt6iw5gJOGSbNbOIVBHWVXIH4/Nq1+GQgLLGgI1KlnN86WDXsPudVaqYHKBIx7Eyw==}
     dependencies:
-      '@codemirror/state': 6.2.0
-      style-mod: 4.0.2
+      '@marijn/find-cluster-break': 1.0.2
+    dev: false
+
+  /@codemirror/view@6.36.0:
+    resolution: {integrity: sha512-aMePDnkNNKE8dSOo1w689xYa3dijREbRajiRcgjSGc2TWN7MTdE+9pm5fxwdz0C4D9Di1VZomrn2M+xDe7tTVg==}
+    dependencies:
+      '@codemirror/state': 6.5.0
+      style-mod: 4.1.2
       w3c-keyname: 2.2.6
     dev: false
 
@@ -159,14 +165,14 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@graphiql/plugin-explorer@0.1.15(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
+  /@graphiql/plugin-explorer@0.1.15(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-/S82L0zahiUfOKqUtdUcHX0rWzxkr24iH7zdisAypBYK7E/oBCpbAySyQHox4+z6l/xcjhXMXdhLNuqZKUCAiw==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/react': 0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+      '@graphiql/react': 0.17.1(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
       graphiql-explorer: 0.9.0(graphql@16.8.1)(react-dom@18.2.0)(react@18.2.0)
       graphql: 16.8.1
       react: 18.2.0
@@ -179,7 +185,7 @@ packages:
       - react-is
     dev: false
 
-  /@graphiql/react@0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
+  /@graphiql/react@0.17.1(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-p99Vnl3aoQsh/T651pkGiS0wqvn7y65Bv4Q32l990T2IIgEDqeqJxgwRp3F48Ol9dWzk6KzxNkZYqe5IVHEmoA==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
@@ -195,7 +201,7 @@ packages:
       '@reach/visually-hidden': 0.17.0(react-dom@18.2.0)(react@18.2.0)
       clsx: 1.2.1
       codemirror: 5.65.12
-      codemirror-graphql: 2.0.5(@codemirror/language@6.6.0)(codemirror@5.65.12)(graphql@16.8.1)
+      codemirror-graphql: 2.0.5(@codemirror/language@6.10.7)(codemirror@5.65.12)(graphql@16.8.1)
       copy-to-clipboard: 3.3.3
       graphql: 16.8.1
       graphql-language-service: 5.1.3(graphql@16.8.1)
@@ -241,20 +247,24 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: true
 
-  /@lezer/common@1.0.2:
-    resolution: {integrity: sha512-SVgiGtMnMnW3ActR8SXgsDhw7a0w0ChHSYAyAUxxrOiJ1OqYWEKk/xJd84tTSPo1mo6DXLObAJALNnd0Hrv7Ng==}
+  /@lezer/common@1.2.3:
+    resolution: {integrity: sha512-w7ojc8ejBqr2REPsWxJjrMFsA/ysDCFICn8zEOR9mrqzOu2amhITYuLD8ag6XZf0CFXDrhKqw7+tW8cX66NaDA==}
     dev: false
 
   /@lezer/highlight@1.1.4:
     resolution: {integrity: sha512-IECkFmw2l7sFcYXrV8iT9GeY4W0fU4CxX0WMwhmhMIVjoDdD1Hr6q3G2NqVtLg/yVe5n7i4menG3tJ2r4eCrPQ==}
     dependencies:
-      '@lezer/common': 1.0.2
+      '@lezer/common': 1.2.3
     dev: false
 
   /@lezer/lr@1.3.3:
     resolution: {integrity: sha512-JPQe3mwJlzEVqy67iQiiGozhcngbO8QBgpqZM6oL1Wj/dXckrEexpBLeFkq0edtW5IqnPRFxA24BHJni8Js69w==}
     dependencies:
-      '@lezer/common': 1.0.2
+      '@lezer/common': 1.2.3
+    dev: false
+
+  /@marijn/find-cluster-break@1.0.2:
+    resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
     dev: false
 
   /@mdx-js/mdx@3.0.0:
@@ -1039,14 +1049,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /codemirror-graphql@2.0.5(@codemirror/language@6.6.0)(codemirror@5.65.12)(graphql@16.8.1):
+  /codemirror-graphql@2.0.5(@codemirror/language@6.10.7)(codemirror@5.65.12)(graphql@16.8.1):
     resolution: {integrity: sha512-erpJV/hOQe4ScOBNhV+rJAAcsCGyC913VkTp3fbGHh/aZQBshpwxgew4+43+EDl855Gw+df36/+maun+Nj8tKw==}
     peerDependencies:
       '@codemirror/language': 6.0.0
       codemirror: ^5.65.3
       graphql: ^15.5.0 || ^16.0.0
     dependencies:
-      '@codemirror/language': 6.6.0
+      '@codemirror/language': 6.10.7
       codemirror: 5.65.12
       graphql: 16.8.1
       graphql-language-service: 5.1.3(graphql@16.8.1)
@@ -1713,14 +1723,14 @@ packages:
       react-dom: 18.2.0(react@18.2.0)
     dev: false
 
-  /graphiql@2.4.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
+  /graphiql@2.4.1(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-PLTY2KI+FwU6548Bsrip2ptne/t2QzNdARHZwXl/KGJ+KVfSpXjjfryJQBHXiEq4plQnG4orw7dJpm8KfM5iig==}
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
     dependencies:
-      '@graphiql/react': 0.17.1(@codemirror/language@6.6.0)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
+      '@graphiql/react': 0.17.1(@codemirror/language@6.10.7)(@types/node@20.11.6)(@types/react@18.0.32)(graphql-ws@5.12.1)(graphql@16.8.1)(react-dom@18.2.0)(react-is@18.2.0)(react@18.2.0)
       '@graphiql/toolkit': 0.8.3(@types/node@20.11.6)(graphql-ws@5.12.1)(graphql@16.8.1)
       graphql: 16.8.1
       graphql-language-service: 5.1.3(graphql@16.8.1)
@@ -1917,7 +1927,7 @@ packages:
     resolution: {integrity: sha512-H/y0+IWPdsLLS738P8tDnrQ8Z+dj12zQQ6WC11TIM21C8WFVoIxcqWXf2H3hiTVZjF1AWqoimGwrTWecWrnmRQ==}
     dependencies:
       '@types/estree': 1.0.0
-      '@types/hast': 3.0.3
+      '@types/hast': 3.0.4
       '@types/unist': 3.0.2
       comma-separated-tokens: 2.0.3
       devlop: 1.1.0
@@ -2294,7 +2304,7 @@ packages:
       ccount: 2.0.1
       devlop: 1.1.0
       mdast-util-find-and-replace: 3.0.1
-      micromark-util-character: 2.0.1
+      micromark-util-character: 2.1.0
     dev: true
 
   /mdast-util-gfm-footnote@2.0.0:
@@ -2778,7 +2788,7 @@ packages:
   /micromark-factory-space@2.0.0:
     resolution: {integrity: sha512-TKr+LIDX2pkBJXFLzpyPyljzYK3MtmllMUMODTQJIUfDGncESaqB90db9IAUcz4AZAJFdd8U9zOp9ty1458rxg==}
     dependencies:
-      micromark-util-character: 2.0.1
+      micromark-util-character: 2.1.0
       micromark-util-types: 2.0.0
     dev: true
 
@@ -3680,7 +3690,7 @@ packages:
   /remark-rehype@11.1.0:
     resolution: {integrity: sha512-z3tJrAs2kIs1AqIIy6pzHmAHlF1hWQ+OdY4/hv+Wxe35EhyLKcajL33iUEn3ScxtFox9nUvRufR/Zre8Q08H/g==}
     dependencies:
-      '@types/hast': 3.0.3
+      '@types/hast': 3.0.4
       '@types/mdast': 4.0.3
       mdast-util-to-hast: 13.1.0
       unified: 11.0.4
@@ -3811,6 +3821,7 @@ packages:
 
   /shikiji@0.6.10:
     resolution: {integrity: sha512-WE+A5Y2ntM5hL3iJQujk97qr5Uj7PSIRXpQfrZ6h+JWPXZ8KBEDhFXc4lqNriaRq1WGOVPUT83XMOzmHiH3W8A==}
+    deprecated: Shikiji is merged back to Shiki v1.0, please migrate over to get the latest updates
     dependencies:
       hast-util-to-html: 9.0.0
     dev: true
@@ -3892,6 +3903,10 @@ packages:
 
   /style-mod@4.0.2:
     resolution: {integrity: sha512-C4myMmRTO8iaC5Gg+N1ftK2WT4eXUTMAa+HEFPPrfVeO/NtqLTtAmV1HbqnuGtLwCek44Ra76fdGUkSqjiMPcQ==}
+    dev: false
+
+  /style-mod@4.1.2:
+    resolution: {integrity: sha512-wnD1HyVqpJUI2+eKZ+eo1UwghftP6yuFheBqqe+bWCotBjC2K1YnteJILRMs3SM4V/0dLEW1SC27MWP5y+mwmw==}
     dev: false
 
   /style-to-object@0.4.1:
