@@ -42,7 +42,7 @@
     "typescript": "5.7.2"
   },
   "dependencies": {
-    "@codemirror/language": "^6.6.0",
+    "@codemirror/language": "^6.11.1",
     "@graphiql/plugin-explorer": "^0.1.15",
     "@graphiql/react": "^0.17.1",
     "@graphiql/toolkit": "^0.8.3",
