@@ -45,8 +45,8 @@ dependencies:
     specifier: ^1.1.1
     version: 1.1.1
   zod:
-    specifier: 3.22.4
-    version: 3.22.4
+    specifier: 3.25.64
+    version: 3.25.64
 
 devDependencies:
   '@geist-ui/react-icons':
@@ -3152,7 +3152,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       scroll-into-view-if-needed: 3.1.0
-      zod: 3.22.4
+      zod: 3.25.64
     dev: true
 
   /nextra@3.0.0-alpha.13(@types/react@18.0.32)(next@13.5.6)(react-dom@18.2.0)(react@18.2.0):
@@ -3196,8 +3196,8 @@ packages:
       unist-util-remove: 4.0.0
       unist-util-visit: 5.0.0
       yaml: 2.3.4
-      zod: 3.22.4
-      zod-validation-error: 1.5.0(zod@3.22.4)
+      zod: 3.25.64
+      zod-validation-error: 1.5.0(zod@3.25.64)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -4322,17 +4322,17 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  /zod-validation-error@1.5.0(zod@3.22.4):
+  /zod-validation-error@1.5.0(zod@3.25.64):
     resolution: {integrity: sha512-/7eFkAI4qV0tcxMBB/3+d2c1P6jzzZYdYSlBuAklzMuCrJu5bzJfHS0yVAS87dRHVlhftd6RFJDIvv03JgkSbw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       zod: ^3.18.0
     dependencies:
-      zod: 3.22.4
+      zod: 3.25.64
     dev: true
 
-  /zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+  /zod@3.25.64:
+    resolution: {integrity: sha512-hbP9FpSZf7pkS7hRVUrOjhwKJNyampPgtXKc3AN6DsWtoHsg2Sb4SQaS4Tcay380zSwd2VPo9G9180emBACp5g==}
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
